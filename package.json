@@ -1,0 +1,17 @@
+{
+  "name": "MrData",
+  "version": "1.0.0",
+  "description": "An ST:FC Bot to allow your alliance to input their Power Destroyed and Resources Raided scores, and compete against one another for the kudos!",
+  "main": "bot.js",
+  "author": "BanderDragon#5699",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "license": "ISC"
+}
