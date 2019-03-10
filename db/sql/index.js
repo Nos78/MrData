@@ -24,7 +24,9 @@ module.exports = {
         empty: sql('scores/empty.sql'),
         init: sql('scores/init.sql'),
         drop: sql('scores/drop.sql'),
-        add: sql('scores/add.sql')
+        add: sql('scores/add.sql'),
+        update: sql('scores/update.sql'),
+        exists: sql('scores/exists.sql')
     }
 };
 

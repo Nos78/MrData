@@ -6,9 +6,10 @@
 
 CREATE TABLE ${schema~}.scores
 (
-    id text PRIMARY KEY,
-    user text NOT NULL,
+    id serial NOT NULL,
+    uid text NOT NULL,
     guild text NOT NULL,
-    power_destroyed INTEGER,
-    resources_raided INTEGER
+    power_destroyed BIGINT,
+    resources_raided BIGINT,
+    PRIMARY KEY(id)
 )

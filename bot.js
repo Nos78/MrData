@@ -63,14 +63,16 @@ bot.on("ready", () => {
 
   // We want to ensure our table is created when the bot comes online
   // and configure them if they don't exist
-  const count = db.scores.total();
-  console.log("Attempt to create scores table: ${count}")
-  if (!count) {
-    logger.debug(`No database score table found!  Creating...`);
-    db.scores.create();
-    logger.debug(`Database configured.`)
-  }
-});
+  db.scores.exists()
+    .then(data => {
+      if(data.rows[0].exists == false) {
+        // Database does not exist, lets create it...
+        logger.debug(`No database score table found!  Creating...`);
+        db.scores.create();
+        logger.debug(`Database configured.`)
+      }
+    });
+  });
 
 //
 // guildCreate & guildDelete
@@ -137,59 +139,86 @@ bot.on('message', async message => {
     // Just add any case commands if you want to..
     case 'powerdestroyed':
     case 'pd':
-      let score = db.scores.findByNameAndGuild(message.author.id, message.guild.id);
-      if (!score) {
-        score = {
-          id: `${message.guild.id}-${message.author.id}`,
-          user: message.author.id,
-          guild: message.guild.id,
-          power_destroyed: 0,
-          resources_raided: 0
-        }
-      }
-      if(args.length > 0) {
-        logger.info(`Args detected`);
-        if(!isNaN(args[0])) {
-          // Second argument is a number, update the score to this value
-          score.power_destroyed = args[0];
-          db.scores.update(score);
-          // Check return value? Because what if something goes wrong...
-
-          // notify the user it was successful
-          message.channel.send({embed: {
-              color: 3447003,
-              description: `Thank you, ${sender}, your power destroyed is set to ${args[0]}`
-          }});
-        } else {
-          let member = message.guild.members.get(args[0]);
-          if(member) {
-            let score = db.scores.findByNameAndGuild(member.id, message.guild.id);
-            message.channel.send({embed: {
-              color: 3447003,
-              description: `${args[0]} power destroyed is ${score.power_destroyed}`
-            }});
-          } else {
-            message.channel.send({embed: {
-              color: 3447003,
-              description: `${sender}, please use \`!pd abc\`, where abc is a number or an actual person!}`
-            }});
+      var score = [];
+      db.scores.findByNameAndGuild(message.author.id, message.guild.id)
+        .then (score => {
+          if (score == null) {
+            score = {
+              uid: message.author.id,
+              guild: message.guild.id,
+              power_destroyed: 0,
+              resources_raided: 0
+            }
+            console.log(`Created score: ${score}`)
           }
-        }
-      } else {
-        const top10 = db.manyOrNone("SELECT * FROM scores WHERE guild = $1 ORDER BY power_destroyed DESC LIMIT 10;", message.guild.id);
-        // Now shake it and show it! (as a nice embed, too!)
-        const embed = new Discord.RichEmbed()
-          .setTitle("Power Destroyed Leaderboard")
-          .setAuthor(bot.user.username, bot.user.avatarURL)
-          .setDescription("Our top 10 power destroyed leaders!")
-          .setColor(0x00AE86);
-
-        for(const data of top10) {
-          embed.addField(bot.users.get(data.user).tag, `${data.power_destroyed}`);
-        }
-        embed.addField(`${sender}, your power destroyed is ${score.power_destroyed}`)
-        return message.channel.send({embed});
-      }
+          console.log(`SCORE: ${score}`);
+          if(args.length > 0) {
+            logger.info(`Args detected`);
+            if(!isNaN(args[0])) {
+              // Second argument is a number, update the score to this value
+              score.power_destroyed = args[0];
+              if(score.id == null) {
+                db.scores.add(score)
+                  .then(function(result) {
+                    console.log(`${result}`);
+                    // notify the user it was successful
+                    message.channel.send({embed: {
+                      color: 3447003,
+                      description: `Thank you, ${sender}, your power destroyed is set to ${args[0]}`
+                    }});
+                  })
+              } else {
+                db.scores.update(score)
+                  .then(function(result) {
+                    console.log(`${result}`);
+                    // notify the user it was successful
+                    message.channel.send({embed: {
+                      color: 3447003,
+                      description: `Thank you, ${sender}, your power destroyed is set to ${args[0]}`
+                    }});
+                  })
+                }
+            } else {
+              let member = message.guild.members.get(args[0]);
+              if(member) {
+                db.scores.findByNameAndGuild(member.id, message.guild.id)
+                  .then (score => {
+                    let desc = `Unable to find ${member} in my database.  They need to log their scores for you to view them!`;
+                    if(score!=null) {
+                      desc = `${args[0]} power destroyed is ${score.power_destroyed}`
+                    }
+                    message.channel.send({embed: {
+                      color: 3447003,
+                      description: `${desc}`
+                    }
+                  });
+                })
+              } else {
+                message.channel.send({embed: {
+                  color: 3447003,
+                  description: `${sender}, please use \`!pd abc\`, where abc is a number or an actual person!}`
+                }});
+              }
+            }
+          } else {
+            db.manyOrNone("SELECT * FROM scores WHERE guild = $1 ORDER BY power_destroyed DESC LIMIT 10;", message.guild.id)
+              .then(top10 => {
+                console.log(`DATA: ${top10}`);
+                const embed = new Discord.RichEmbed()
+                  .setTitle("Power Destroyed Leaderboard")
+                  .setAuthor(bot.user.username, bot.user.avatarURL)
+                  .setDescription("Our top 10 power destroyed leaders!")
+                  .setColor(0x00AE86);
+                var c = 1;
+                for(const data of top10) {
+                  embed.addField(`${c}. ${bot.users.get(data.uid).tag}`, `${data.power_destroyed}`);
+                  c++;
+                }
+                embed.addField(`Your personal power destroyed is`, `${score.power_destroyed}`)
+                return message.channel.send({embed});
+              });
+          }
+        });
     break;
   }
 });

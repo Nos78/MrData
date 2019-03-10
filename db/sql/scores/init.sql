@@ -9,7 +9,7 @@
     https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost
 */
 
-INSERT INTO ${schema~}.scores(user) VALUES
+INSERT INTO ${schema~}.scores(uid) VALUES
 ('Demo User 1'), -- user 1;
 ('Demo User 2'), -- user 2;
 ('Demo User 3'), -- user 3;

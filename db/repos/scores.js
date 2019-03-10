@@ -15,6 +15,7 @@ class ScoresRepository {
 
     // Creates the table;
     create() {
+        console.log("Table creation ...");
         var retval = this.db.none(sql.create);
         console.log("Table created... ${retval}");
         if(!retval) {
@@ -25,6 +26,9 @@ class ScoresRepository {
         return retval;
     }
 
+    exists() {
+        return this.db.result(sql.exists, []);
+    }
     // Initializes the table with some user records, and return their id-s;
     init() {
         return this.db.map(sql.init, [], row => row.id);
@@ -44,7 +48,7 @@ class ScoresRepository {
     add(values) {
         return this.db.one(sql.add, {
             id: +values.id,
-            user: values.user,
+            uid: values.uid,
             guild: values.guild,
             power_destroyed: values.power_destroyed,
             resources_raided: values.resources_raided
@@ -54,7 +58,7 @@ class ScoresRepository {
     update(values) {
       return this.db.one(sql.update, {
           id: +values.id,
-          user: values.user,
+          uid: values.uid,
           guild: values.guild,
           power_destroyed: values.power_destroyed,
           resources_raided: values.resources_raided
@@ -72,8 +76,8 @@ class ScoresRepository {
     }
 
     // Tries to find a record from user;
-    findByName(user) {
-        return this.db.oneOrNone('SELECT * FROM scores WHERE user = $1', user);
+    findByName(uid) {
+        return this.db.oneOrNone('SELECT * FROM scores WHERE uid = $1', uid);
     }
 
     // Finds records by guild (individual discord server)
@@ -81,11 +85,12 @@ class ScoresRepository {
       return this.db.oneOrNone('SELECT * from scores WHERE guild = $1', guild);
     }
 
-    findByNameAndGuild(user, guild) {
+    findByNameAndGuild(uid, guild) {
       var values = [];
-      values.push(user);
+      values.push(uid);
       values.push(guild);
-      return this.db.oneOrNone('SELECT * from scores WHERE user = $1 AND guild = $2', values);
+      console.log(`findByNameAndGuild ${uid},${guild}\nValues: ${values}`);
+      return this.db.oneOrNone('SELECT * from scores WHERE uid = $1 AND guild = $2', values);
     }
 
     // Returns all user records;
@@ -109,11 +114,11 @@ function createColumnsets(pgp) {
         // otherwise you can just pass in a string for the table name.
         const table = new pgp.helpers.TableName({table: 'scores', schema: 'public'});
 
-        cs.insert = new pgp.helpers.ColumnSet(['user'], {table});
+        cs.insert = new pgp.helpers.ColumnSet(['uid'], {table});
         cs.update = cs.insert.extend(['?id']);
-        cs.update = cs.insert.extend(['guild', '^']);
-        cs.update = cs.insert.extend(['power_destroyed', 'int', 0]);
-        cs.update = cs.insert.extend(['resources_raided', 'int', 0]);
+        cs.update = cs.insert.extend({name:'guild', mod:'^'});
+        cs.update = cs.insert.extend({name:'power_destroyed', mod:'int', def:0});
+        cs.update = cs.insert.extend({name:'resources_raided', mod:'int', def:0});
     }
     return cs;
 }
