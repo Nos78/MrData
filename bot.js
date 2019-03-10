@@ -9,26 +9,9 @@
 // Configure the Discord bot client
 const Discord = require('discord.js');
 const config = require('./config.json');
-const formatter = require('./numberformat.js');
-
-//const SQLite = require("better-sqlite3");
-//const db = new SQLite('./scores.sqlite');
-//const pgp = require('pg-promise')(/*options*/);
-//const db = pgp(config.db);
+const formatter = require('./format.js');
 
 const db = require('./db');
-
-//const db = pgp(process.env.DATABASE_URL) // use this for Heroku
-
-//var connectionString = "postgres://*USERNAME*:*PASSWORD*@*HOST*:*PORT*/*DATABASE*"
-
-//pg.connect(connectionString, function(err, client, done) {
-//   client.query('SELECT * FROM your_table', function(err, result) {
-//      done();
-//      if(err) return console.error(err);
-//      console.log(result.rows);
-//   });
-//});*/
 
 // Set up the logger for debug/info
 const logger = require('winston');
@@ -37,8 +20,7 @@ logger.add(new logger.transports.Console, {
   colorize: true
 });
 
-logger.level = 'debug';
-
+logger.level = 'none';
 
 // Initialize Discord Bot
 // token needs to be added to config.json
@@ -107,6 +89,7 @@ bot.on('message', async message => {
   const cmd = args.shift().toLowerCase();
   const sender = message.author;
   const senderID = message.author.id;
+  const guildID = message.guild.id;
 
   logger.debug(`${sender} ${cmd}`);
 
@@ -123,6 +106,7 @@ bot.on('message', async message => {
       bot.sendMessage({
         to: message.channel,
         message: '`!ping           : see if I am awake\n' +
+        resources_raided: 0
                   '!datahelp         : self explanatory!\n' +
                   '\n' +
                   '!powerdestroyed : see the powerdestroyed league table (alias = !pd).\n' +
@@ -147,11 +131,9 @@ bot.on('message', async message => {
               uid: message.author.id,
               guild: message.guild.id,
               power_destroyed: 0,
-              resources_raided: 0
             }
-            console.log(`Created score: ${score}`)
+            logger.info(`Created score: ${score}`);
           }
-          console.log(`SCORE: ${score}`);
           if(args.length > 0) {
             logger.info(`Args detected`);
             if(!isNaN(args[0])) {
@@ -160,7 +142,6 @@ bot.on('message', async message => {
               if(score.id == null) {
                 db.scores.add(score)
                   .then(function(result) {
-                    console.log(`${result}`);
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: 3447003,
@@ -170,7 +151,6 @@ bot.on('message', async message => {
               } else {
                 db.scores.update(score)
                   .then(function(result) {
-                    console.log(`${result}`);
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: 3447003,
@@ -203,7 +183,6 @@ bot.on('message', async message => {
           } else {
             db.manyOrNone("SELECT * FROM scores WHERE guild = $1 ORDER BY power_destroyed DESC LIMIT 10;", message.guild.id)
               .then(top10 => {
-                console.log(`DATA: ${top10}`);
                 const embed = new Discord.RichEmbed()
                   .setTitle("Power Destroyed Leaderboard")
                   .setAuthor(bot.user.username, bot.user.avatarURL)
@@ -211,7 +190,7 @@ bot.on('message', async message => {
                   .setColor(0x00AE86);
                 var c = 1;
                 for(const data of top10) {
-                  embed.addField(`${c}. ${bot.users.get(data.uid).tag}`, `${formatter.numberWithCommas(data.power_destroyed)}`);
+                  embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${formatter.numberWithCommas(data.power_destroyed)}`);
                   c++;
                 }
                 embed.addField(`Your personal power destroyed is`, `${formatter.numberWithCommas(score.power_destroyed)}`)
@@ -233,9 +212,8 @@ bot.on('message', async message => {
               power_destroyed: 0,
               resources_raided: 0
             }
-            console.log(`Created score: ${score}`)
+            logger.info(`Created score: ${score}`);
           }
-          console.log(`SCORE: ${score}`);
           if(args.length > 0) {
             logger.info(`Args detected`);
             if(!isNaN(args[0])) {
@@ -244,7 +222,6 @@ bot.on('message', async message => {
               if(score.id == null) {
                 db.scores.add(score)
                   .then(function(result) {
-                    console.log(`${result}`);
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: 3447003,
@@ -254,7 +231,6 @@ bot.on('message', async message => {
               } else {
                 db.scores.update(score)
                   .then(function(result) {
-                    console.log(`${result}`);
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: 3447003,
@@ -287,7 +263,6 @@ bot.on('message', async message => {
           } else {
             db.manyOrNone("SELECT * FROM scores WHERE guild = $1 ORDER BY resources_raided DESC LIMIT 10;", message.guild.id)
               .then(top10 => {
-                console.log(`DATA: ${top10}`);
                 const embed = new Discord.RichEmbed()
                   .setTitle("Resources Raided Leaderboard")
                   .setAuthor(bot.user.username, bot.user.avatarURL)
@@ -295,7 +270,8 @@ bot.on('message', async message => {
                   .setColor(0x770086);
                 var c = 1;
                 for(const data of top10) {
-                  embed.addField(`${c}. ${bot.users.get(data.uid).tag}`, `${formatter.numberWithCommas(data.resources_raided)}`);
+                  embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${formatter.numberWithCommas(data.resources_raided)}`);
+                  //embed.addField(`${c}. ${bot.users.get(data.uid).tag}`, `${formatter.numberWithCommas(data.resources_raided)}`);
                   c++;
                 }
                 embed.addField(`Your personal resources raided is`, `${formatter.numberWithCommas(score.resources_raided)}`)
