@@ -165,7 +165,7 @@ bot.on('message', async message => {
                   .then (score => {
                     let desc = `Unable to find ${member} in my database.  They need to log their scores for you to view them!`;
                     if(score!=null) {
-                      desc = `${args[0]} power destroyed is ${score.power_destroyed}`
+                      desc = `${args[0]} power destroyed is ${formatter.numberWithCommas(score.power_destroyed)}`
                     }
                     message.channel.send({embed: {
                       color: 3447003,
@@ -245,7 +245,7 @@ bot.on('message', async message => {
                   .then (score => {
                     let desc = `Unable to find ${member} in my database.  They need to log their scores for you to view them!`;
                     if(score!=null) {
-                      desc = `${args[0]} resources raided is ${score.resources_raided}`
+                      desc = `${args[0]} resources raided is ${formatter.numberWithCommas(core.resources_raided)}`
                     }
                     message.channel.send({embed: {
                       color: 3447003,
