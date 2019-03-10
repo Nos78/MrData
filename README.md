@@ -1,5 +1,5 @@
 # MrData
-Discord Bot providing some simple scoring using sqlite3
+Discord Bot providing some simple scoring using Postgres
 
 This Bot uses the DiscordJS API wrapper.
 
@@ -13,6 +13,7 @@ npm packages (using npm install):
 + pg
 + pg-promise
 + bluebird
++pg-monitor
 
 ...as detailed in packages.json
 
