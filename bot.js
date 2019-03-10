@@ -9,7 +9,7 @@
 // Configure the Discord bot client
 const Discord = require('discord.js');
 const config = require('./config.json');
-
+const formatter = require('./numberformat.js');
 
 //const SQLite = require("better-sqlite3");
 //const db = new SQLite('./scores.sqlite');
@@ -211,10 +211,94 @@ bot.on('message', async message => {
                   .setColor(0x00AE86);
                 var c = 1;
                 for(const data of top10) {
-                  embed.addField(`${c}. ${bot.users.get(data.uid).tag}`, `${data.power_destroyed}`);
+                  embed.addField(`${c}. ${bot.users.get(data.uid).tag}`, `${formatter.numberWithCommas(data.power_destroyed)}`);
                   c++;
                 }
-                embed.addField(`Your personal power destroyed is`, `${score.power_destroyed}`)
+                embed.addField(`Your personal power destroyed is`, `${formatter.numberWithCommas(score.power_destroyed)}`)
+                return message.channel.send({embed});
+              });
+          }
+        });
+    break;
+
+    case 'resourcesraided':
+    case 'rr':
+      var score = [];
+      db.scores.findByNameAndGuild(message.author.id, message.guild.id)
+        .then (score => {
+          if (score == null) {
+            score = {
+              uid: message.author.id,
+              guild: message.guild.id,
+              power_destroyed: 0,
+              resources_raided: 0
+            }
+            console.log(`Created score: ${score}`)
+          }
+          console.log(`SCORE: ${score}`);
+          if(args.length > 0) {
+            logger.info(`Args detected`);
+            if(!isNaN(args[0])) {
+              // Second argument is a number, update the score to this value
+              score.resources_raided = args[0];
+              if(score.id == null) {
+                db.scores.add(score)
+                  .then(function(result) {
+                    console.log(`${result}`);
+                    // notify the user it was successful
+                    message.channel.send({embed: {
+                      color: 3447003,
+                      description: `Thank you, ${sender}, your resources raided is set to ${args[0]}`
+                    }});
+                  })
+              } else {
+                db.scores.update(score)
+                  .then(function(result) {
+                    console.log(`${result}`);
+                    // notify the user it was successful
+                    message.channel.send({embed: {
+                      color: 3447003,
+                      description: `Thank you, ${sender}, your resources raided is set to ${args[0]}`
+                    }});
+                  })
+                }
+            } else {
+              let member = message.guild.members.get(args[0]);
+              if(member) {
+                db.scores.findByNameAndGuild(member.id, message.guild.id)
+                  .then (score => {
+                    let desc = `Unable to find ${member} in my database.  They need to log their scores for you to view them!`;
+                    if(score!=null) {
+                      desc = `${args[0]} resources raided is ${score.resources_raided}`
+                    }
+                    message.channel.send({embed: {
+                      color: 3447003,
+                      description: `${desc}`
+                    }
+                  });
+                })
+              } else {
+                message.channel.send({embed: {
+                  color: 3447003,
+                  description: `${sender}, please use \`!pd abc\`, where abc is a number or an actual person!}`
+                }});
+              }
+            }
+          } else {
+            db.manyOrNone("SELECT * FROM scores WHERE guild = $1 ORDER BY resources_raided DESC LIMIT 10;", message.guild.id)
+              .then(top10 => {
+                console.log(`DATA: ${top10}`);
+                const embed = new Discord.RichEmbed()
+                  .setTitle("Resources Raided Leaderboard")
+                  .setAuthor(bot.user.username, bot.user.avatarURL)
+                  .setDescription("Our top 10 resources raided leaders!")
+                  .setColor(0x770086);
+                var c = 1;
+                for(const data of top10) {
+                  embed.addField(`${c}. ${bot.users.get(data.uid).tag}`, `${formatter.numberWithCommas(data.resources_raided)}`);
+                  c++;
+                }
+                embed.addField(`Your personal resources raided is`, `${formatter.numberWithCommas(score.resources_raided)}`)
                 return message.channel.send({embed});
               });
           }
