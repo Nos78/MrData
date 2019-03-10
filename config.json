@@ -1,4 +1,10 @@
 {
     "token":"",
-    "prefix":"!"
+    "prefix":"!",
+    "db":{
+      "host":"localhost",
+      "port":5432,
+      "database":"mrdata",
+      "user":"postgres"
+    }
 }

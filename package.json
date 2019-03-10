@@ -5,7 +5,9 @@
   "main": "bot.js",
   "author": "BanderDragon#5699",
   "dependencies": {
+    "bluebird": "^3.5.3",
     "discord.js": "^11.4.2",
+    "pg": "^7.8.2",
     "pg-promise": "^8.6.3",
     "winston": "^3.2.1"
   },

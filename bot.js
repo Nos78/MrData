@@ -12,9 +12,23 @@ const config = require('./config.json');
 
 
 //const SQLite = require("better-sqlite3");
-//const sql = new SQLite('./scores.sqlite');
-const pgp = require('pg-promise')(/*options*/)
-const sql = pgp('postgres://username:password@host:port/database')
+//const db = new SQLite('./scores.sqlite');
+//const pgp = require('pg-promise')(/*options*/);
+//const db = pgp(config.db);
+
+const db = require('./db');
+
+//const db = pgp(process.env.DATABASE_URL) // use this for Heroku
+
+//var connectionString = "postgres://*USERNAME*:*PASSWORD*@*HOST*:*PORT*/*DATABASE*"
+
+//pg.connect(connectionString, function(err, client, done) {
+//   client.query('SELECT * FROM your_table', function(err, result) {
+//      done();
+//      if(err) return console.error(err);
+//      console.log(result.rows);
+//   });
+//});*/
 
 // Set up the logger for debug/info
 const logger = require('winston');
@@ -39,7 +53,7 @@ const bot = new Discord.Client({
 //
 // bot.on ready - used when the bot comes online
 //
-$bot.on("ready", () => {
+bot.on("ready", () => {
   logger.info('Connected');
   logger.info('Logged in as: ');
   logger.info(bot.user.username + ' - (' + bot.user.id + ')');
@@ -49,21 +63,13 @@ $bot.on("ready", () => {
 
   // We want to ensure our table is created when the bot comes online
   // and configure them if they don't exist
-  const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'scores';").get();
-  if (!table['count(*)']) {
+  const count = db.scores.total();
+  console.log("Attempt to create scores table: ${count}")
+  if (!count) {
     logger.debug(`No database score table found!  Creating...`);
-    // If the table isn't there, create it and setup the database correctly.
-    sql.prepare("CREATE TABLE scores (id TEXT PRIMARY KEY, user TEXT, guild TEXT, power_destroyed INTEGER, resources_raided INTEGER);").run();
-    // Ensure that the "id" row is always unique and indexed.
-    sql.prepare("CREATE UNIQUE INDEX idx_scores_id ON scores (id);").run();
-    sql.pragma("synchronous = 1");
-    sql.pragma("journal_mode = wal");
+    db.scores.create();
     logger.debug(`Database configured.`)
   }
-
-  // And then we have two prepared statements to get and set the score data.
-  bot.getScore = sql.prepare("SELECT * FROM scores WHERE user = ? AND guild = ?");
-  bot.setScore = sql.prepare("INSERT OR REPLACE INTO scores (id, user, guild, power_destroyed, resources_raided) VALUES (@id, @user, @guild, @power_destroyed, @resources_raided);");
 });
 
 //
@@ -131,7 +137,7 @@ bot.on('message', async message => {
     // Just add any case commands if you want to..
     case 'powerdestroyed':
     case 'pd':
-      let score = client.getScore.get(message.author.id, message.guild.id);
+      let score = db.scores.findByNameAndGuild(message.author.id, message.guild.id);
       if (!score) {
         score = {
           id: `${message.guild.id}-${message.author.id}`,
@@ -144,10 +150,12 @@ bot.on('message', async message => {
       if(args.length > 0) {
         logger.info(`Args detected`);
         if(!isNaN(args[0])) {
-          // Second arguement is a number, update the score to this value
+          // Second argument is a number, update the score to this value
           score.power_destroyed = args[0];
-          bot.setScore.run(score);
+          db.scores.update(score);
+          // Check return value? Because what if something goes wrong...
 
+          // notify the user it was successful
           message.channel.send({embed: {
               color: 3447003,
               description: `Thank you, ${sender}, your power destroyed is set to ${args[0]}`
@@ -155,7 +163,7 @@ bot.on('message', async message => {
         } else {
           let member = message.guild.members.get(args[0]);
           if(member) {
-            let score = client.getScore.get(member.id, message.guild.id);
+            let score = db.scores.findByNameAndGuild(member.id, message.guild.id);
             message.channel.send({embed: {
               color: 3447003,
               description: `${args[0]} power destroyed is ${score.power_destroyed}`
@@ -168,8 +176,7 @@ bot.on('message', async message => {
           }
         }
       } else {
-        const top10 = sql.prepare("SELECT * FROM scores WHERE guild = ? ORDER BY power_destroyed DESC LIMIT 10;").all(message.guild.id);
-
+        const top10 = db.manyOrNone("SELECT * FROM scores WHERE guild = $1 ORDER BY power_destroyed DESC LIMIT 10;", message.guild.id);
         // Now shake it and show it! (as a nice embed, too!)
         const embed = new Discord.RichEmbed()
           .setTitle("Power Destroyed Leaderboard")
