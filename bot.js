@@ -106,7 +106,6 @@ bot.on('message', async message => {
       bot.sendMessage({
         to: message.channel,
         message: '`!ping           : see if I am awake\n' +
-        resources_raided: 0
                   '!datahelp         : self explanatory!\n' +
                   '\n' +
                   '!powerdestroyed : see the powerdestroyed league table (alias = !pd).\n' +
