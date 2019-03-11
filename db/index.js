@@ -30,7 +30,7 @@ const initOptions = {
 const pgp = require('pg-promise')(initOptions);
 
 // Create the database instance:
-const db = pgp(config.db);
+const db = pgp(process.env.DATABASE_URL);
 
 // Load and initialize optional diagnostics:
 const diagnostics = require('./diagnostics');
