@@ -15,13 +15,10 @@ class ScoresRepository {
 
     // Creates the table;
     create() {
-        console.log("Table creation ...");
         var retval = this.db.none(sql.create);
-        console.log("Table created... ${retval}");
         if(!retval) {
           // Ensure that the "id" is always unique and indexed.
           retval = this.db.none(`CREATE UNIQUE INDEX idx_scores_id ON scores (id)`);
-          console.log("Table unique ID created... ${retval}");
         }
         return retval;
     }
@@ -89,7 +86,6 @@ class ScoresRepository {
       var values = [];
       values.push(uid);
       values.push(guild);
-      console.log(`findByNameAndGuild ${uid},${guild}\nValues: ${values}`);
       return this.db.oneOrNone('SELECT * from scores WHERE uid = $1 AND guild = $2', values);
     }
 
