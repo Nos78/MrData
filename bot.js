@@ -284,6 +284,3 @@ bot.on('message', async message => {
 
 // Start the client!
 bot.login(process.env.BOT_TOKEN);
-
-// 'Hack' to ensure our bot service runs on zeit!
-require('http').createServer().listen(3000);
