@@ -9,7 +9,7 @@ CREATE TABLE ${schema~}.scores
     id serial NOT NULL,
     uid text NOT NULL,
     guild text NOT NULL,
-    power_destroyed BIGINT,
-    resources_raided BIGINT,
+    power_destroyed BIGINT NOT NULL,
+    resources_raided BIGINT NOT NULL,
     PRIMARY KEY(id)
 )
