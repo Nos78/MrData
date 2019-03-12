@@ -130,6 +130,7 @@ bot.on('message', async message => {
               uid: message.author.id,
               guild: message.guild.id,
               power_destroyed: 0,
+              resources_raided: 0
             }
             logger.info(`Created score: ${score}`);
           }
