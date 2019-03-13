@@ -238,13 +238,13 @@ bot.on('message', async message => {
                   })
                 }
             } else {
-              let member = message.guild.members.get(args[0]);
+              let member = message.mentions.members.first();
               if(member) {
                 db.scores.findByNameAndGuild(member.id, message.guild.id)
                   .then (score => {
-                    let desc = `Unable to find ${member} in my database.  They need to log their scores for you to view them!`;
+                    let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
                     if(score!=null) {
-                      desc = `${args[0]} resources raided is ${formatter.numberWithCommas(core.resources_raided)}`
+                      desc = `${member.displayName} resources raided is ${formatter.numberWithCommas(score.resources_raided)}`
                     }
                     message.channel.send({embed: {
                       color: 3447003,
