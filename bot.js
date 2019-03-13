@@ -103,20 +103,19 @@ bot.on('message', async message => {
     break;
 
     case 'datahelp':
-      bot.sendMessage({
-        to: message.channel,
-        message: '`!ping           : see if I am awake\n' +
-                  '!datahelp         : self explanatory!\n' +
+      message.channel.send('```css\n' +
+                  '# The following commands can be used to instruct me:\n' +
+                  '!ping           # see if I am awake\n' +
+                  '!datahelp       # self explanatory!\n' +
                   '\n' +
-                  '!powerdestroyed : see the powerdestroyed league table (alias = !pd).\n' +
-                  '!powerdestroyed <number> : set the level of your power destroyed to the <number> you specify.\n' +
-                  '!powerdestroyed <name> : see the power destroyed of <name>.\n' +
+                  '!powerdestroyed # see the powerdestroyed league table (alias = !pd).\n' +
+                  '!powerdestroyed number # set the level of your power destroyed to the <number> you specify.\n' +
+                  '!powerdestroyed @name # see the power destroyed of <name>.\n' +
                   '\n' +
-                  '!resourcesraided : see the resourcesraided league table (alias = !rr).\n' +
-                  '!resourcesraided <number> : set the level of your resourcesraided to the <number> you specify.\n' +
-                  '!resourcesraided <name> : see the resourcesraided of <name>.\n' +
-                  ''
-      });
+                  '!resourcesraided # see the resourcesraided league table (alias = !rr).\n' +
+                  '!resourcesraided number # set the level of your resourcesraided to the <number> you specify.\n' +
+                  '!resourcesraided @name # see the resourcesraided of <name>.\n' +
+                  '```');
     break;
 
     // Just add any case commands if you want to..
@@ -159,13 +158,13 @@ bot.on('message', async message => {
                   })
                 }
             } else {
-              let member = message.guild.members.get(args[0]);
+              let member = message.mentions.members.first();
               if(member) {
                 db.scores.findByNameAndGuild(member.id, message.guild.id)
                   .then (score => {
-                    let desc = `Unable to find ${member} in my database.  They need to log their scores for you to view them!`;
+                    let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
                     if(score!=null) {
-                      desc = `${args[0]} power destroyed is ${formatter.numberWithCommas(score.power_destroyed)}`
+                      desc = `${member.displayName} power destroyed is ${formatter.numberWithCommas(score.power_destroyed)}`
                     }
                     message.channel.send({embed: {
                       color: 3447003,
