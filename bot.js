@@ -90,8 +90,6 @@ bot.on('message', async message => {
   const senderID = message.author.id;
   const guildID = message.guild.id;
 
-  logger.debug(`${sender} ${cmd}`);
-
   switch(cmd) {
     // !ping
     case 'ping':
@@ -100,6 +98,26 @@ bot.on('message', async message => {
       const m = await message.channel.send("Ping?");
       m.edit(`Pong! ${sender} Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
     break;
+
+    case 'isowner':
+      let owner = "is not";
+      if(library.Admin.isOwner(senderID, guildID, bot)) {
+        owner = "is"
+      }
+      message.channel.send(`According to my records, ${sender} ${owner} recorded as being my owner.`);
+    break;
+
+    case 'isadmin':
+      let admin = "is not";
+      if(library.Admin.isAdmin(senderID, guildID, bot)) {
+        admin = "is"
+      }
+      message.channel.send(`According to my records, ${sender} ${admin} recorded as an admin of ${message.guild.name}.`);
+    break;
+
+    case 'owner':
+      message.channel.send(`According to my records, my current owner is ${library.Admin.owner(guildID, bot)}`);
+      break;
 
     case 'datahelp':
       message.channel.send('```# The following commands can be used to instruct me:\n' +
