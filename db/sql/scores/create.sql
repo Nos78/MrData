@@ -11,5 +11,6 @@ CREATE TABLE ${schema~}.scores
     guild text NOT NULL,
     power_destroyed BIGINT NOT NULL,
     resources_raided BIGINT NOT NULL,
+    totalpower BIGINT NOT NULL,
     PRIMARY KEY(id)
 )

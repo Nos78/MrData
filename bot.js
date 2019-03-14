@@ -103,18 +103,21 @@ bot.on('message', async message => {
     break;
 
     case 'datahelp':
-      message.channel.send('```css\n' +
-                  '# The following commands can be used to instruct me:\n' +
-                  '!ping           # see if I am awake\n' +
-                  '!datahelp       # self explanatory!\n' +
+      message.channel.send('```# The following commands can be used to instruct me:\n' +
+                  '!ping      : see if I am awake\n' +
+                  '!datahelp  : self explanatory!\n' +
                   '\n' +
-                  '!powerdestroyed # see the powerdestroyed league table (alias = !pd).\n' +
-                  '!powerdestroyed number # set the level of your power destroyed to the <number> you specify.\n' +
-                  '!powerdestroyed @name # see the power destroyed of <name>.\n' +
+                  '!power        : see the power top 10.\n' +
+                  '!power number : set your power to the you specify.\n' +
+                  '!power @name  : see the power of @name.\n' +
                   '\n' +
-                  '!resourcesraided # see the resourcesraided league table (alias = !rr).\n' +
-                  '!resourcesraided number # set the level of your resourcesraided to the <number> you specify.\n' +
-                  '!resourcesraided @name # see the resourcesraided of <name>.\n' +
+                  '!pd        : see the powerdestroyed top 10 (alias = !powerdestroyed).\n' +
+                  '!pd number : set your power destroyed.\n' +
+                  '!pd @name  : see the power destroyed of <name>.\n' +
+                  '\n' +
+                  '!rr        : see the resourcesraided top 10 (alias = !resourcesraided).\n' +
+                  '!rr number : set your resources raided.\n' +
+                  '!rr @name  : see the resources raided of @name.\n' +
                   '```');
     break;
 
@@ -129,7 +132,8 @@ bot.on('message', async message => {
               uid: message.author.id,
               guild: message.guild.id,
               power_destroyed: 0,
-              resources_raided: 0
+              resources_raided: 0,
+              totalpower: 0
             }
             logger.info(`Created score: ${score}`);
           }
@@ -150,7 +154,8 @@ bot.on('message', async message => {
                             uid: member.id,
                             guild: message.guild.id,
                             power_destroyed: 0,
-                            resources_raided: 0
+                            resources_raided: 0,
+                            totalpower: 0
                           }
                           logger.info(`Created score: ${score}`);
                         }
@@ -258,7 +263,8 @@ bot.on('message', async message => {
             uid: message.author.id,
             guild: message.guild.id,
             power_destroyed: 0,
-            resources_raided: 0
+            resources_raided: 0,
+            totalpower: 0
           }
           logger.info(`Created score: ${score}`);
         }
@@ -279,7 +285,8 @@ bot.on('message', async message => {
                           uid: member.id,
                           guild: message.guild.id,
                           power_destroyed: 0,
-                          resources_raided: 0
+                          resources_raided: 0,
+                          totalpower: 0
                         }
                         logger.info(`Created score: ${score}`);
                       }
@@ -320,7 +327,7 @@ bot.on('message', async message => {
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: 3447003,
-                      description: `Thank you, ${sender}, your resources raided is set to ${score.resources_raided}`
+                      description: `Thank you, ${sender}, your resources raided is set to ${formatter.numberWithCommas(core.resources_raided)}`
                     }});
                   })
                 } else {
@@ -329,7 +336,7 @@ bot.on('message', async message => {
                       // notify the user it was successful
                       message.channel.send({embed: {
                         color: 3447003,
-                        description: `Thank you, ${sender}, your resources raided is set to ${score.resources_raided}`
+                        description: `Thank you, ${sender}, your resources raided is set to ${formatter.numberWithCommas(score.resources_raided)}`
                       }});
                   })
                 }
@@ -371,6 +378,137 @@ bot.on('message', async message => {
                 c++;
               }
               embed.addField(`Your personal resources raided is`, `${formatter.numberWithCommas(score.resources_raided)}`)
+              return message.channel.send({embed});
+            });
+        }
+      });
+  break;
+
+  // Just add any case commands if you want to..
+  case 'power':
+    var score = [];
+    db.scores.findByNameAndGuild(message.author.id, message.guild.id)
+      .then (score => {
+        if (score == null) {
+          score = {
+            uid: message.author.id,
+            guild: message.guild.id,
+            power_destroyed: 0,
+            resources_raided: 0,
+            totalpower: 0
+          }
+          logger.info(`Created score: ${score}`);
+        }
+        switch (args.length) {
+          case 2:
+            if(args.length > 1) {
+              let member = message.mentions.members.first();
+              if(member && !isNaN(args[1])) {
+                // We have a !pd @name number
+                // Admin only command
+                let allowedRole = message.guild.roles.find("name", "Admin");
+                if (message.member.roles.has(allowedRole.id)) {
+                  // allowed access to command
+                  db.scores.findByNameAndGuild(member.id, message.guild.id)
+                    .then (score => {
+                      if (score == null) {
+                        score = {
+                          uid: member.id,
+                          guild: message.guild.id,
+                          power_destroyed: 0,
+                          resources_raided: 0,
+                          totalpower: 0
+                        }
+                        logger.info(`Created score: ${score}`);
+                      }
+                      score.totalpower = args[1];
+                      if(score.id == null) {
+                        db.scores.add(score)
+                          .then(function(result) {
+                            // notify the user it was successful
+                            message.channel.send({embed: {
+                              color: 3447003,
+                              description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${formatter.numberWithCommas(score.totalpower)}`
+                          }});
+                        })
+                      } else {
+                        db.scores.update(score)
+                          .then(function(result) {
+                            // notify the user it was successful
+                            message.channel.send({embed: {
+                              color: 3447003,
+                              description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${formatter.numberWithCommas(score.totalpower)}`
+                            }});
+                        })
+                      }
+                  });
+                }
+              }
+            }
+          break;
+
+          case 1:
+            logger.info(`Args detected`);
+            if(!isNaN(args[0])) {
+              // Second argument is a number, update the score to this value
+              score.totalpower = args[0];
+              if(score.id == null) {
+                db.scores.add(score)
+                  .then(function(result) {
+                    // notify the user it was successful
+                    message.channel.send({embed: {
+                      color: 3447003,
+                      description: `Thank you, ${sender}, your power is set to ${formatter.numberWithCommas(score.totalpower)}`
+                    }});
+                  })
+                } else {
+                  db.scores.update(score)
+                    .then(function(result) {
+                      // notify the user it was successful
+                      message.channel.send({embed: {
+                        color: 3447003,
+                        description: `Thank you, ${sender}, your power is set to ${formatter.numberWithCommas(score.totalpower)}`
+                      }});
+                  })
+                }
+            } else {
+              let member = message.mentions.members.first();
+              if(member) {
+                db.scores.findByNameAndGuild(member.id, message.guild.id)
+                  .then (score => {
+                    let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
+                    if(score!=null) {
+                      desc = `${member.displayName} power is ${formatter.numberWithCommas(score.totalpower)}`
+                    }
+                    message.channel.send({embed: {
+                      color: 3447003,
+                      description: `${desc}`
+                    }
+                  });
+                })
+              } else {
+                message.channel.send({embed: {
+                  color: 3447003,
+                  description: `${sender}, please use \`!pd abc\`, where abc is a number or an actual person!}`
+                }});
+              }
+            }
+          break;
+
+        case 0:
+          db.manyOrNone("SELECT * FROM scores WHERE guild = $1 ORDER BY totalpower DESC LIMIT 10;", message.guild.id)
+            .then(top10 => {
+              const embed = new Discord.RichEmbed()
+                .setTitle("Power Leaderboard")
+                .setAuthor(bot.user.username, bot.user.avatarURL)
+                .setDescription("Our top 10 power destroyed leaders!")
+                .setColor(0x00AE86);
+              var c = 1;
+              for(const data of top10) {
+                embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${formatter.numberWithCommas(data.totalpower)}`);
+                c++;
+              }
+              embed.addField(`Your personal power is`, `${formatter.numberWithCommas(score.totalpower)}`)
               return message.channel.send({embed});
             });
         }

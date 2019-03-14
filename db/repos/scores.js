@@ -48,7 +48,8 @@ class ScoresRepository {
             uid: values.uid,
             guild: values.guild,
             power_destroyed: values.power_destroyed,
-            resources_raided: values.resources_raided
+            resources_raided: values.resources_raided,
+            totalpower: values.totalpower
         });
     }
 
@@ -58,7 +59,8 @@ class ScoresRepository {
           uid: values.uid,
           guild: values.guild,
           power_destroyed: values.power_destroyed,
-          resources_raided: values.resources_raided
+          resources_raided: values.resources_raided,
+          totalpower: values.totalpower
       });
     }
 
@@ -115,6 +117,7 @@ function createColumnsets(pgp) {
         cs.update = cs.insert.extend({name:'guild', mod:'^'});
         cs.update = cs.insert.extend({name:'power_destroyed', mod:'int', def:0});
         cs.update = cs.insert.extend({name:'resources_raided', mod:'int', def:0});
+        cs.update = cs.insert.extend({name:'totalpower', mod:'int', def:0});
     }
     return cs;
 }
