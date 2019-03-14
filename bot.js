@@ -9,8 +9,7 @@
 // Configure the Discord bot client
 const Discord = require('discord.js');
 const config = require('./config.json');
-const formatter = require('./format.js');
-
+const library = require('./library');
 const db = require('./db');
 
 // Set up the logger for debug/info
@@ -166,7 +165,7 @@ bot.on('message', async message => {
                               // notify the user it was successful
                               message.channel.send({embed: {
                                 color: 3447003,
-                                description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${formatter.numberWithCommas(score.power_destroyed)}`
+                                description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${library.Format.numberWithCommas(score.power_destroyed)}`
                             }});
                           })
                         } else {
@@ -175,7 +174,7 @@ bot.on('message', async message => {
                               // notify the user it was successful
                               message.channel.send({embed: {
                                 color: 3447003,
-                                description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${formatter.numberWithCommas(score.power_destroyed)}`
+                                description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${library.Format.numberWithCommas(score.power_destroyed)}`
                               }});
                           })
                         }
@@ -196,7 +195,7 @@ bot.on('message', async message => {
                       // notify the user it was successful
                       message.channel.send({embed: {
                         color: 3447003,
-                        description: `Thank you, ${sender}, your power destroyed is set to ${formatter.numberWithCommas(score.power_destroyed)}`
+                        description: `Thank you, ${sender}, your power destroyed is set to ${library.Format.numberWithCommas(score.power_destroyed)}`
                       }});
                     })
                   } else {
@@ -205,7 +204,7 @@ bot.on('message', async message => {
                         // notify the user it was successful
                         message.channel.send({embed: {
                           color: 3447003,
-                          description: `Thank you, ${sender}, your power destroyed is set to ${formatter.numberWithCommas(score.power_destroyed)}`
+                          description: `Thank you, ${sender}, your power destroyed is set to ${library.Format.numberWithCommas(score.power_destroyed)}`
                         }});
                     })
                   }
@@ -216,7 +215,7 @@ bot.on('message', async message => {
                     .then (score => {
                       let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
                       if(score!=null) {
-                        desc = `${member.displayName} power destroyed is ${formatter.numberWithCommas(score.power_destroyed)}`
+                        desc = `${member.displayName} power destroyed is ${library.Format.numberWithCommas(score.power_destroyed)}`
                       }
                       message.channel.send({embed: {
                         color: 3447003,
@@ -243,10 +242,10 @@ bot.on('message', async message => {
                   .setColor(0x00AE86);
                 var c = 1;
                 for(const data of top10) {
-                  embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${formatter.numberWithCommas(data.power_destroyed)}`);
+                  embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.power_destroyed)}`);
                   c++;
                 }
-                embed.addField(`Your personal power destroyed is`, `${formatter.numberWithCommas(score.power_destroyed)}`)
+                embed.addField(`Your personal power destroyed is`, `${library.Format.numberWithCommas(score.power_destroyed)}`)
                 return message.channel.send({embed});
               });
           }
@@ -297,7 +296,7 @@ bot.on('message', async message => {
                             // notify the user it was successful
                             message.channel.send({embed: {
                               color: 3447003,
-                              description: `Thank you, ${sender}, ${member.displayName} resources raided is set to ${formatter.numberWithCommas(score.resources_raided)}`
+                              description: `Thank you, ${sender}, ${member.displayName} resources raided is set to ${library.Format.numberWithCommas(score.resources_raided)}`
                           }});
                         })
                       } else {
@@ -306,7 +305,7 @@ bot.on('message', async message => {
                             // notify the user it was successful
                             message.channel.send({embed: {
                               color: 3447003,
-                              description: `Thank you, ${sender}, ${member.displayName} resources raided is set to ${formatter.numberWithCommas(score.resources_raided)}`
+                              description: `Thank you, ${sender}, ${member.displayName} resources raided is set to ${library.Format.numberWithCommas(score.resources_raided)}`
                             }});
                         })
                       }
@@ -327,7 +326,7 @@ bot.on('message', async message => {
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: 3447003,
-                      description: `Thank you, ${sender}, your resources raided is set to ${formatter.numberWithCommas(core.resources_raided)}`
+                      description: `Thank you, ${sender}, your resources raided is set to ${library.Format.numberWithCommas(core.resources_raided)}`
                     }});
                   })
                 } else {
@@ -336,7 +335,7 @@ bot.on('message', async message => {
                       // notify the user it was successful
                       message.channel.send({embed: {
                         color: 3447003,
-                        description: `Thank you, ${sender}, your resources raided is set to ${formatter.numberWithCommas(score.resources_raided)}`
+                        description: `Thank you, ${sender}, your resources raided is set to ${library.Format.numberWithCommas(score.resources_raided)}`
                       }});
                   })
                 }
@@ -347,7 +346,7 @@ bot.on('message', async message => {
                   .then (score => {
                     let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
                     if(score!=null) {
-                      desc = `${member.displayName} resources raided is ${formatter.numberWithCommas(score.resources_raided)}`
+                      desc = `${member.displayName} resources raided is ${library.Format.numberWithCommas(score.resources_raided)}`
                     }
                     message.channel.send({embed: {
                       color: 3447003,
@@ -374,10 +373,10 @@ bot.on('message', async message => {
                 .setColor(0x770086);
               var c = 1;
               for(const data of top10) {
-                embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${formatter.numberWithCommas(data.resources_raided)}`);
+                embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.resources_raided)}`);
                 c++;
               }
-              embed.addField(`Your personal resources raided is`, `${formatter.numberWithCommas(score.resources_raided)}`)
+              embed.addField(`Your personal resources raided is`, `${library.Format.numberWithCommas(score.resources_raided)}`)
               return message.channel.send({embed});
             });
         }
@@ -428,7 +427,7 @@ bot.on('message', async message => {
                             // notify the user it was successful
                             message.channel.send({embed: {
                               color: 3447003,
-                              description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${formatter.numberWithCommas(score.totalpower)}`
+                              description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${library.Format.numberWithCommas(score.totalpower)}`
                           }});
                         })
                       } else {
@@ -437,7 +436,7 @@ bot.on('message', async message => {
                             // notify the user it was successful
                             message.channel.send({embed: {
                               color: 3447003,
-                              description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${formatter.numberWithCommas(score.totalpower)}`
+                              description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${library.Format.numberWithCommas(score.totalpower)}`
                             }});
                         })
                       }
@@ -458,7 +457,7 @@ bot.on('message', async message => {
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: 3447003,
-                      description: `Thank you, ${sender}, your power is set to ${formatter.numberWithCommas(score.totalpower)}`
+                      description: `Thank you, ${sender}, your power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                     }});
                   })
                 } else {
@@ -467,7 +466,7 @@ bot.on('message', async message => {
                       // notify the user it was successful
                       message.channel.send({embed: {
                         color: 3447003,
-                        description: `Thank you, ${sender}, your power is set to ${formatter.numberWithCommas(score.totalpower)}`
+                        description: `Thank you, ${sender}, your power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                       }});
                   })
                 }
@@ -478,7 +477,7 @@ bot.on('message', async message => {
                   .then (score => {
                     let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
                     if(score!=null) {
-                      desc = `${member.displayName} power is ${formatter.numberWithCommas(score.totalpower)}`
+                      desc = `${member.displayName} power is ${library.Format.numberWithCommas(score.totalpower)}`
                     }
                     message.channel.send({embed: {
                       color: 3447003,
@@ -505,10 +504,10 @@ bot.on('message', async message => {
                 .setColor(0x00AE86);
               var c = 1;
               for(const data of top10) {
-                embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${formatter.numberWithCommas(data.totalpower)}`);
+                embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
                 c++;
               }
-              embed.addField(`Your personal power is`, `${formatter.numberWithCommas(score.totalpower)}`)
+              embed.addField(`Your personal power is`, `${library.Format.numberWithCommas(score.totalpower)}`)
               return message.channel.send({embed});
             });
         }
