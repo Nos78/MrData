@@ -3,6 +3,10 @@
 //
 
 module.exports = {
+  isBotOwner: function (uid) {
+    return uid == process.env.BOT_ONWER;
+  },
+
   isOwner: function (uid, gid, bot) {
     let guild = bot.guilds.get(gid);
     return guild.ownerID == uid;
