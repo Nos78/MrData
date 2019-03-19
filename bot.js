@@ -91,6 +91,21 @@ bot.on('message', async message => {
   const guildID = message.guild.id;
 
   switch(cmd) {
+    // uptime
+    case 'uptime':
+      let totalSeconds = (bot.uptime / 1000);
+      let days = Math.floor(totalSeconds / 86400);
+      let hours = Math.floor(totalSeconds / 3600);
+      totalSeconds %= 3600;
+      let minutes = Math.floor(totalSeconds / 60);
+      let seconds = totalSeconds % 60;
+
+      Then you'll have days, hours, minutes and seconds ready to use.
+
+      let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+      message.channel.send(`${sender}, I have been active for ${uptime}`);
+    break;
+
     // !ping
     case 'ping':
       // Calculates ping between sending a message and editing it, giving a nice round-trip latency.
