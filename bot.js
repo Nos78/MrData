@@ -99,9 +99,6 @@ bot.on('message', async message => {
       totalSeconds %= 3600;
       let minutes = Math.floor(totalSeconds / 60);
       let seconds = totalSeconds % 60;
-
-      Then you'll have days, hours, minutes and seconds ready to use.
-
       let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
       message.channel.send(`${sender}, I have been active for ${uptime}`);
     break;
