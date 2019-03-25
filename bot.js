@@ -457,7 +457,7 @@ bot.on('message', async message => {
                             // notify the user it was successful
                             message.channel.send({embed: {
                               color: 3447003,
-                              description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${library.Format.numberWithCommas(score.totalpower)}`
+                              description: `Thank you, ${sender}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                           }});
                         })
                       } else {
@@ -466,7 +466,7 @@ bot.on('message', async message => {
                             // notify the user it was successful
                             message.channel.send({embed: {
                               color: 3447003,
-                              description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${library.Format.numberWithCommas(score.totalpower)}`
+                              description: `Thank you, ${sender}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                             }});
                         })
                       }
@@ -487,7 +487,7 @@ bot.on('message', async message => {
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: 3447003,
-                      description: `Thank you, ${sender}, your power is set to ${library.Format.numberWithCommas(score.totalpower)}`
+                      description: `Thank you, ${sender}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                     }});
                   })
                 } else {
@@ -496,7 +496,7 @@ bot.on('message', async message => {
                       // notify the user it was successful
                       message.channel.send({embed: {
                         color: 3447003,
-                        description: `Thank you, ${sender}, your power is set to ${library.Format.numberWithCommas(score.totalpower)}`
+                        description: `Thank you, ${sender}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                       }});
                   })
                 }
@@ -530,14 +530,14 @@ bot.on('message', async message => {
               const embed = new Discord.RichEmbed()
                 .setTitle("Power Leaderboard")
                 .setAuthor(bot.user.username, bot.user.avatarURL)
-                .setDescription("Our top 10 power destroyed leaders!")
+                .setDescription("Our top 10 power leaders!")
                 .setColor(0x00AE86);
               var c = 1;
               for(const data of top10) {
                 embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
                 c++;
               }
-              embed.addField(`Your personal power is`, `${library.Format.numberWithCommas(score.totalpower)}`)
+              embed.addField(`Your personal total power is`, `${library.Format.numberWithCommas(score.totalpower)}`)
               return message.channel.send({embed});
             });
         }
