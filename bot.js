@@ -269,7 +269,7 @@ bot.on('message', async message => {
                   .setTitle("Power Destroyed Leaderboard")
                   .setAuthor(bot.user.username, bot.user.avatarURL)
                   .setDescription("Our top 10 power destroyed leaders!")
-                  .setColor(0x00AE86);
+                  .setColor(config.powerDestroyedColor);
                 var c = 1;
                 for(const data of top10) {
                   embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.power_destroyed)}`);
@@ -400,7 +400,7 @@ bot.on('message', async message => {
                 .setTitle("Resources Raided Leaderboard")
                 .setAuthor(bot.user.username, bot.user.avatarURL)
                 .setDescription("Our top 10 resources raided leaders!")
-                .setColor(0x770086);
+                .setColor(config.resourcesRaidedColor);
               var c = 1;
               for(const data of top10) {
                 embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.resources_raided)}`);
@@ -531,7 +531,7 @@ bot.on('message', async message => {
                 .setTitle("Power Leaderboard")
                 .setAuthor(bot.user.username, bot.user.avatarURL)
                 .setDescription("Our top 10 power leaders!")
-                .setColor(0xFFFF00);
+                .setColor(config.powerColor);
               var c = 1;
               for(const data of top10) {
                 embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
