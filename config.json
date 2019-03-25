@@ -5,6 +5,9 @@
       "port":5432,
       "database":"mrdata",
       "user":"postgres",
-      "password":"localhost"
+      "password":"localhost",
+      "powerColor":16776960,
+      "powerDestroyedColor":44678,
+      "resourcesRaidedColor":7798918
     }
 }
