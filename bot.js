@@ -531,7 +531,7 @@ bot.on('message', async message => {
                 .setTitle("Power Leaderboard")
                 .setAuthor(bot.user.username, bot.user.avatarURL)
                 .setDescription("Our top 10 power leaders!")
-                .setColor(0x00AE86);
+                .setColor(0xFFFF00);
               var c = 1;
               for(const data of top10) {
                 embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
