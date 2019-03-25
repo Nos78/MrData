@@ -194,7 +194,7 @@ bot.on('message', async message => {
                             .then(function(result) {
                               // notify the user it was successful
                               message.channel.send({embed: {
-                                color: 3447003,
+                                color: config.powerDestroyedColor,
                                 description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${library.Format.numberWithCommas(score.power_destroyed)}`
                             }});
                           })
@@ -203,7 +203,7 @@ bot.on('message', async message => {
                             .then(function(result) {
                               // notify the user it was successful
                               message.channel.send({embed: {
-                                color: 3447003,
+                                color: config.powerDestroyedColor,
                                 description: `Thank you, ${sender}, ${member.displayName} power destroyed is set to ${library.Format.numberWithCommas(score.power_destroyed)}`
                               }});
                           })
@@ -224,7 +224,7 @@ bot.on('message', async message => {
                     .then(function(result) {
                       // notify the user it was successful
                       message.channel.send({embed: {
-                        color: 3447003,
+                        color: config.powerDestroyedColor,
                         description: `Thank you, ${sender}, your power destroyed is set to ${library.Format.numberWithCommas(score.power_destroyed)}`
                       }});
                     })
@@ -233,7 +233,7 @@ bot.on('message', async message => {
                       .then(function(result) {
                         // notify the user it was successful
                         message.channel.send({embed: {
-                          color: 3447003,
+                          color: config.powerDestroyedColor,
                           description: `Thank you, ${sender}, your power destroyed is set to ${library.Format.numberWithCommas(score.power_destroyed)}`
                         }});
                     })
@@ -248,14 +248,14 @@ bot.on('message', async message => {
                         desc = `${member.displayName} power destroyed is ${library.Format.numberWithCommas(score.power_destroyed)}`
                       }
                       message.channel.send({embed: {
-                        color: 3447003,
+                        color: config.powerDestroyedColor,
                         description: `${desc}`
                       }
                     });
                   })
                 } else {
                   message.channel.send({embed: {
-                    color: 3447003,
+                    color: config.powerDestroyedColor,
                     description: `${sender}, please use \`!pd abc\`, where abc is a number or an actual person!}`
                   }});
                 }
@@ -325,7 +325,7 @@ bot.on('message', async message => {
                           .then(function(result) {
                             // notify the user it was successful
                             message.channel.send({embed: {
-                              color: 3447003,
+                              color: config.resourcesRaidedColor,
                               description: `Thank you, ${sender}, ${member.displayName} resources raided is set to ${library.Format.numberWithCommas(score.resources_raided)}`
                           }});
                         })
@@ -334,7 +334,7 @@ bot.on('message', async message => {
                           .then(function(result) {
                             // notify the user it was successful
                             message.channel.send({embed: {
-                              color: 3447003,
+                              color: config.resourcesRaidedColor,
                               description: `Thank you, ${sender}, ${member.displayName} resources raided is set to ${library.Format.numberWithCommas(score.resources_raided)}`
                             }});
                         })
@@ -355,7 +355,7 @@ bot.on('message', async message => {
                   .then(function(result) {
                     // notify the user it was successful
                     message.channel.send({embed: {
-                      color: 3447003,
+                      color: config.resourcesRaidedColor,
                       description: `Thank you, ${sender}, your resources raided is set to ${library.Format.numberWithCommas(core.resources_raided)}`
                     }});
                   })
@@ -379,14 +379,14 @@ bot.on('message', async message => {
                       desc = `${member.displayName} resources raided is ${library.Format.numberWithCommas(score.resources_raided)}`
                     }
                     message.channel.send({embed: {
-                      color: 3447003,
+                      color: config.resourcesRaidedColor,
                       description: `${desc}`
                     }
                   });
                 })
               } else {
                 message.channel.send({embed: {
-                  color: 3447003,
+                  color: config.resourcesRaidedColor,
                   description: `${sender}, please use \`!pd abc\`, where abc is a number or an actual person!}`
                 }});
               }
@@ -456,7 +456,7 @@ bot.on('message', async message => {
                           .then(function(result) {
                             // notify the user it was successful
                             message.channel.send({embed: {
-                              color: 3447003,
+                              color: config.powerColor,
                               description: `Thank you, ${sender}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                           }});
                         })
@@ -465,7 +465,7 @@ bot.on('message', async message => {
                           .then(function(result) {
                             // notify the user it was successful
                             message.channel.send({embed: {
-                              color: 3447003,
+                              color: config.powerColor,
                               description: `Thank you, ${sender}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                             }});
                         })
@@ -486,7 +486,7 @@ bot.on('message', async message => {
                   .then(function(result) {
                     // notify the user it was successful
                     message.channel.send({embed: {
-                      color: 3447003,
+                      color: config.powerColor,
                       description: `Thank you, ${sender}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                     }});
                   })
@@ -495,7 +495,7 @@ bot.on('message', async message => {
                     .then(function(result) {
                       // notify the user it was successful
                       message.channel.send({embed: {
-                        color: 3447003,
+                        color: config.powerColor,
                         description: `Thank you, ${sender}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                       }});
                   })
@@ -510,14 +510,14 @@ bot.on('message', async message => {
                       desc = `${member.displayName} power is ${library.Format.numberWithCommas(score.totalpower)}`
                     }
                     message.channel.send({embed: {
-                      color: 3447003,
+                      color:config.powerColor,
                       description: `${desc}`
                     }
                   });
                 })
               } else {
                 message.channel.send({embed: {
-                  color: 3447003,
+                  color: config.powerColor,
                   description: `${sender}, please use \`!pd abc\`, where abc is a number or an actual person!}`
                 }});
               }
