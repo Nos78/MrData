@@ -13,8 +13,6 @@ const library = require('./library');
 const db = require('./db');
 
 const fs = require('fs');
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 // Set up the logger for debug/info
 const logger = require('winston');
@@ -27,10 +25,13 @@ logger.level = 'none';
 
 // Initialize Discord Bot
 // token needs to be added to config.json
-const bot = new Discord.Client({
+const client = new Discord.Client({
  token: config.token,
  autorun: true
 });
+
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 //
 // Configure all the commands,
@@ -54,13 +55,13 @@ const cooldowns = new Discord.Collection();
 //
 // bot.on ready - used when the bot comes online
 //
-bot.on("ready", () => {
+client.on("ready", () => {
   logger.info('Connected');
   logger.info('Logged in as: ');
-  logger.info(bot.user.username + ' - (' + bot.user.id + ')');
+  logger.info(client.user.username + ' - (' + client.user.id + ')');
   // Update the bot activity text to reflect the connections status
-  bot.user.setActivity(`${bot.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
-  logger.info(`MrData Bot has started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} guilds.`);
+  client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
+  logger.info(`MrData Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
 
   // We want to ensure our table is created when the bot comes online
   // and configure them if they don't exist
@@ -80,21 +81,21 @@ bot.on("ready", () => {
 // These two events are triggered when the bot joins and leaves
 // a guild server...
 //
-bot.on("guildCreate", guild => {
+client.on("guildCreate", guild => {
   // This event triggers when the bot joins a guild.
   logger.info(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   // Update the bot activity text to reflect the new stat
-  bot.user.setActivity(`${bot.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
+  client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
 });
 
-bot.on("guildDelete", guild => {
+client.on("guildDelete", guild => {
   // this event triggers when the bot is removed from a guild.
   logger.info(`I have been removed from: ${guild.name} (id: ${guild.id})`);
   // Update the bot activity text to reflect the new stat
-  bot.user.setActivity(`${bot.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
+  client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
 });
 
-bot.on('message', async message => {
+client.on('message', async message => {
   // Ignore other bots!
   if(message.author.bot) return;
 
@@ -160,4 +161,4 @@ bot.on('message', async message => {
 });
 
 // Start the client!
-bot.login(process.env.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
