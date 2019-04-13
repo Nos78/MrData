@@ -12,6 +12,6 @@ module.exports = {
     let minutes = Math.floor(totalSeconds / 60);
     let seconds = totalSeconds % 60;
     let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
-    message.channel.send(`${sender}, I have been active for ${uptime}`);
+    message.channel.send(`${message.author}, I have been active for ${uptime}`);
 	},
 };

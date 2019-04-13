@@ -5,6 +5,7 @@ module.exports = {
 	description: `Are you my owner? This command will let you know!`,
 	cooldown: 30,
 	args: false,
+	guildOnly: true,
 	execute(message, args) {
     let owner = "is not";
     if(library.Admin.isOwner(message.author.id, message.guild.id, message.client)) {

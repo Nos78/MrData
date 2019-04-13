@@ -5,11 +5,12 @@ module.exports = {
 	description: `Are you an admin of this server? This command will let you know!`,
 	cooldown: 30,
 	args: false,
+	guildOnly: true,
 	execute(message, args) {
     let admin = "is not";
-    if(library.Admin.isAdmin(message.sender.id, message.guild.id, message.client)) {
+    if(library.Admin.isAdmin(message.author.id, message.guild.id, message.client)) {
       admin = "is"
     }
-    message.channel.send(`According to my records, ${message.sender} ${admin} recorded as an admin of ${message.guild.name}.`);
+    message.channel.send(`According to my records, ${message.author} ${admin} recorded as an admin of ${message.guild.name}.`);
 	},
 };

@@ -116,7 +116,7 @@ client.on('message', async message => {
   if (!cmd) return;
 
   // Some commands are not meant to be executed inside DMs
-  if (command.guildOnly && message.channel.type !== 'text') {
+  if (cmd.guildOnly && message.channel.type !== 'text') {
   	return message.reply('I cannot execute that command inside a direct message!');
   }
 
@@ -144,7 +144,7 @@ client.on('message', async message => {
 
   	if (now < expirationTime) {
   		const timeLeft = (expirationTime - now) / 1000;
-  		return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
+  		return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${cmd.name}\` command.`);
   	}
   }
   timestamps.set(message.author.id, now);

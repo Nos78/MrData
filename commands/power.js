@@ -1,5 +1,7 @@
+const Discord = require('discord.js');
 const db = require('../db');
 const config = require('../config.json');
+const library = require('../library');
 
 module.exports = {
 	name: 'power',
@@ -8,6 +10,7 @@ module.exports = {
   args: false,
   usage: '<number>',
 	cooldown: 30,
+	guildOnly: true,
 	execute(message, args) {
     var score = [];
     db.scores.findByNameAndGuild(message.author.id, message.guild.id)
@@ -51,7 +54,7 @@ module.exports = {
                             // notify the user it was successful
                             message.channel.send({embed: {
                               color: config.powerColor,
-                              description: `Thank you, ${sender}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
+                              description: `Thank you, ${message.author}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                           }});
                         })
                       } else {
@@ -60,7 +63,7 @@ module.exports = {
                             // notify the user it was successful
                             message.channel.send({embed: {
                               color: config.powerColor,
-                              description: `Thank you, ${sender}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
+                              description: `Thank you, ${message.author}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                             }});
                         })
                       }
@@ -81,7 +84,7 @@ module.exports = {
                     // notify the user it was successful
                     message.channel.send({embed: {
                       color: config.powerColor,
-                      description: `Thank you, ${sender}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
+                      description: `Thank you, ${message.author}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                     }});
                   })
                 } else {
@@ -90,7 +93,7 @@ module.exports = {
                       // notify the user it was successful
                       message.channel.send({embed: {
                         color: config.powerColor,
-                        description: `Thank you, ${sender}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
+                        description: `Thank you, ${message.author}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
                       }});
                   })
                 }
@@ -112,7 +115,7 @@ module.exports = {
               } else {
                 message.channel.send({embed: {
                   color: config.powerColor,
-                  description: `${sender}, please use \`!pd abc\`, where abc is a number or an actual person!}`
+                  description: `${message.author}, please use \`!pd abc\`, where abc is a number or an actual person!}`
                 }});
               }
             }
@@ -123,12 +126,12 @@ module.exports = {
             .then(top10 => {
               const embed = new Discord.RichEmbed()
                 .setTitle("Power Leaderboard")
-                .setAuthor(bot.user.username, bot.user.avatarURL)
+                .setAuthor(message.client.user.username, message.client.user.avatarURL)
                 .setDescription("Our top 10 power leaders!")
                 .setColor(config.powerColor);
               var c = 1;
               for(const data of top10) {
-                embed.addField(`${c}. ${bot.guilds.get(guildID).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
+                embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
                 c++;
               }
               embed.addField(`${config.password} Your personal total power is`, `${library.Format.numberWithCommas(score.totalpower)}`)
