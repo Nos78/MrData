@@ -3,6 +3,13 @@ const db = require('../db');
 const config = require('../config.json');
 const library = require('../library');
 
+// Set up the logger for debug/info
+const logger = require('winston');
+logger.remove(logger.transports.Console);
+logger.add(new logger.transports.Console, {
+  colorize: true
+});
+
 module.exports = {
 	name: 'power',
   description: 'See the current power top 10, or set your own power score.',
