@@ -23,7 +23,6 @@ module.exports = {
             resources_raided: 0,
             totalpower: 0
           }
-          logger.info(`Created score: ${score}`);
         }
         switch (args.length) {
           case 2:
@@ -45,7 +44,6 @@ module.exports = {
                           resources_raided: 0,
                           totalpower: 0
                         }
-                        logger.info(`Created score: ${score}`);
                       }
                       score.power_destroyed = args[1];
                       if(score.id == null) {
@@ -74,7 +72,6 @@ module.exports = {
           break;
 
           case 1:
-            logger.info(`Args detected`);
             if(!isNaN(args[0])) {
               // Second argument is a number, update the score to this value
               score.power_destroyed = args[0];

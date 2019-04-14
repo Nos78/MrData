@@ -3,13 +3,6 @@ const db = require('../db');
 const config = require('../config.json');
 const library = require('../library');
 
-// Set up the logger for debug/info
-const logger = require('winston');
-logger.remove(logger.transports.Console);
-logger.add(new logger.transports.Console, {
-  colorize: true
-});
-
 module.exports = {
 	name: 'power',
   description: 'See the current power top 10, or set your own power score.',
@@ -30,7 +23,6 @@ module.exports = {
             resources_raided: 0,
             totalpower: 0
           }
-          logger.info(`Created score: ${score}`);
         }
         switch (args.length) {
           case 2:
@@ -52,7 +44,6 @@ module.exports = {
                           resources_raided: 0,
                           totalpower: 0
                         }
-                        logger.info(`Created score: ${score}`);
                       }
                       score.totalpower = args[1];
                       if(score.id == null) {
@@ -81,7 +72,6 @@ module.exports = {
           break;
 
           case 1:
-            logger.info(`Args detected`);
             if(!isNaN(args[0])) {
               // Second argument is a number, update the score to this value
               score.totalpower = args[0];
