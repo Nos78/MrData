@@ -40,6 +40,10 @@ const cn = {
     idleTimeoutMillis: process.env.DATABASE_IDLE_TIMEOUT
 };
 
+let constring = process.env.DATABASE_URL_FULL
+
+console.log(JSON.stringify(cn));
+console.log(constring);
 // Create the database instance:
 const db = pgp(cn);
 
