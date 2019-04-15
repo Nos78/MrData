@@ -29,8 +29,19 @@ const initOptions = {
 // Load and initialize pg-promise:
 const pgp = require('pg-promise')(initOptions);
 
+// Connection parameters
+const cn = {
+    host: process.env.DATABASE_URL,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    max: process.env.DATABASE_MAX_CON,
+    idleTimeoutMillis: process.env.DATABASE_IDLE_TIMEOUT
+};
+
 // Create the database instance:
-const db = pgp(process.env.DATABASE_URL);
+const db = pgp(cn);
 
 // Load and initialize optional diagnostics:
 const diagnostics = require('./diagnostics');
