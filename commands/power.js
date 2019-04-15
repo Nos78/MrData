@@ -131,7 +131,7 @@ module.exports = {
                 embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
                 c++;
               }
-              embed.addField(`${config.password} Your personal total power is`, `${library.Format.numberWithCommas(score.totalpower)}`)
+              embed.addField(`${message.author} Your personal total power is`, `${library.Format.numberWithCommas(score.totalpower)}`)
               return message.channel.send({embed});
             });
         }
