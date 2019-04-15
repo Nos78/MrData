@@ -131,7 +131,7 @@ module.exports = {
                 embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.resources_raided)}`);
                 c++;
               }
-              embed.addField(`${message.author}, your personal resources raided is`, `${library.Format.numberWithCommas(score.resources_raided)}`)
+              embed.addField(`*Your personal resources raided is*`, `*${library.Format.numberWithCommas(score.resources_raided)}*`);
               return message.channel.send({embed});
             });
         }

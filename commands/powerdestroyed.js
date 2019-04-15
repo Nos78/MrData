@@ -131,7 +131,7 @@ module.exports = {
                 embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.power_destroyed)}`);
                 c++;
               }
-              embed.addField(`${message.author}, your personal power destroyed is`, `${library.Format.numberWithCommas(score.power_destroyed)}`)
+              embed.addField(`*Your personal power destroyed is*`, `*${library.Format.numberWithCommas(score.power_destroyed)}*`)
               return message.channel.send({embed});
             });
         }
