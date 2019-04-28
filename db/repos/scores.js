@@ -15,20 +15,11 @@ class ScoresRepository {
 
     // Creates the table;
     create() {
-        var retval = this.db.none(sql.create);
-        if(!retval) {
-          // Ensure that the "id" is always unique and indexed.
-          retval = this.db.none(`CREATE UNIQUE INDEX idx_scores_id ON scores (id)`);
-        }
-        return retval;
+        return this.db.none(sql.create);
     }
 
     exists() {
         return this.db.result(sql.exists, []);
-    }
-    // Initializes the table with some user records, and return their id-s;
-    init() {
-        return this.db.map(sql.init, [], row => row.id);
     }
 
     // Drops the table;
@@ -44,9 +35,8 @@ class ScoresRepository {
     // Adds a new user, and returns the new object;
     add(values) {
         return this.db.one(sql.add, {
-            id: +values.id,
-            uid: values.uid,
-            guild: values.guild,
+            user_id: values.userId,
+            guild_id: values.guildId,
             power_destroyed: values.power_destroyed,
             resources_raided: values.resources_raided,
             totalpower: values.totalpower
@@ -55,43 +45,37 @@ class ScoresRepository {
 
     update(values) {
       return this.db.one(sql.update, {
-          id: +values.id,
-          uid: values.uid,
-          guild: values.guild,
+          uid: values.userId,
+          guild: values.guildId,
           power_destroyed: values.power_destroyed,
           resources_raided: values.resources_raided,
           totalpower: values.totalpower
       });
     }
 
-    // Tries to delete a user by id, and returns the number of records deleted;
-    remove(id) {
-        return this.db.result('DELETE FROM scores WHERE id = $1', +id, r => r.rowCount);
+    // Tries to delete a user's scores by id, and returns the number of records deleted;
+    removeUser(userId) {
+        return this.db.result('DELETE FROM scores WHERE user_id = $1', +userId, r => r.rowCount);
     }
 
-    // Tries to find a user from id;
-    findById(id) {
-        return this.db.oneOrNone('SELECT * FROM scores WHERE id = $1', +id);
+    // Tries to find a user's scores from id;
+    findByUser(userId) {
+        return this.db.result('SELECT * FROM scores WHERE user_id = $1', +userId);
     }
 
-    // Tries to find a record from user;
-    findByName(uid) {
-        return this.db.oneOrNone('SELECT * FROM scores WHERE uid = $1', uid);
+    // Finds scores by guild (individual discord server)
+    findByGuild(guildId) {
+      return this.db.result('SELECT * from scores WHERE guild_id = $1', +guildId);
     }
 
-    // Finds records by guild (individual discord server)
-    findByGuild(guild) {
-      return this.db.oneOrNone('SELECT * from scores WHERE guild = $1', guild);
-    }
-
-    findByNameAndGuild(uid, guild) {
+    findByUserAndGuild(userId, guildId) {
       var values = [];
       values.push(uid);
       values.push(guild);
-      return this.db.oneOrNone('SELECT * from scores WHERE uid = $1 AND guild = $2', values);
+      return this.db.oneOrNone('SELECT * from scores WHERE user_id = $1 AND guild_id = $2', values);
     }
 
-    // Returns all user records;
+    // Returns all scores records;
     all() {
         return this.db.any('SELECT * FROM scores');
     }

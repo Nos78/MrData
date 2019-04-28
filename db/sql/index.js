@@ -22,23 +22,22 @@ module.exports = {
     users: {
       create: sql('users/create.sql'),
       empty: sql('users/empty.sql'),
-      init: sql('users/init.sql'),
       drop: sql('users/drop.sql'),
-      add: sql('users/add.sql')
+      add: sql('users/add.sql'),
+      exists: sql('users/exists.sql')
     },
 
     guilds: {
       create: sql('guilds/create.sql'),
       empty: sql('guilds/empty.sql'),
-      init: sql('guilds/init.sql'),
       drop: sql('guilds/drop.sql'),
-      add: sql('guilds/add.sql')
+      add: sql('guilds/add.sql'),
+      exists: sql('guilds/exists.sql')
     },
 
     scores: {
         create: sql('scores/create.sql'),
         empty: sql('scores/empty.sql'),
-        init: sql('scores/init.sql'),
         drop: sql('scores/drop.sql'),
         add: sql('scores/add.sql'),
         update: sql('scores/update.sql'),

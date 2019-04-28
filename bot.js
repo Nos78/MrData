@@ -16,6 +16,7 @@ const fs = require('fs');
 
 // Set up the logger for debug/info
 const logger = require('winston');
+
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
   colorize: true
@@ -63,7 +64,7 @@ client.on("ready", () => {
   client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
   logger.info(`MrData Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
 
-  // We want to ensure our table is created when the bot comes online
+  // We want to ensure our database is created when the bot comes online
   // and configure them if they don't exist
   db.scores.exists()
     .then(data => {
@@ -71,7 +72,29 @@ client.on("ready", () => {
         // Database does not exist, lets create it...
         logger.debug(`No database score table found!  Creating...`);
         db.scores.create();
-        logger.debug(`Database configured.`)
+        logger.debug(`Scores configured.`)
+      }
+    });
+  });
+
+  db.users.exists()
+    .then(data => {
+      if(data.rows[0].exists == false) {
+        // Database does not exist, lets create it...
+        logger.debug(`No database users table found!  Creating...`);
+        db.users.create();
+        logger.debug(`Users configured.`)
+      }
+    });
+  });
+
+  db.guilds.exists()
+    .then(data => {
+      if(data.rows[0].exists == false) {
+        // Database does not exist, lets create it...
+        logger.debug(`No database users table found!  Creating...`);
+        db.guilds.create();
+        logger.debug(`Guilds configured.`)
       }
     });
   });
