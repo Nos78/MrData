@@ -96,9 +96,8 @@ function createColumnsets(pgp) {
         // otherwise you can just pass in a string for the table name.
         const table = new pgp.helpers.TableName({table: 'scores', schema: 'public'});
 
-        cs.insert = new pgp.helpers.ColumnSet(['uid'], {table});
-        cs.update = cs.insert.extend(['?id']);
-        cs.update = cs.insert.extend({name:'guild', mod:'^'});
+        cs.insert = new pgp.helpers.ColumnSet(['user_id'], {table});
+        cs.update = cs.insert.extend({name:'guild_id', mod:'^'});
         cs.update = cs.insert.extend({name:'power_destroyed', mod:'int', def:0});
         cs.update = cs.insert.extend({name:'resources_raided', mod:'int', def:0});
         cs.update = cs.insert.extend({name:'totalpower', mod:'int', def:0});

@@ -22,11 +22,6 @@ class UsersRepository {
         return this.db.none(sql.create);
     }
 
-    // Initializes the table with some user records, and return their id-s;
-    init() {
-        return this.db.map(sql.init, [], row => row.id);
-    }
-
     // Drops the table;
     drop() {
         return this.db.none(sql.drop);
@@ -38,23 +33,18 @@ class UsersRepository {
     }
 
     // Adds a new user, and returns the new object;
-    add(name) {
-        return this.db.one(sql.add, name);
+    add(user_id) {
+        return this.db.one(sql.add, user_id);
     }
 
     // Tries to delete a user by id, and returns the number of records deleted;
-    remove(id) {
-        return this.db.result('DELETE FROM users WHERE id = $1', +id, r => r.rowCount);
+    remove(user_id) {
+        return this.db.result('DELETE FROM users WHERE user_id = $1', +id, r => r.rowCount);
     }
 
-    // Tries to find a user from id;
-    findById(id) {
-        return this.db.oneOrNone('SELECT * FROM users WHERE id = $1', +id);
-    }
-
-    // Tries to find a user from name;
-    findByName(name) {
-        return this.db.oneOrNone('SELECT * FROM users WHERE name = $1', name);
+    // Tries to find a user from their discord user id;
+    findUserById(user_id) {
+        return this.db.oneOrNone('SELECT * FROM users WHERE user_id = $1', +id);
     }
 
     // Returns all user records;
@@ -78,7 +68,7 @@ function createColumnsets(pgp) {
         // otherwise you can just pass in a string for the table name.
         const table = new pgp.helpers.TableName({table: 'users', schema: 'public'});
 
-        cs.insert = new pgp.helpers.ColumnSet(['name'], {table});
+        cs.insert = new pgp.helpers.ColumnSet(['user_id'], {table});
         cs.update = cs.insert.extend(['?id']);
     }
     return cs;
