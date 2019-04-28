@@ -19,6 +19,22 @@ const path = require('path');
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports = {
+    users: {
+      create: sql('users/create.sql'),
+      empty: sql('users/empty.sql'),
+      init: sql('users/init.sql'),
+      drop: sql('users/drop.sql'),
+      add: sql('users/add.sql')
+    },
+
+    guilds: {
+      create: sql('guilds/create.sql'),
+      empty: sql('guilds/empty.sql'),
+      init: sql('guilds/init.sql'),
+      drop: sql('guilds/drop.sql'),
+      add: sql('guilds/add.sql')
+    },
+
     scores: {
         create: sql('scores/create.sql'),
         empty: sql('scores/empty.sql'),

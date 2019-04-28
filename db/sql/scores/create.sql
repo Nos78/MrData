@@ -6,11 +6,11 @@
 
 CREATE TABLE ${schema~}.scores
 (
-    id serial NOT NULL,
-    uid text NOT NULL,
-    guild text NOT NULL,
+    user_id integer references users(id),
+    guild_id integer references guilds(id),
     power_destroyed BIGINT NOT NULL,
     resources_raided BIGINT NOT NULL,
     totalpower BIGINT NOT NULL,
-    PRIMARY KEY(id)
-)
+    UNIQUE (user_id, guild_id),
+    PRIMARY KEY(user_id, guild_id)
+);
