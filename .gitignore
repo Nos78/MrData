@@ -61,4 +61,4 @@ typings/
 .next
 
 # MrData db configuration file
-dbconn.json
+config-secret.json
