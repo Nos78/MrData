@@ -74,8 +74,7 @@ client.on("ready", () => {
         logger.debug(`No database score table found!  Creating...`);
         db.scores.create();
         logger.debug(`Scores configured.`)
-      }
-    });
+    }
   });
 
   db.users.exists()
@@ -85,8 +84,7 @@ client.on("ready", () => {
         logger.debug(`No database users table found!  Creating...`);
         db.users.create();
         logger.debug(`Users configured.`)
-      }
-    });
+    }
   });
 
   db.guilds.exists()
@@ -96,9 +94,9 @@ client.on("ready", () => {
         logger.debug(`No database users table found!  Creating...`);
         db.guilds.create();
         logger.debug(`Guilds configured.`)
-      }
-    });
+    }
   });
+});
 
 //
 // guildCreate & guildDelete
