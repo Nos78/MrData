@@ -25,6 +25,8 @@ const initOptions = {
         // Do not use 'require()' here, because this event occurs for every task
         // and transaction being executed, which should be as fast as possible.
         obj.scores = new repos.Scores(obj, pgp);
+        obj.users = new repos.Users(obj, pgp);
+        obj.guilds = new repos.Guilds(obj, pgp);
     }
 };
 
