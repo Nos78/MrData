@@ -1,7 +1,5 @@
 'use strict';
 
-const config-secret = require ('../config-secret.json');
-
 // Bluebird is the best promise library available today,
 // and is the one recommended here:
 const promise = require('bluebird');
@@ -9,6 +7,8 @@ const promise = require('bluebird');
 const repos = require('./repos'); // loading all repositories
 
 const config = require('../config.json'); // load the config file
+
+const config-secret = require('../config-secret.json');
 
 // pg-promise initialization options:
 const initOptions = {
