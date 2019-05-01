@@ -22,6 +22,10 @@ class UsersRepository {
         return this.db.none(sql.create);
     }
 
+    exists() {
+        return this.db.result(sql.exists, []);
+    }
+    
     // Drops the table;
     drop() {
         return this.db.none(sql.drop);

@@ -21,6 +21,10 @@ class GuildsRepository {
     create() {
         return this.db.none(sql.create);
     }
+    
+    exists() {
+        return this.db.result(sql.exists, []);
+    }
 
     // Drops the table;
     drop() {
