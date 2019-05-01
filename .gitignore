@@ -62,3 +62,4 @@ typings/
 
 # MrData db configuration file
 config-secret.json
+config-secret.json.old
