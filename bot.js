@@ -9,6 +9,7 @@
 // Configure the Discord bot client
 const Discord = require('discord.js');
 const config = require('./config.json');
+const config-secret = require('./config-secret.json');
 const library = require('./library');
 const db = require('./db');
 
@@ -184,4 +185,5 @@ client.on('message', async message => {
 });
 
 // Start the client!
-client.login(process.env.BOT_TOKEN);
+//client.login(process.env.BOT_TOKEN);
+client.login(config-secret.token);

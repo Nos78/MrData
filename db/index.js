@@ -1,5 +1,7 @@
 'use strict';
 
+const config-secret = require ('../config-secret.json');
+
 // Bluebird is the best promise library available today,
 // and is the one recommended here:
 const promise = require('bluebird');
@@ -29,23 +31,8 @@ const initOptions = {
 // Load and initialize pg-promise:
 const pgp = require('pg-promise')(initOptions);
 
-// Connection parameters
-const cn = {
-    host: process.env.DATABASE_URL,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    max: process.env.DATABASE_MAX_CON,
-    idleTimeoutMillis: process.env.DATABASE_IDLE_TIMEOUT
-};
-
-let constring = process.env.DATABASE_URL_FULL
-
-console.log(JSON.stringify(cn));
-console.log(constring);
 // Create the database instance:
-const db = pgp(cn);
+const db = pgp(config-secret.db);
 
 // Load and initialize optional diagnostics:
 const diagnostics = require('./diagnostics');
