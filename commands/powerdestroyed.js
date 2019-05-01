@@ -13,7 +13,7 @@ module.exports = {
 	guildOnly: true,
 	execute(message, args) {
     var score = [];
-    db.scores.findByNameAndGuild(message.author.id, message.guild.id)
+    db.scores.findByUserAndGuild(message.author.id, message.guild.id)
       .then (score => {
         if (score == null) {
           score = {
@@ -34,7 +34,7 @@ module.exports = {
                 let allowedRole = message.guild.roles.find("name", "Admin");
                 if (message.member.roles.has(allowedRole.id)) {
                   // allowed access to command
-                  db.scores.findByNameAndGuild(member.id, message.guild.id)
+                  db.scores.findByUserAndGuild(member.id, message.guild.id)
                     .then (score => {
                       if (score == null) {
                         score = {
@@ -97,7 +97,7 @@ module.exports = {
             } else {
               let member = message.mentions.members.first();
               if(member) {
-                db.scores.findByNameAndGuild(member.id, message.guild.id)
+                db.scores.findByUserAndGuild(member.id, message.guild.id)
                   .then (score => {
                     let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
                     if(score!=null) {
