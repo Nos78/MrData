@@ -8,7 +8,7 @@ const repos = require('./repos'); // loading all repositories
 
 const config = require('../config.json'); // load the config file
 
-const config-secret = require('../config-secret.json');
+const configSecret = require('../config-secret.json');
 
 // pg-promise initialization options:
 const initOptions = {
@@ -32,7 +32,7 @@ const initOptions = {
 const pgp = require('pg-promise')(initOptions);
 
 // Create the database instance:
-const db = pgp(config-secret.db);
+const db = pgp(configSecret.db);
 
 // Load and initialize optional diagnostics:
 const diagnostics = require('./diagnostics');
