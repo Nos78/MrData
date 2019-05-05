@@ -5,11 +5,11 @@
   "main": "bot.js",
   "author": "BanderDragon#5699",
   "dependencies": {
-    "bluebird": "^3.5.3",
+    "bluebird": "^3.5.4",
     "discord.js": "^11.4.2",
-    "pg": "^7.8.2",
+    "pg": "^7.10.0",
     "pg-monitor": "^1.1.0",
-    "pg-promise": "^8.6.3",
+    "pg-promise": "^8.6.5",
     "winston": "^3.2.1"
   },
   "devDependencies": {},
