@@ -1,3 +1,11 @@
+/**
+ * @Date:   2019-04-24T09:29:15+01:00
+ * @Email:  noscere1978@gmail.com
+ * @Project: MrData
+ * @Filename: users.js
+ * @Last modified time: 2019-05-06T01:42:52+01:00
+ */
+
 'use strict';
 
 const sql = require('../sql').users;
@@ -25,7 +33,7 @@ class UsersRepository {
     exists() {
         return this.db.result(sql.exists, []);
     }
-    
+
     // Drops the table;
     drop() {
         return this.db.none(sql.drop);
@@ -37,8 +45,18 @@ class UsersRepository {
     }
 
     // Adds a new user, and returns the new object;
+    // returns null if the user already exists
     add(user_id) {
-        return this.db.one(sql.add, user_id);
+        return this.db.oneOrNone(sql.add, user_id)
+          .then (user => {
+            if (user == null || user.length == 0) {
+              findUserById(user_id)
+                .then (user => {
+                  return user;
+              })
+            }
+            return user;
+        });
     }
 
     // Tries to delete a user by id, and returns the number of records deleted;
@@ -48,7 +66,7 @@ class UsersRepository {
 
     // Tries to find a user from their discord user id;
     findUserById(user_id) {
-        return this.db.oneOrNone('SELECT * FROM users WHERE user_id = $1', +id);
+        return this.db.oneOrNone('SELECT * FROM users WHERE user_id = $1', user_id);
     }
 
     // Returns all user records;

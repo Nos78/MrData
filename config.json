@@ -2,5 +2,6 @@
     "prefix":"!",
     "powerColor":16776960,
     "powerDestroyedColor":44678,
-    "resourcesRaidedColor":7798918
+    "resourcesRaidedColor":7798918,
+    "standardMessageColor":3447003
 }

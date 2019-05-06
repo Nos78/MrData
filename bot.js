@@ -1,10 +1,12 @@
-// ============================
-// MrData bot.js
-// ============================
-// Created by BanderDragon#5699
-// (c) 2019
-// noscere1978@gmail.com
-// ============================
+/**
+ * @Author: BanderDragon
+ * @Date:   2019-03-13T18:13:07+00:00
+ * @Email:  noscere1978@gmail.com
+ * @Project: MrData
+ * @Filename: bot.js
+ * @Last modified by:
+ * @Last modified time: 2019-05-06T01:32:42+01:00
+ */
 
 // Configure the Discord bot client
 const Discord = require('discord.js');
@@ -63,19 +65,13 @@ client.on("ready", () => {
   logger.info(client.user.username + ' - (' + client.user.id + ')');
   // Update the bot activity text to reflect the connections status
   client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
-  logger.info(`MrData Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
+  logger.info(`${client.user.username} Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
 
-  // We want to ensure our database is created when the bot comes online
-  // and configure them if they don't exist
-  db.scores.exists()
-    .then(data => {
-      if(data.rows[0].exists == false) {
-        // Database does not exist, lets create it...
-        logger.debug(`No database score table found!  Creating...`);
-        db.scores.create();
-        logger.debug(`Scores configured.`)
-    }
-  });
+  /* We want to ensure our database is created when the bot comes online
+   * and configure it if they don't exist...
+   *
+   * Create the users and guilds tables first, then the dependant tables...
+   */
 
   db.users.exists()
     .then(data => {
@@ -96,6 +92,29 @@ client.on("ready", () => {
         logger.debug(`Guilds configured.`)
     }
   });
+
+  db.scores.exists()
+    .then(data => {
+      if(data.rows[0].exists == false) {
+        // Database does not exist, lets create it...
+        logger.debug(`No database score table found!  Creating...`);
+        db.scores.create();
+        logger.debug(`Scores configured.`)
+    }
+  });
+
+  /* Populate the database with the guilds we are online in. */
+  //for (x = 0; x < client.guilds.size; x++) {
+  client.guilds.forEach((guild) => {
+    logger.info(`Adding ${guild.name}, id: ${guild.id} to the database`);
+    db.guilds.add(guild.id).then((guild_record) => {
+        if(guild_record == null) {
+          logger.info(`Guild already exists.`);
+        } else {
+          logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table.`);
+        }
+    });
+  }); // end for
 });
 
 //
@@ -108,6 +127,11 @@ client.on("guildCreate", guild => {
   logger.info(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   // Update the bot activity text to reflect the new stat
   client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
+  db.guilds.add(guild.id)
+    .then(guild_record => {
+      console.log("guild added to database.");
+      logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table. ${guild_record.count} records added.`);
+    });
 });
 
 client.on("guildDelete", guild => {
@@ -175,10 +199,10 @@ client.on('message', async message => {
   // try to execute the command
   // and exit gracefully on error
   try {
-     cmd.execute(message, args);
+    cmd.execute(message, args);
   } catch (error) {
     console.error(error);
-	   message.reply('there was an error trying to execute that command!');
+    message.reply('there was an error trying to execute that command!');
   }
 });
 

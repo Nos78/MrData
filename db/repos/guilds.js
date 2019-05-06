@@ -17,11 +17,11 @@ class GuildsRepository {
         createColumnsets(pgp);
     }
 
-    // Creates the table;
+    // Creates the table
     create() {
         return this.db.none(sql.create);
     }
-    
+
     exists() {
         return this.db.result(sql.exists, []);
     }
@@ -36,9 +36,19 @@ class GuildsRepository {
         return this.db.none(sql.empty);
     }
 
-    // Adds a new guild, and returns the new object;
+    // Adds a new guild, and returns the new object, and finds it if it exists;
+    addOrFind(guildId) {
+        return this.add(guildId)
+          .then (guild => {
+            if (guild == null) {
+              return this.findGuildById(guildId);
+            }
+        })
+    }
+
+    // Adds a new guild, and returns the new object or null if it exists
     add(guildId) {
-        return this.db.one(sql.add, guildId);
+        return this.db.oneOrNone(sql.add, guildId);
     }
 
     // Tries to delete a user by id, and returns the number of records deleted;
@@ -48,7 +58,7 @@ class GuildsRepository {
 
     // Tries to find a guild from their discord guild id;
     findGuildById(guildId) {
-        return this.db.oneOrNone('SELECT * FROM guilds WHERE guild_id = $1', +guildId);
+        return this.db.oneOrNone('SELECT * FROM guilds WHERE guild_id = $1', guildId);
     }
 
     // Returns all user records;

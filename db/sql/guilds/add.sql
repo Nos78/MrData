@@ -5,4 +5,5 @@
 */
 INSERT INTO ${schema~}.guilds(guild_id)
 VALUES($1)
+ON CONFLICT DO NOTHING
 RETURNING *

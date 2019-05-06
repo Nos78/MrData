@@ -1,3 +1,15 @@
+/**
+ * @Author: BanderDragon
+ * @Date:   2019-03-10T12:45:21+00:00
+ * @Email:  noscere1978@gmail.com
+ * @Project: MrData
+ * @Filename: scores.js
+ * @Last modified by:
+ * @Last modified time: 2019-05-06T01:39:08+01:00
+ */
+
+
+
 'use strict';
 
 const sql = require('../sql').scores;
@@ -32,47 +44,49 @@ class ScoresRepository {
         return this.db.none(sql.empty);
     }
 
-    // Adds a new user, and returns the new object;
-    add(values) {
-        return this.db.one(sql.add, {
-            user_id: values.userId,
-            guild_id: values.guildId,
-            power_destroyed: values.power_destroyed,
-            resources_raided: values.resources_raided,
-            totalpower: values.totalpower
-        });
-    }
-
-    update(values) {
+    upsert(values) {
       return this.db.one(sql.update, {
-          uid: values.userId,
-          guild: values.guildId,
-          power_destroyed: values.power_destroyed,
-          resources_raided: values.resources_raided,
-          totalpower: values.totalpower
+          userId: values.userId,
+          guildId: values.guildId,
+          power_destroyed: values.powerDestroyed,
+          resources_raided: values.resourcesRaided,
+          totalpower: values.totalPower,
+          pvpships_destroyed: values.pvpshipsDestroyed,
+          pvpkd_ratio: values.pvpKdRatio,
+          pvp_total_damage: values.pvpTotalDamage,
+          hostiles_destroyed: values.hostilesDestroyed,
+          hostiles_total_damage: values.hostilesTotalDamage,
+          resources_mined: values.resourcesMined,
+          current_level: values.currentLevel
       });
     }
 
     // Tries to delete a user's scores by id, and returns the number of records deleted;
     removeUser(userId) {
-        return this.db.result('DELETE FROM scores WHERE user_id = $1', +userId, r => r.rowCount);
+        return this.db.result('DELETE FROM scores USING users WHERE users.user_id = $1', +userId, r => r.rowCount);
     }
 
     // Tries to find a user's scores from id;
     findByUser(userId) {
-        return this.db.result('SELECT * FROM scores WHERE user_id = $1', +userId);
+        return this.db.manyOrNone(sql.findByUser, {
+          userId: userId
+        });
     }
 
     // Finds scores by guild (individual discord server)
-    findByGuild(guildId) {
-      return this.db.result('SELECT * from scores WHERE guild_id = $1', +guildId);
+    findByGuild(guildId, orderBy) {
+      if (orderBy.length == 0) {
+        orderBy = 'user_id';
+      }
+      return this.db.any(sql.findByGuild, {
+        guildId: guildId, orderBy: orderBy
+      });
     }
 
     findByUserAndGuild(userId, guildId) {
-      var values = [];
-      values.push(uid);
-      values.push(guild);
-      return this.db.oneOrNone('SELECT * from scores WHERE user_id = $1 AND guild_id = $2', values);
+      return this.db.oneOrNone(sql.findByUserAndGuild, {
+        userId: userId, guildId: guildId
+      });
     }
 
     // Returns all scores records;

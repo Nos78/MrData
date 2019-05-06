@@ -39,9 +39,14 @@ module.exports = {
         create: sql('scores/create.sql'),
         empty: sql('scores/empty.sql'),
         drop: sql('scores/drop.sql'),
-        add: sql('scores/add.sql'),
-        update: sql('scores/update.sql'),
-        exists: sql('scores/exists.sql')
+        upsert: sql('scores/upsert.sql'),
+        exists: sql('scores/exists.sql'),
+        deleteByGuild: sql('scores/deleteByGuild.sql'),
+        deleteByUser: sql('scores/deleteByUser.sql'),
+        deleteByUserAndGuild: sql('scores/deleteByUserAndGuild.sql'),
+        findByUser: sql('scores/findByUser.sql'),
+        findByGuild: sql('scores/findByGuild.sql'),
+        findByUserAndGuild: sql('scores/findByUserAndGuild.sql')
     }
 };
 
