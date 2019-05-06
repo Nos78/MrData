@@ -8,7 +8,7 @@ const repos = require('./repos'); // loading all repositories
 
 const config = require('../config.json'); // load the config file
 
-const configSecret = require('../config-secret-mrtest.json');
+const configSecret = require('../config-secret.json');
 
 // pg-promise initialization options:
 const initOptions = {
