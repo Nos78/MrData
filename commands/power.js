@@ -9,7 +9,7 @@ module.exports = {
   aliases: ['p'],
   args: false,
   usage: '<number>',
-	cooldown: 30,
+	cooldown: 3,
 	guildOnly: true,
 	execute(message, args) {
     var score = [];
@@ -17,8 +17,8 @@ module.exports = {
       .then (score => {
         if (score == null) {
           score = {
-            uid: message.author.id,
-            guild: message.guild.id,
+            user_id: message.author.id,
+            guild_id: message.guild.id,
             power_destroyed: 0,
             resources_raided: 0,
             totalpower: 0
@@ -38,8 +38,8 @@ module.exports = {
                     .then (score => {
                       if (score == null) {
                         score = {
-                          uid: member.id,
-                          guild: message.guild.id,
+                          user_id: member.id,
+                          guild_id: message.guild.id,
                           power_destroyed: 0,
                           resources_raided: 0,
                           totalpower: 0
@@ -128,7 +128,7 @@ module.exports = {
                 .setColor(config.powerColor);
               var c = 1;
               for(const data of top10) {
-                embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.uid).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
+                embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.user_id).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
                 c++;
               }
               embed.addField(`*Your personal total power is*`, `*${library.Format.numberWithCommas(score.totalpower)}*`)

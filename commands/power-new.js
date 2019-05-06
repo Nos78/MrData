@@ -1,15 +1,3 @@
-/**
- *
- * Resources Raided command.
- *
- * @Author: BanderDragon
- * @Date:   2019-04-13T20:07:36+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: resourcesraided.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-06T00:19:25+01:00
- */
 
 const Discord = require('discord.js');
 const db = require('../db');
@@ -20,7 +8,7 @@ const library = require('../library');
 const logger = require('winston');
 
 module.exports = {
-	name: 'resourcesraided',
+	name: 'power',
   description: 'See the resources raided top 10, or set your own resources raided score.',
   aliases: ['rr'],
   args: false,
@@ -40,24 +28,19 @@ module.exports = {
 			success_message: ""
 		};
 
-		logger.debug(`Executing resoucesraided, args: ${JSON.stringify(args)}`);
 		switch(args.length) {
 			case 0:
 				/*
 				 * Print the league table
 				 */
-				 logger.debug("No parameters, simply display the league table");
 				 db.scores.findByGuild(message.guild.id, 'resources_raided')
 					 .then(top10 => {
-						 logger.debug(`findByGuild() called for ${message.guild}`);
 						 if(top10 == null || top10.length == 0) {
-							 logger.debug(`No records found for ${message.guild}`);
 							 message.channel.send({embed: {
 								 color: config.resourcesRaidedColor,
 								 description: `${message.author}, *No* records were found for **${message.client.guilds.get(message.guild.id).name}**`
 							 }});
 						 } else {
-							 logger.debug(`Displaying the league table for ${message.guild}`);
 							 const embed = new Discord.RichEmbed()
 								 .setTitle("Resources Raided Leaderboard")
 								 .setAuthor(message.client.user.username, message.client.user.avatarURL)
@@ -86,15 +69,12 @@ module.exports = {
 				 * Parameter could be a name or a number
 				 */
 				if(isNaN(args[0])) {
-					logger.debug(`Checking if this is a name...`);
  					let member = message.mentions.members.first();
 					if(member) {
-						logger.debug(`Finding ${member.displayName} score record...`)
 						db.scores.findByUserAndGuild(member.id, message.guild.id)
  					 		.then (score => {
  								let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
 								if(score!=null) {
-									logger.debug(`${member.displayName} score record located...`)
 									desc = `${member.displayName} resources raided is ${library.Format.numberWithCommas(score.resources_raided)}`
 								} // endif
 								message.channel.send({embed: {
@@ -115,7 +95,6 @@ module.exports = {
 				} else {
 					// Parameter is a number, configure the relevant information object
 					// This will be sent to the database once we drop out of the switch
-					logger.debug(`User is ${message.author.username}: Configuring the score...`)
 					new_score.resources_raided_score = args[0];
 					new_score.user_discord_id = message.author.id;
 					new_score.success_message = `Thank you, ${message.author}, your resources raided is set to ${library.Format.numberWithCommas(new_score.resources_raided)}`;
