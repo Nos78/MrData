@@ -34,7 +34,7 @@ INSERT INTO
 SELECT
   userAndGuild.u, userAndGuild.g,
   ${powerDestroyed}, ${resourcesRaided},
-	${totalPower}, ${pvpshipsDestroyed},
+	${total_power}, ${pvpshipsDestroyed},
 	${pvpKdRatio}, ${pvpTotalDamage},
 	${hostilesDestroyed}, ${hostilesDamage},
 	${resourcesMined}, ${currentLevel}
@@ -43,7 +43,7 @@ FROM
 ON CONFLICT (user_id, guild_id) DO UPDATE SET
   power_destroyed = ${powerDestroyed},
   resources_raided = ${resourcesRaided},
-  total_power = ${totalPower},
+  total_power = ${total_power},
   pvp_ships_destroyed = ${pvpshipsDestroyed},
   pvp_kd_ratio = ${pvpkdRatio},
   pvp_total_damage = ${pvpTotalDamage},

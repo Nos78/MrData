@@ -1,8 +1,8 @@
 SELECT
-	users.user_id, users.id, guilds.guild_id, guilds.id, scores.power_destroyed, scores.resources_raided, scores.totalpower,
-	scores.pvpships_destroyed,
-	scores.pvpkd_ratio,
-	scores.pvp_damage,
+	users.user_id, users.id, guilds.guild_id, guilds.id, scores.power_destroyed, scores.resources_raided, scores.total_power,
+	scores.pvp_ships_destroyed,
+	scores.pvp_kd_ratio,
+	scores.pvp_total_damage,
 	scores.hostiles_destroyed,
 	scores.hostiles_total_damage,
 	scores.resources_mined,

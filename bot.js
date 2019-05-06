@@ -12,7 +12,6 @@
 const Discord = require('discord.js');
 const config = require('./config.json');
 const configSecret = require('./config-secret.json');
-const library = require('./library');
 const db = require('./db');
 
 const fs = require('fs');
@@ -25,7 +24,7 @@ logger.add(new logger.transports.Console, {
   colorize: true
 });
 
-logger.level = 'none';
+logger.level = config.debugLevel;
 
 // Initialize Discord Bot
 // token needs to be added to config.json
