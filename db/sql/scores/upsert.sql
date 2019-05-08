@@ -36,7 +36,7 @@ SELECT
   ${powerDestroyed}, ${resourcesRaided},
 	${totalPower}, ${pvpShipsDestroyed},
 	${pvpKdRatio}, ${pvpTotalDamage},
-	${hostilesDestroyed}, ${hostilesDamage},
+	${hostilesDestroyed}, ${hostilesTotalDamage},
 	${resourcesMined}, ${currentLevel}
 FROM
     userAndGuild
