@@ -1,9 +1,15 @@
 {
-    "prefix":"!",
-    "powerColor":16776960,
-    "powerDestroyedColor":44678,
-    "resourcesRaidedColor":7798918,
-    "standardMessageColor": 3447003,
-    "debugLevel": "none"
-
+  "prefix": "!",
+  "powerColor": 16776960,
+  "powerDestroyedColor": 44678,
+  "resourcesRaidedColor": 7798918,
+  "standardMessageColor": 3447003,
+  "hostileshipsdestroyedColor": 2124492,
+  "hostilestotaldamageColor": 28415,
+  "kdratioColor": 15015197,
+  "pvpshipsdestroyedColor": 15993097,
+  "levelColor": 969005,
+  "resourcesminedColor": 1341220,
+  "pvptotaldamageColor": 16711680,
+  "debugLevel": "none"
 }

@@ -124,7 +124,7 @@ module.exports = {
                         message.channel.send({
                             embed: {
                                 color: config.powerDestroyedColor,
-                                description: `${message.author}, please use \`!power abc\`, where abc is a number or an actual person!}`
+                                description: `${message.author}, please use \`!powerdestroyed abc\`, where abc is a number or an actual person!}`
                             }
                         });
                         return;
@@ -149,7 +149,7 @@ module.exports = {
                     // remove commas from args[1] - the user might input a comma-formatted number
                     args[1] = library.Format.stripCommas(args[1]);
                     if (member && !isNaN(args[1])) {
-                        // The command seems to be of the form !power @name number
+                        // The command seems to be of the form !powerdestroyed @name number
                         let allowedRole = message.guild.roles.find("name", "Admin");
                         if (!message.member.roles.has(allowedRole.id)) {
                             // Sender in not priveleged, warn and exit. Do not drop
