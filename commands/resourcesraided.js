@@ -7,8 +7,8 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: resourcesraided.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-06T00:19:25+01:00
+ * @Last modified by:
+ * @Last modified time: 2019-05-08T14:17:03+01:00
  */
 
 const Discord = require('discord.js');
@@ -53,7 +53,7 @@ module.exports = {
                  */
                 db.scores.findByUserAndGuild(message.author.id, message.guild.id)
                     .then(author_score => {
-                        db.scores.findByGuild(message.guild.id, 'resources_raided')
+                        db.scores.findByGuild(message.guild.id, 'resources_raided DESC LIMIT 10')
                             .then(top10 => {
                                 logger.debug(`findByGuild().then() called for ${message.guild}`);
                                 if (top10 == null || top10.length == 0) {
@@ -73,7 +73,7 @@ module.exports = {
                                         .setColor(config.resourcesRaidedColor);
                                     var c = 1;
                                     for (const data of top10) {
-                                        embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.user_id).displayName}`, `${library.Format.numberWithCommas(author_score.resources_raided)}`);
+                                        embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.user_id).displayName}`, `${library.Format.numberWithCommas(data.resources_raided)}`);
                                         c++;
                                     }
                                     if (author_score == null || author_score.length == 0) {
@@ -167,26 +167,42 @@ module.exports = {
 		//
 		// We have the relevant information object (new_score)
 		// Add this into the database
-		//
+    //
 		// 1. Get existing record (if exists, go directly to 4)
 		// 2. Check if the guild_discord_id exists (and add).
 		// 3. Check if the user_discord_id exists (and add).
         // 4. Upsert the new score data
         db.scores.findByUserAndGuild(new_score.user_discord_id, new_score.guild_discord_id)
             .then(score => {
-                if (score == null || score.length == 0) {
-                    score.user_id = new_score.user_discord_id,
-                    score.guild_id = new_score.guild_discord_id,
-                    score.resources_raided = new_score.resources_raided,
-                    score.power_destroyed = 0,
-                    score.total_power = 0,
-                    score.pvp_ships_destroyed = 0,
-                    score.pvp_kd_ratio = 0,
-                    score.pvp_total_damage = 0,
-                    score.hostiles_destroyed = 0,
-                    score.hostiles_total_damage = 0,
-                    score.resources_mined = 0,
+                if (score == null) {
+                    score = [];
+                    score.user_id = new_score.user_discord_id
+                    score.guild_id = new_score.guild_discord_id
+                    score.resources_raided = new_score.resources_raided
+                    score.power_destroyed = 0
+                    score.total_power = 0
+                    score.pvp_ships_destroyed = 0
+                    score.pvp_kd_ratio = 0
+                    score.pvp_total_damage = 0
+                    score.hostiles_destroyed = 0
+                    score.hostiles_total_damage = 0
+                    score.resources_mined = 0
                     score.current_level = 0
+                } else if (score.length == 0) {
+                    score.user_id = new_score.user_discord_id
+                    score.guild_id = new_score.guild_discord_id
+                    score.resources_raided = new_score.resources_raided
+                    score.power_destroyed = 0
+                    score.total_power = 0
+                    score.pvp_ships_destroyed = 0
+                    score.pvp_kd_ratio = 0
+                    score.pvp_total_damage = 0
+                    score.hostiles_destroyed = 0
+                    score.hostiles_total_damage = 0
+                    score.resources_mined = 0
+                    score.current_level = 0
+                } else {
+                    score.resources_raided = new_score.resources_raided
                 }
                 logger.debug("Calling db.scores.upsert()");
                 db.scores.upsert(score).then((result) => {
@@ -210,4 +226,3 @@ module.exports = {
             })
     } // execute
 } // module.exports
-

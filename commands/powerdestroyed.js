@@ -3,7 +3,7 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: powerdestroyed.js
- * @Last modified time: 2019-05-07T19:23:00+01:00
+ * @Last modified time: 2019-05-08T14:17:11+01:00
  */
 
 const Discord = require('discord.js');
@@ -48,7 +48,7 @@ module.exports = {
                  */
                 db.scores.findByUserAndGuild(message.author.id, message.guild.id)
                     .then(author_score => {
-                        db.scores.findByGuild(message.guild.id, 'power_destroyed')
+                        db.scores.findByGuild(message.guild.id, 'power_destroyed DESC LIMIT 10')
                             .then(top10 => {
                                 logger.debug(`findByGuild().then() called for ${message.guild}`);
                                 if (top10 == null || top10.length == 0) {
@@ -68,7 +68,7 @@ module.exports = {
                                         .setColor(config.powerDestroyedColor);
                                     var c = 1;
                                     for (const data of top10) {
-                                        embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.user_id).displayName}`, `${library.Format.numberWithCommas(author_score.power_destroyed)}`);
+                                        embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.user_id).displayName}`, `${library.Format.numberWithCommas(data.power_destroyed)}`);
                                         c++;
                                     }
                                     if (author_score == null || author_score.length == 0) {
@@ -172,26 +172,40 @@ module.exports = {
         // 4. Upsert the new score data
         db.scores.findByUserAndGuild(new_score.user_discord_id, new_score.guild_discord_id)
             .then(score => {
-                if (score == null || score.length == 0) {
-                    score.user_id = new_score.user_discord_id,
-                        score.guild_id = new_score.guild_discord_id,
-                        score.resources_raided = 0,
-                        score.power_destroyed = new_score.power_destroyed,
-                        score.total_power = 0,
-                        score.pvp_ships_destroyed = 0,
-                        score.pvp_kd_ratio = 0,
-                        score.pvp_total_damage = 0,
-                        score.hostiles_destroyed = 0,
-                        score.hostiles_total_damage = 0,
-                        score.resources_mined = 0,
-                        score.current_level = 0
+                if (score == null) {
+                    score.user_id = new_score.user_discord_id
+                    score.guild_id = new_score.guild_discord_id
+                    score.resources_raided = 0
+                    score.power_destroyed = new_score.power_destroyed
+                    score.total_power = 0
+                    score.pvp_ships_destroyed = 0
+                    score.pvp_kd_ratio = 0
+                    score.pvp_total_damage = 0
+                    score.hostiles_destroyed = 0
+                    score.hostiles_total_damage = 0
+                    score.resources_mined = 0
+                    score.current_level = 0
+                } else if (score.length == 0) {
+                    score.guild_id = new_score.guild_discord_id
+                    score.resources_raided = 0
+                    score.power_destroyed = new_score.power_destroyed
+                    score.total_power = 0
+                    score.pvp_ships_destroyed = 0
+                    score.pvp_kd_ratio = 0
+                    score.pvp_total_damage = 0
+                    score.hostiles_destroyed = 0
+                    score.hostiles_total_damage = 0
+                    score.resources_mined = 0
+                    score.current_level = 0
+                } else {
+                    score.power_destroyed = new_score.power_destroyed
                 }
                 logger.debug("Calling db.scores.upsert()");
                 db.scores.upsert(score).then((result) => {
                     if (result == null) {
                         message.channel.send({
                             embed: {
-                                color: config.powerColor,
+                                color: config.powerDestroyedColor,
                                 description: `${message.author}, an error occured, and I was unable to commit your information into my database.`
                             }
                         });
@@ -199,7 +213,7 @@ module.exports = {
                     else { // no records added?
                         message.channel.send({
                             embed: {
-                                color: config.powerColor,
+                                color: config.powerDestroyedColor,
                                 description: new_score.success_message
                             }
                         });
@@ -208,4 +222,3 @@ module.exports = {
             })
     } // execute
 } // module.exports
-
