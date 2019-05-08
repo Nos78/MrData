@@ -1,140 +1,212 @@
+/**
+ * @Date:   2019-05-06T08:09:56+01:00
+ * @Email:  noscere1978@gmail.com
+ * @Project: MrData
+ * @Filename: power.js
+ * @Last modified time: 2019-05-07T18:57:25+01:00
+ */
+
 const Discord = require('discord.js');
 const db = require('../db');
 const config = require('../config.json');
 const library = require('../library');
 
+// Set up the logger for debug/info
+const logger = require('winston');
+
 module.exports = {
-	name: 'power',
-  description: 'See the current power top 10, or set your own power score.',
-  aliases: ['p'],
-  args: false,
-  usage: '<number>',
-	cooldown: 3,
-	guildOnly: true,
-	execute(message, args) {
-    var score = [];
-    db.scores.findByUserAndGuild(message.author.id, message.guild.id)
-      .then (score => {
-        if (score == null) {
-          score = {
-            user_id: message.author.id,
-            guild_id: message.guild.id,
-            power_destroyed: 0,
-            resources_raided: 0,
-            totalpower: 0
-          }
-        }
+    name: 'power',
+    description: 'See the top 10 power scores, or set your own power score.',
+    aliases: ['p'],
+    args: false,
+    usage: '<number>',
+    cooldown: 3,
+    guildOnly: true,
+    execute(message, args) {
+        // New score object stores the data for adding into the database
+        // This will configured in the switch statement below
+        // And committed to the database after.
+        var new_score = {
+            user_discord_id: 0,
+            guild_discord_id: message.guild.id,
+            total_power: 0,
+            success_message: ""
+        };
+
+        logger.debug(`Executing resoucesraided, args: ${JSON.stringify(args)}`);
         switch (args.length) {
-          case 2:
-            if(args.length > 1) {
-              let member = message.mentions.members.first();
-              if(member && !isNaN(args[1])) {
-                // We have a !pd @name number
-                // Admin only command
-                let allowedRole = message.guild.roles.find("name", "Admin");
-                if (message.member.roles.has(allowedRole.id)) {
-                  // allowed access to command
-                  db.scores.findByUserAndGuild(member.id, message.guild.id)
-                    .then (score => {
-                      if (score == null) {
-                        score = {
-                          user_id: member.id,
-                          guild_id: message.guild.id,
-                          power_destroyed: 0,
-                          resources_raided: 0,
-                          totalpower: 0
-                        }
-                      }
-                      score.totalpower = args[1];
-                      if(score.id == null) {
-                        db.scores.add(score)
-                          .then(function(result) {
-                            // notify the user it was successful
-                            message.channel.send({embed: {
-                              color: config.powerColor,
-                              description: `Thank you, ${message.author}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
-                          }});
-                        })
-                      } else {
-                        db.scores.update(score)
-                          .then(function(result) {
-                            // notify the user it was successful
-                            message.channel.send({embed: {
-                              color: config.powerColor,
-                              description: `Thank you, ${message.author}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
-                            }});
-                        })
-                      }
-                  });
-                }
-              }
-            }
-          break;
+            case 0:
+                /*
+ 				 */
+                logger.debug("No parameters, simply display the league table");
+                /*
+                 * Print the league table
+                 * 1. Find the message sender's score.
+                 * 2. Get the score table.
+                 * 3. Print the top 10
+                 * 4. Print the message sender's score.
+                 */
+                db.scores.findByUserAndGuild(message.author.id, message.guild.id)
+                    .then(author_score => {
+                        db.scores.findByGuild(message.guild.id, 'total_power')
+                            .then(top10 => {
+                                logger.debug(`findByGuild().then() called for ${message.guild}`);
+                                if (top10 == null || top10.length == 0) {
+                                    logger.debug(`No records found for ${message.guild}`);
+                                    message.channel.send({
+                                        embed: {
+                                            color: config.powerColor,
+                                            description: `${message.author}, *No* records were found for **${message.client.guilds.get(message.guild.id).name}**`
+                                        }
+                                    });
+                                } else {
+                                    logger.debug(`Displaying the league table for ${message.guild}`);
+                                    const embed = new Discord.RichEmbed()
+                                        .setTitle("Total Power Leaderboard")
+                                        .setAuthor(message.client.user.username, message.client.user.avatarURL)
+                                        .setDescription("Our top 10 total power scores!")
+                                        .setColor(config.powerColor);
+                                    var c = 1;
+                                    for (const data of top10) {
+                                        embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.user_id).displayName}`, `${library.Format.numberWithCommas(author_score.total_power)}`);
+                                        c++;
+                                    }
+                                    if (author_score == null || author_score.length == 0) {
+                                        embed.addField(`*You have not yet set any scores!*`);
+                                    } else {
+                                        logger.debug(`${message.author} score ${author_score.total_power}`);
+                                        embed.addField(`*Your personal total power score is*`, `*${library.Format.numberWithCommas(author_score.total_power)}*`);
+                                    }
+                                    logger.debug(`Sending embed mesage${embed}`);
+                                    return message.channel.send({ embed });
+                                } // endif top10
+                            }); // db.scores.findByGuild
+                    });
+                return;
 
-          case 1:
-            if(!isNaN(args[0])) {
-              // Second argument is a number, update the score to this value
-              score.totalpower = args[0];
-              if(score.id == null) {
-                db.scores.add(score)
-                  .then(function(result) {
-                    // notify the user it was successful
-                    message.channel.send({embed: {
-                      color: config.powerColor,
-                      description: `Thank you, ${message.author}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
-                    }});
-                  })
+            case 1:
+				/*
+				 * Parameter could be a name or a number
+				 */
+                if (isNaN(args[0])) {
+                    logger.debug(`Checking if this is a name...`);
+                    let member = message.mentions.members.first();
+                    if (member) {
+                        logger.debug(`Finding ${member.displayName} score record...`)
+                        db.scores.findByUserAndGuild(member.id, message.guild.id)
+                            .then(score => {
+                                let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
+                                if (score != null) {
+                                    logger.debug(`${member.displayName} score record located...`)
+                                    desc = `${member.displayName} total power is ${library.Format.numberWithCommas(score.resources_raided)}`
+                                } // endif
+                                message.channel.send({
+                                    embed: {
+                                        color: config.powerColor,
+                                        description: `${desc}`
+                                    } // Embed
+                                }); // message.channel.send
+                                return;
+                            }); // db.findByUserAndGuild
+                    } else {
+                        // not a member, print the error message and exit
+                        message.channel.send({
+                            embed: {
+                                color: config.powerColor,
+                                description: `${message.author}, please use \`!power abc\`, where abc is a number or an actual person!}`
+                            }
+                        });
+                        return;
+                    } // endif member
                 } else {
-                  db.scores.update(score)
-                    .then(function(result) {
-                      // notify the user it was successful
-                      message.channel.send({embed: {
-                        color: config.powerColor,
-                        description: `Thank you, ${message.author}, your total power is set to ${library.Format.numberWithCommas(score.totalpower)}`
-                      }});
-                  })
+                    // Parameter is a number, configure the relevant information object
+                    // This will be sent to the database once we drop out of the switch
+                    logger.debug(`User is ${message.author.username}: Configuring the score...`)
+                    new_score.total_power = args[0];
+                    new_score.user_discord_id = message.author.id;
+                    new_score.success_message = `Thank you, ${message.author}, your total power is set to ${library.Format.numberWithCommas(new_score.total_power)}`;
                 }
-            } else {
-              let member = message.mentions.members.first();
-              if(member) {
-                db.scores.findByUserAndGuild(member.id, message.guild.id)
-                  .then (score => {
-                    let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
-                    if(score!=null) {
-                      desc = `${member.displayName} power is ${library.Format.numberWithCommas(score.totalpower)}`
+                break;
+            case 2:
+                {
+                    /*
+                     * This is a special case, for use with admin privleges only.
+                     * This allows an admin to specify a username and update their scores
+                     * for that user.
+                     */
+                    let member = message.mentions.members.first();
+                    if (member && !isNaN(args[1])) {
+                        // The command seems to be of the form !power @name number
+                        let allowedRole = message.guild.roles.find("name", "Admin");
+                        if (!message.member.roles.has(allowedRole.id)) {
+                            // Sender in not priveleged, warn and exit. Do not drop
+                            // out of the switch statement.
+                            message.channel.send({
+                                embed: {
+                                    color: config.powerColor,
+                                    description: `${message.author}, only an Administrator can set the score of other users`
+                                }
+                            });
+                            return;
+                        } else {
+                            // admin is allowed access to the command
+                            // Configure the information object
+                            new_score.total_power = args[1];
+                            new_score.user_discord_id = member.id;
+                            new_score.success_message = `Thank you, ${message.author}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(new_score.total_power)}`
+                        }
                     }
-                    message.channel.send({embed: {
-                      color:config.powerColor,
-                      description: `${desc}`
-                    }
-                  });
-                })
-              } else {
-                message.channel.send({embed: {
-                  color: config.powerColor,
-                  description: `${message.author}, please use \`!pd abc\`, where abc is a number or an actual person!}`
-                }});
-              }
-            }
-          break;
-
-        case 0:
-          db.manyOrNone("SELECT * FROM scores WHERE guild = $1 ORDER BY totalpower DESC LIMIT 10;", message.guild.id)
-            .then(top10 => {
-              const embed = new Discord.RichEmbed()
-                .setTitle("Power Leaderboard")
-                .setAuthor(message.client.user.username, message.client.user.avatarURL)
-                .setDescription("Our top 10 power leaders!")
-                .setColor(config.powerColor);
-              var c = 1;
-              for(const data of top10) {
-                embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.user_id).displayName}`, `${library.Format.numberWithCommas(data.totalpower)}`);
-                c++;
-              }
-              embed.addField(`*Your personal total power is*`, `*${library.Format.numberWithCommas(score.totalpower)}*`)
-              return message.channel.send({embed});
-            });
+                    break;
+                }
         }
-      });
-	},
-};
+
+        //
+        // COMMIT TO THE DATABASE!
+        //
+        // We have the relevant information object (new_score)
+        // Add this into the database
+        //
+        // 1. Get existing record (if exists, go directly to 4)
+        // 2. Check if the guild_discord_id exists (and add).
+        // 3. Check if the user_discord_id exists (and add).
+        // 4. Upsert the new score data
+        db.scores.findByUserAndGuild(new_score.user_discord_id, new_score.guild_discord_id)
+            .then(score => {
+                if (score == null || score.length == 0) {
+                    score.user_id = new_score.user_discord_id,
+                        score.guild_id = new_score.guild_discord_id,
+                        score.resources_raided = 0,
+                        score.power_destroyed = 0,
+                        score.total_power = new_score.total_power,
+                        score.pvp_ships_destroyed = 0,
+                        score.pvp_kd_ratio = 0,
+                        score.pvp_total_damage = 0,
+                        score.hostiles_destroyed = 0,
+                        score.hostiles_total_damage = 0,
+                        score.resources_mined = 0,
+                        score.current_level = 0
+                }
+                logger.debug("Calling db.scores.upsert()");
+                db.scores.upsert(score).then((result) => {
+                    if (result == null) {
+                        message.channel.send({
+                            embed: {
+                                color: config.powerColor,
+                                description: `${message.author}, an error occured, and I was unable to commit your information into my database.`
+                            }
+                        });
+                    }
+                    else { // no records added?
+                        message.channel.send({
+                            embed: {
+                                color: config.powerColor,
+                                description: new_score.success_message
+                            }
+                        });
+                    }
+                })
+            })
+    } // execute
+} // module.exports
+
+

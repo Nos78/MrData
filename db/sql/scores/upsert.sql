@@ -7,8 +7,8 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: upsert.sql
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-06T00:12:39+01:00
+ * @Last modified by:
+ * @Last modified time: 2019-05-07T22:43:18+01:00
  */
 WITH insUser AS (
 	INSERT INTO users (user_id)
@@ -34,7 +34,7 @@ INSERT INTO
 SELECT
   userAndGuild.u, userAndGuild.g,
   ${powerDestroyed}, ${resourcesRaided},
-	${total_power}, ${pvpshipsDestroyed},
+	${totalPower}, ${pvpShipsDestroyed},
 	${pvpKdRatio}, ${pvpTotalDamage},
 	${hostilesDestroyed}, ${hostilesDamage},
 	${resourcesMined}, ${currentLevel}
@@ -43,9 +43,9 @@ FROM
 ON CONFLICT (user_id, guild_id) DO UPDATE SET
   power_destroyed = ${powerDestroyed},
   resources_raided = ${resourcesRaided},
-  total_power = ${total_power},
-  pvp_ships_destroyed = ${pvpshipsDestroyed},
-  pvp_kd_ratio = ${pvpkdRatio},
+  total_power = ${totalPower},
+  pvp_ships_destroyed = ${pvpShipsDestroyed},
+  pvp_kd_ratio = ${pvpKdRatio},
   pvp_total_damage = ${pvpTotalDamage},
   hostiles_destroyed = ${hostilesDestroyed},
   hostiles_total_damage = ${hostilesTotalDamage},

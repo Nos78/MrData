@@ -5,16 +5,15 @@
  * @Project: MrData
  * @Filename: scores.js
  * @Last modified by:
- * @Last modified time: 2019-05-06T01:39:08+01:00
+ * @Last modified time: 2019-05-07T22:38:50+01:00
  */
-
-
-
 'use strict';
 
 const sql = require('../sql').scores;
 
 const cs = {}; // Reusable ColumnSet objects.
+
+const logger = require('winston');
 
 class ScoresRepository {
     constructor(db, pgp) {
@@ -45,19 +44,19 @@ class ScoresRepository {
     }
 
     upsert(values) {
-      return this.db.one(sql.update, {
-          userId: values.userId,
-          guildId: values.guildId,
-          power_destroyed: values.powerDestroyed,
-          resources_raided: values.resourcesRaided,
-          totalpower: values.totalPower,
-          pvpships_destroyed: values.pvpshipsDestroyed,
-          pvpkd_ratio: values.pvpKdRatio,
-          pvp_total_damage: values.pvpTotalDamage,
-          hostiles_destroyed: values.hostilesDestroyed,
-          hostiles_total_damage: values.hostilesTotalDamage,
-          resources_mined: values.resourcesMined,
-          current_level: values.currentLevel
+      return this.db.one(sql.upsert, {
+          userId: values.user_id,
+          guildId: values.guild_id,
+          powerDestroyed: values.power_destroyed,
+          resourcesRaided: values.resources_raided,
+          totalPower: values.total_power,
+          pvpShipsDestroyed: values.pvp_ships_destroyed,
+          pvpKdRatio: values.pvp_kd_ratio,
+          pvpTotalDamage: values.pvp_total_damage,
+          hostilesDestroyed: values.hostiles_destroyed,
+          hostilesTotalDamage: values.hostiles_total_damage,
+          resourcesMined: values.resources_mined,
+          currentLevel: values.current_level
       });
     }
 
@@ -75,9 +74,10 @@ class ScoresRepository {
 
     // Finds scores by guild (individual discord server)
     findByGuild(guildId, orderBy) {
-      if (orderBy.length == 0) {
+      if (orderBy == null || orderBy.length == 0) {
         orderBy = 'user_id';
       }
+      logger.debug(`findByGuild(${guildId}, ${orderBy}`);
       return this.db.any(sql.findByGuild, {
         guildId: guildId, orderBy: orderBy
       });
@@ -112,9 +112,16 @@ function createColumnsets(pgp) {
 
         cs.insert = new pgp.helpers.ColumnSet(['user_id'], {table});
         cs.update = cs.insert.extend({name:'guild_id', mod:'^'});
-        cs.update = cs.insert.extend({name:'power_destroyed', mod:'int', def:0});
-        cs.update = cs.insert.extend({name:'resources_raided', mod:'int', def:0});
-        cs.update = cs.insert.extend({name:'totalpower', mod:'int', def:0});
+        cs.update = cs.insert.extend({name:'power_destroyed', mod:'bigint', def:0});
+        cs.update = cs.insert.extend({name:'resources_raided', mod:'bigint', def:0});
+        cs.update = cs.insert.extend({name:'total_power', mod:'bigint', def:0});
+        cs.update = cs.insert.extend({ name: 'pvp_ships_destroyed', mod: 'int', def: 0 });
+        cs.update = cs.insert.extend({ name: 'pvp_kd_ratio', mod: 'float', def: 0.0 });
+        cs.update = cs.insert.extend({ name: 'pvp_total_damage', mod: 'bigint', def: 0 });
+        cs.update = cs.insert.extend({ name: 'hostiles_destroyed', mod: 'int', def: 0 });
+        cs.update = cs.insert.extend({ name: 'hostiles_total_damage', mod: 'bigint', def: 0 });
+        cs.update = cs.insert.extend({ name: 'resources_mined', mod: 'int', def: 0 });
+        cs.update = cs.insert.extend({ name: 'current_level', mod: 'smallint', def: 0 });
     }
     return cs;
 }

@@ -1,3 +1,13 @@
+/**
+ * @Author: BanderDragon
+ * @Date:   2019-05-06T08:09:56+01:00
+ * @Email:  noscere1978@gmail.com
+ * @Project: MrData
+ * @Filename: guilds.js
+ * @Last modified by:   BanderDragon
+ * @Last modified time: 2019-05-06T20:54:27+01:00
+ */
+
 'use strict';
 
 const sql = require('../sql').guilds;

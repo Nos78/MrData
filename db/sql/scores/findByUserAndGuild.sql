@@ -1,6 +1,13 @@
-/*
+/**
+ * @Date:   2019-05-06T08:09:56+01:00
+ * @Email:  noscere1978@gmail.com
+ * @Project: MrData
+ * @Filename: findByUserAndGuild.sql
+ * @Last modified time: 2019-05-06T22:33:13+01:00
+ *
  * Finds a scores record using both the discord user id and discord guild id
  */
+
 SELECT
 	users.user_id,
 	users.id,
@@ -15,7 +22,7 @@ SELECT
 	scores.hostiles_destroyed,
 	scores.hostiles_total_damage,
 	scores.resources_mined,
-	scores.level
+	scores.current_level
 FROM
 	scores
 JOIN users ON users.id = scores.user_id
