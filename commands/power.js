@@ -134,7 +134,7 @@ module.exports = {
                     // Parameter is a number, configure the relevant information object
                     // This will be sent to the database once we drop out of the switch
                     logger.debug(`User is ${message.author.username}: Configuring the score...`)
-                    new_score.total_power =
+                    new_score.total_power = args[0];
                     new_score.user_discord_id = message.author.id;
                     new_score.success_message = `Thank you, ${message.author}, your total power is set to ${library.Format.numberWithCommas(new_score.total_power)}`;
                 }
