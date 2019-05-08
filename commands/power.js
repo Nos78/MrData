@@ -3,7 +3,7 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: power.js
- * @Last modified time: 2019-05-08T14:17:14+01:00
+ * @Last modified time: 2019-05-08T15:26:27+01:00
  */
 
 const Discord = require('discord.js');
@@ -68,7 +68,14 @@ module.exports = {
                                         .setColor(config.powerColor);
                                     var c = 1;
                                     for (const data of top10) {
-                                        embed.addField(`${c}. ${message.client.guilds.get(message.guild.id).members.get(data.user_id).displayName}`, `${library.Format.numberWithCommas(data.total_power)}`);
+                                        var top10member = message.client.guilds.get(message.guild.id).members.get(data.user_id);
+                                        var displayName = "";
+                                        if (top10member == null) {
+                                            displayName = `User ${data.user_id} has left the building`;
+                                        } else {
+                                            displayName = top10member.displayName;
+                                        }
+                                        embed.addField(`${c}. ${displayName}`, `${library.Format.numberWithCommas(data.total_power)}`);
                                         c++;
                                     }
                                     if (author_score == null || author_score.length == 0) {
@@ -88,6 +95,11 @@ module.exports = {
 				/*
 				 * Parameter could be a name or a number
 				 */
+
+                // remove commas from args[0] - these should not be present in a name
+                // but the user might input a comma-formatted number
+                args[0] = library.Format.stripCommas(args[0]);
+
                 if (isNaN(args[0])) {
                     logger.debug(`Checking if this is a name...`);
                     let member = message.mentions.members.first();
@@ -122,7 +134,7 @@ module.exports = {
                     // Parameter is a number, configure the relevant information object
                     // This will be sent to the database once we drop out of the switch
                     logger.debug(`User is ${message.author.username}: Configuring the score...`)
-                    new_score.total_power = args[0];
+                    new_score.total_power =
                     new_score.user_discord_id = message.author.id;
                     new_score.success_message = `Thank you, ${message.author}, your total power is set to ${library.Format.numberWithCommas(new_score.total_power)}`;
                 }
@@ -135,6 +147,8 @@ module.exports = {
                      * for that user.
                      */
                     let member = message.mentions.members.first();
+                    // remove commas from args[1] - the user might input a comma-formatted number
+                    args[1] = library.Format.stripCommas(args[1]);
                     if (member && !isNaN(args[1])) {
                         // The command seems to be of the form !power @name number
                         let allowedRole = message.guild.roles.find("name", "Admin");
