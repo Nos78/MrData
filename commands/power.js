@@ -33,7 +33,7 @@ module.exports = {
             success_message: ""
         };
 
-        logger.debug(`Executing resoucesraided, args: ${JSON.stringify(args)}`);
+        logger.debug(`Executing power, args: ${JSON.stringify(args)}`);
         switch (args.length) {
             case 0:
                 /*
@@ -167,7 +167,8 @@ module.exports = {
                             // Configure the information object
                             new_score.total_power = args[1];
                             new_score.user_discord_id = member.id;
-                            new_score.success_message = `Thank you, ${message.author}, ${member.displayName} total power is set to ${library.Format.numberWithCommas(new_score.total_power)}`
+                            var displayName = escape(member.displayName);
+                            new_score.success_message = `Thank you, ${message.author}, ${displayName} total power is set to ${library.Format.numberWithCommas(new_score.total_power)}`
                         }
                     }
                     break;
@@ -187,6 +188,7 @@ module.exports = {
         db.scores.findByUserAndGuild(new_score.user_discord_id, new_score.guild_discord_id)
             .then(score => {
                 if (score == null) {
+                    score = [];
                     score.user_id = new_score.user_discord_id
                     score.guild_id = new_score.guild_discord_id
                     score.resources_raided = 0

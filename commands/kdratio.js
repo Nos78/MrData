@@ -185,7 +185,8 @@ module.exports = {
         // 4. Upsert the new score data
         db.scores.findByUserAndGuild(new_score.user_discord_id, new_score.guild_discord_id)
             .then(score => {
-                if (score == null) {
+                if (score == null) 
+                    score = [];
                     score.user_id = new_score.user_discord_id
                     score.guild_id = new_score.guild_discord_id
                     score.resources_raided = 0
