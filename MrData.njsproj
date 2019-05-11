@@ -90,6 +90,16 @@
     <Folder Include="MrData" />
     <Folder Include="MrData\MrData" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="commands\hostileshipsdestroyed.js" />
+    <Compile Include="commands\hostilestotaldamage.js" />
+    <Compile Include="commands\kdratio.js" />
+    <Compile Include="commands\level.js" />
+    <Compile Include="commands\changenickname.js" />
+    <Compile Include="commands\pvpshipsdestroyed.js" />
+    <Compile Include="commands\pvptotaldamage.js" />
+    <Compile Include="commands\resourcesmined.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
