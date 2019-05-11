@@ -1,10 +1,11 @@
 /**
+ * @Author: BanderDragon
  * @Date:   2019-05-06T08:09:56+01:00
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: admin.js
- * @Last modified time: 2019-05-10T21:33:24+01:00
- *
+ * @Last modified by:   BanderDragon
+ * @Last modified time: 2019-05-11T02:40:39+01:00
  * Helper functions for Bot admin
  */
 
@@ -68,11 +69,12 @@ module.exports = {
         return true;
     },
 
-    isPrivilegedRole: function (roleId, gid) {
-        var roles = library.Admin.readRoles();
+    hasPrivilegedRole: function (member, gid) {
+        var roles = this.readRoles(gid);
         if (roles != null) {
             for (var i = 0; i < roles.length; i++) {
-                if (roles[i] == roleId) {
+
+                if (member.roles.has(roles[i])) {
                     return true;
                 }
             }

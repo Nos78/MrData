@@ -19,10 +19,8 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
-    <Content Include="add.sql" />
     <Content Include="config-secret.json" />
     <Content Include="config.json" />
-    <Content Include="create.sql" />
     <Content Include="db\sql\guilds\add.sql" />
     <Content Include="db\sql\guilds\create.sql" />
     <Content Include="db\sql\guilds\drop.sql" />
@@ -45,9 +43,6 @@
     <Content Include="db\sql\users\drop.sql" />
     <Content Include="db\sql\users\empty.sql" />
     <Content Include="db\sql\users\exists.sql" />
-    <Content Include="drop.sql" />
-    <Content Include="empty.sql" />
-    <Content Include="exists.sql" />
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
