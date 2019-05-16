@@ -23,7 +23,7 @@ module.exports = {
       if (index < args.length) {
           var returnString = args[index];
           for(var i = index + 1; i < args.length; i++) {
-              returnString = " " + args[i];
+              returnString = returnString + " " + args[i];
           }
       }
       return returnString;
