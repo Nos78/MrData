@@ -1,9 +1,11 @@
 /**
+ * @Author: BanderDragon
  * @Date:   2019-05-06T08:09:56+01:00
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: power.js
- * @Last modified time: 2019-05-08T15:26:27+01:00
+ * @Last modified by:   BanderDragon
+ * @Last modified time: 2019-05-18T23:50:23+01:00
  */
 
 const Discord = require('discord.js');
@@ -236,6 +238,7 @@ module.exports = {
                         });
                     }
                 })
+                library.League.outputTables(message.client);
             })
     } // execute
 } // module.exports

@@ -1,14 +1,11 @@
 /**
- *
- * Resources Raided command.
- *
  * @Author: BanderDragon
- * @Date:   2019-04-13T20:07:36+01:00
+ * @Date:   2019-05-10T20:21:49+01:00
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: resourcesraided.js
- * @Last modified by:
- * @Last modified time: 2019-05-08T15:26:37+01:00
+ * @Last modified by:   BanderDragon
+ * @Last modified time: 2019-05-18T23:50:42+01:00
  */
 
 const Discord = require('discord.js');
@@ -25,6 +22,7 @@ module.exports = {
     aliases: ['rr'],
     args: false,
     usage: '<number>',
+    cooldown: 3,
     cooldown: 3,
     guildOnly: true,
     execute(message, args) {
@@ -237,6 +235,7 @@ module.exports = {
                         });
                     }
                 })
+                library.League.outputTables(message.client);
             })
     } // execute
 } // module.exports

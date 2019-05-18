@@ -5,7 +5,7 @@
  * @Project: MrData
  * @Filename: admin.js
  * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-11T02:40:39+01:00
+ * @Last modified time: 2019-05-18T23:46:05+01:00
  * Helper functions for Bot admin
  */
 
@@ -80,5 +80,14 @@ module.exports = {
             }
         }
         return false;
+    },
+
+    deleteAllMessages: async function (channel) {
+        let fetched;
+        do {
+            fetched = await channel.fetchMessages({limit: 100});
+            channel.bulkDelete(fetched);
+        }
+        while(fetched.size >= 2);
     }
 }
