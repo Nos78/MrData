@@ -5,31 +5,36 @@
  * @Project: MrData
  * @Filename: index.js
  * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-18T23:44:57+01:00
+ * @Last modified time: 2019-05-19T00:03:12+01:00
  */
 
 const logger = require('winston');
 const library = require('../../library');
-const config = require('../../config.json');
-
 
 module.exports = {
-    clearChannelAndSend: function (channel, messageToSend) {
-        if(channel != null) {
-            libary.Admin.deleteAllMessages(channel)
-              .then (returnValue => {
-                  let m = channel.send(messageToSend);
-                  m.delete;
-            });
+    clearChannelAndSend: async function (channel, messageToSend) {
+        if (channel != null) {
+            let fetched;
+            do {
+                fetched = await channel.fetchMessages({ limit: 100 });
+                channel.bulkDelete(fetched);
+            }
+            while (fetched.size >= 2);
+            let m = channel.send(messageToSend);
+            m.delete;
         }
     },
 
     outputTables: function (client) {
+        // we want the bot not to ignore the next 3 messages
+        client.ignoreMyself = false;
+        client.myselfMaximum = client.myselfMaximum + 3;
+
         let chan = client.channels.find("name", "power");
-        library.League.clearChannelAndSend(chan, "!power");
-        let chan = client.channels.find("name", "resources-raided");
-        library.League.clearChannelAndSend(chan, "!rr");
-        let chan = client.channels.find("name", "power-destroyed");
-        library.League.clearChannelAndSend(chan, "!pd");
+        this.clearChannelAndSend(chan, "!power");
+        chan = client.channels.find("name", "resources-raided");
+        this.clearChannelAndSend(chan, "!rr");
+        chan = client.channels.find("name", "power-destroyed");
+        this.clearChannelAndSend(chan, "!pd");
     }
 }

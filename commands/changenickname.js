@@ -4,8 +4,8 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: changenickname.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-11T02:41:08+01:00
+ * @Last modified by:
+ * @Last modified time: 2019-05-14T09:58:23+01:00
  */
 
 const library = require('../library');
@@ -45,5 +45,6 @@ module.exports = {
                 break;
         }
         message.guild.members.get(userToChange).setNickname(newNickname);
+        return message.channel.send(`${message.author}, that nickname has been successfully updated.`);
     },
 }

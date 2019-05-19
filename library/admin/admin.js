@@ -10,7 +10,6 @@
  */
 
 const logger = require('winston');
-const library = require('../../library');
 const config = require('../../config.json');
 
 var fs = require('fs');

@@ -4,8 +4,8 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: bot.js
- * @Last modified by:
- * @Last modified time: 2019-05-06T01:32:42+01:00
+ * @Last modified by:   BanderDragon
+ * @Last modified time: 2019-05-11T01:36:09+01:00
  */
 
 // Configure the Discord bot client
@@ -13,7 +13,6 @@ const Discord = require('discord.js');
 const config = require('./config.json');
 const configSecret = require('./config-secret.json');
 const db = require('./db');
-
 const fs = require('fs');
 
 // Set up the logger for debug/info
@@ -29,8 +28,8 @@ logger.level = config.debugLevel;
 // Initialize Discord Bot
 // token needs to be added to config.json
 const client = new Discord.Client({
- token: config.token,
- autorun: true
+    token: config.token,
+    autorun: true
 });
 
 client.commands = new Discord.Collection();
@@ -41,16 +40,29 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 // read commands directory and place
 // into the commands collection
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
+    const command = require(`./commands/${file}`);
 
-	// set a new item in the Collection
-	// with the key as the command name and the value as the exported module
-	client.commands.set(command.name, command);
+    // set a new item in the Collection
+    // with the key as the command name and the value as the exported module
+    client.commands.set(command.name, command);
 }
 
 //
 // initialise the cooldowns collection
 const cooldowns = new Discord.Collection();
+
+client.ignoreBots = true;
+client.ignoreMyself = true;
+client.myselfCount = 0;
+client.myselfMaximum = 0;
+var me = false;
+
+try {
+    client.deleteCallingCommand = config.deleteCallingCommand
+} catch (error) {
+    logger.info(`Failed to access config.deleteCallingCommand; update your config.json with this member.  Error: ${JSON.stringify(error)}`);
+    client.deleteCallingCommand = false;
+}
 
 //
 // Set up the callback functions
@@ -59,61 +71,61 @@ const cooldowns = new Discord.Collection();
 // bot.on ready - used when the bot comes online
 //
 client.on("ready", () => {
-  logger.info('Connected');
-  logger.info('Logged in as: ');
-  logger.info(client.user.username + ' - (' + client.user.id + ')');
-  // Update the bot activity text to reflect the connections status
-  client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
-  logger.info(`${client.user.username} Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
+    logger.info('Connected');
+    logger.info('Logged in as: ');
+    logger.info(client.user.username + ' - (' + client.user.id + ')');
+    // Update the bot activity text to reflect the connections status
+    client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
+    logger.info(`${client.user.username} Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
 
-  /* We want to ensure our database is created when the bot comes online
-   * and configure it if they don't exist...
-   *
-   * Create the users and guilds tables first, then the dependant tables...
-   */
+    /* We want to ensure our database is created when the bot comes online
+     * and configure it if they don't exist...
+     *
+     * Create the users and guilds tables first, then the dependant tables...
+     */
 
-  db.users.exists()
-    .then(data => {
-      if(data.rows[0].exists == false) {
-        // Database does not exist, lets create it...
-        logger.debug(`No database users table found!  Creating...`);
-        db.users.create();
-        logger.debug(`Users configured.`)
-    }
-  });
+    db.users.exists()
+        .then(data => {
+            if (data.rows[0].exists == false) {
+                // Database does not exist, lets create it...
+                logger.debug(`No database users table found!  Creating...`);
+                db.users.create();
+                logger.debug(`Users configured.`)
+            }
+        });
 
-  db.guilds.exists()
-    .then(data => {
-      if(data.rows[0].exists == false) {
-        // Database does not exist, lets create it...
-        logger.debug(`No database users table found!  Creating...`);
-        db.guilds.create();
-        logger.debug(`Guilds configured.`)
-    }
-  });
+    db.guilds.exists()
+        .then(data => {
+            if (data.rows[0].exists == false) {
+                // Database does not exist, lets create it...
+                logger.debug(`No database users table found!  Creating...`);
+                db.guilds.create();
+                logger.debug(`Guilds configured.`)
+            }
+        });
 
-  db.scores.exists()
-    .then(data => {
-      if(data.rows[0].exists == false) {
-        // Database does not exist, lets create it...
-        logger.debug(`No database score table found!  Creating...`);
-        db.scores.create();
-        logger.debug(`Scores configured.`)
-    }
-  });
+    db.scores.exists()
+        .then(data => {
+            if (data.rows[0].exists == false) {
+                // Database does not exist, lets create it...
+                logger.debug(`No database score table found!  Creating...`);
+                db.scores.create();
+                logger.debug(`Scores configured.`)
+            }
+        });
 
-  /* Populate the database with the guilds we are online in. */
-  //for (x = 0; x < client.guilds.size; x++) {
-  client.guilds.forEach((guild) => {
-    logger.info(`Adding ${guild.name}, id: ${guild.id} to the database`);
-    db.guilds.add(guild.id).then((guild_record) => {
-        if(guild_record == null) {
-          logger.info(`Guild already exists.`);
-        } else {
-          logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table.`);
-        }
-    });
-  }); // end for
+    /* Populate the database with the guilds we are online in. */
+    //for (x = 0; x < client.guilds.size; x++) {
+    client.guilds.forEach((guild) => {
+        logger.info(`Adding ${guild.name}, id: ${guild.id} to the database`);
+        db.guilds.add(guild.id).then((guild_record) => {
+            if (guild_record == null) {
+                logger.info(`Guild already exists.`);
+            } else {
+                logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table.`);
+            }
+        });
+    }); // end for
 });
 
 //
@@ -122,87 +134,123 @@ client.on("ready", () => {
 // a guild server...
 //
 client.on("guildCreate", guild => {
-  // This event triggers when the bot joins a guild.
-  logger.info(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  // Update the bot activity text to reflect the new stat
-  client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
-  db.guilds.add(guild.id)
-    .then(guild_record => {
-      console.log("guild added to database.");
-      logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table. ${guild_record.count} records added.`);
-    });
+    // This event triggers when the bot joins a guild.
+    logger.info(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+    // Update the bot activity text to reflect the new stat
+    client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
+    db.guilds.add(guild.id)
+        .then(guild_record => {
+            logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table. ${guild_record.count} records added.`);
+        });
 });
 
 client.on("guildDelete", guild => {
-  // this event triggers when the bot is removed from a guild.
-  logger.info(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  // Update the bot activity text to reflect the new stat
-  client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING'});
+    // this event triggers when the bot is removed from a guild.
+    logger.info(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+    // Update the bot activity text to reflect the new stat
+    client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
 });
 
 client.on('message', async message => {
-  // Ignore other bots!
-  if(message.author.bot) return;
-
-  // The bot should ignore any messages that are not commands
-  // It will listen for messages that will start with the prefix
-  // that is specified in config.prefix
-  if(message.content.indexOf(config.prefix) !== 0) return;
-
-  // split up the message into the command word and any additional arguements
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-  const cmdName = args.shift().toLowerCase();
-
-  // get the specified command name
-  const cmd = client.commands.get(cmdName)
-    || client.commands.find(command => command.aliases && command.aliases.includes(cmdName));
-
-  // If no command exists, simply exit
-  if (!cmd) return;
-
-  // Some commands are not meant to be executed inside DMs
-  if (cmd.guildOnly && message.channel.type !== 'text') {
-  	return message.reply('I cannot execute that command inside a direct message!');
-  }
-
-  // If the command requires arguments yet there are none, provide
-  // the user with a correct explanation.
-  if (cmd.args && !args.length) {
-    let reply = `You didn't provide any arguments, ${message.author}!`;
-    if (cmd.usage) {
-      reply += `\nThe proper usage would be: \`${config.prefix}${cmd.name} ${cmd.usage}\``;
+    // Ignore other bots!
+    if (client.user.id == message.author.id) {
+        // I sent this message
+        me = true;
+        if (client.ignoreMyself) {
+            return;
+        } else {
+            logger.debug(`Not ignoring myself for ${client.myselfCount + 1} command, a maximum of ${client.myselfMaximum}`)
+        }
+    } else {
+        me = false;
+        if (client.ignoreBots) {
+            if (message.author.bot) {
+                return;
+            }
+        }
     }
-    return message.channel.send(reply);
-  }
 
-  // Check for cooldowns status
-  if (!cooldowns.has(cmd.name)) {
-	   cooldowns.set(cmd.name, new Discord.Collection());
-  }
+    // split up the message into the command word and any additional arguements
+    const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+    const cmdName = args.shift().toLowerCase();
 
-  const now = Date.now();
-  const timestamps = cooldowns.get(cmd.name);
-  const cooldownAmount = (cmd.cooldown || 3) * 1000;
+    // get the specified command name
+    const cmd = client.commands.get(cmdName)
+        || client.commands.find(command => command.aliases && command.aliases.includes(cmdName));
 
-  if (timestamps.has(message.author.id)) {
-    const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+    // If no command exists, simply exit
+    if (!cmd) return;
 
-  	if (now < expirationTime) {
-  		const timeLeft = (expirationTime - now) / 1000;
-  		return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${cmd.name}\` command.`);
-  	}
-  }
-  timestamps.set(message.author.id, now);
-  setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    // Some commands are not meant to be executed inside DMs
+    if (cmd.guildOnly && message.channel.type !== 'text') {
+        return message.reply('I cannot execute that command inside a direct message!');
+    }
 
-  // try to execute the command
-  // and exit gracefully on error
-  try {
-    cmd.execute(message, args);
-  } catch (error) {
-    console.error(error);
-    message.reply('there was an error trying to execute that command!');
-  }
+    // If the command requires arguments yet there are none, provide
+    // the user with a correct explanation.
+    if (cmd.args && !args.length) {
+        let reply = `You didn't provide any arguments, ${message.author}!`;
+        if (cmd.usage) {
+            reply += `\nThe proper usage would be: \`${config.prefix}${cmd.name} ${cmd.usage}\``;
+        }
+        return message.channel.send(reply);
+    }
+
+    // Check if a specified role is required
+    if(cmd.role) {
+        let allowedRole = message.guild.roles.find("name", cmd.role);
+        if(!message.member.roles.has(allowedRole.id)) {
+            return message.channel.send(`You cannot use this command, only members of *${cmd.role}* can use this command.`)
+        }
+    }
+
+    // Check if a specified channel is required
+    if(cmd.channel) {
+        if(message.channel.name != cmd.channel) {
+            return message.channel.send(`You can only use this command in the *${cmd.channel}* channel.`);
+        }
+    }
+
+    // Check for cooldowns status
+    if (!cooldowns.has(cmd.name)) {
+        cooldowns.set(cmd.name, new Discord.Collection());
+    }
+
+    const now = Date.now();
+    const timestamps = cooldowns.get(cmd.name);
+    const cooldownAmount = (cmd.cooldown || 3) * 1000;
+
+    if (timestamps.has(message.author.id)) {
+        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+        if (now < expirationTime) {
+            const timeLeft = (expirationTime - now) / 1000;
+            //return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${cmd.name}\` command.`);
+        }
+    }
+    timestamps.set(message.author.id, now);
+    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+
+    // try to execute the command
+    // and exit gracefully on error
+    try {
+        if (me) {
+            client.myselfCount++;
+
+            if (client.myselfCount == client.myselfMaximum) {
+                client.ignoreMyself = true;
+                client.myselfCount = 0;
+                client.myselfMaximum = 0;
+            }
+        }
+        cmd.execute(message, args);
+        if (client.deleteCallingCommand) {
+            message.delete;
+        }
+    } catch (error) {
+        logger.error(error);
+        message.reply('there was an error trying to execute that command!');
+    }
 });
 
 // Start the client!

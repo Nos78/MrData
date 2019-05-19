@@ -23,7 +23,6 @@ module.exports = {
     args: false,
     usage: '<number>',
     cooldown: 3,
-    cooldown: 3,
     guildOnly: true,
     execute(message, args) {
         // New score object stores the data for adding into the database
@@ -119,8 +118,8 @@ module.exports = {
 										color: config.resourcesRaidedColor,
 										description: `${desc}`
 									} // Embed
- 		                        }); // message.channel.send
-		                        return;
+                                }); // message.channel.send
+                                return;
                         }); // db.findByUserAndGuild
                     } else {
                         // not a member, print the error message and exit

@@ -23,7 +23,7 @@ module.exports = {
   collateArgs: function(index, args) {
       var returnString = "";
       if (index < args.length) {
-          var returnString = args[index];
+          returnString = args[index];
           for(var i = index + 1; i < args.length; i++) {
               returnString = returnString + " " + args[i];
           }
