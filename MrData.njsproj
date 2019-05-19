@@ -82,10 +82,12 @@
     <Folder Include="library" />
     <Folder Include="library\admin" />
     <Folder Include="library\format" />
+    <Folder Include="library\league\" />
     <Folder Include="MrData" />
     <Folder Include="MrData\MrData" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="commands\deletecallingcommand.js" />
     <Compile Include="commands\hostileshipsdestroyed.js" />
     <Compile Include="commands\hostilestotaldamage.js" />
     <Compile Include="commands\kdratio.js" />
@@ -94,6 +96,8 @@
     <Compile Include="commands\pvpshipsdestroyed.js" />
     <Compile Include="commands\pvptotaldamage.js" />
     <Compile Include="commands\resourcesmined.js" />
+    <Compile Include="commands\sendmessage.js" />
+    <Compile Include="library\league\league.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
