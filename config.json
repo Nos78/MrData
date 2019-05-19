@@ -13,5 +13,6 @@
   "pvptotaldamageColor": 16711680,
   "debugLevel": "none",
   "rolesPathAndFilename": "./roles/roles.",
-  "rolesExtension": ".json"
+  "rolesExtension": ".json",
+  "deleteCallingCommand":  false
 }
