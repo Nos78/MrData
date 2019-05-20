@@ -23,7 +23,7 @@ module.exports = {
                 return message.channel.send("Not enough parameters!  Please use `!artr <from role A> <to role B>`");
             } else {
                 let roleA = message.guild.roles.find("name", args[0]);
-                let RoleB = message.guild.roles.find("name", args[1]);
+                let roleB = message.guild.roles.find("name", args[1]);
                 if(roleA == null) {
                   return message.channel.send(`Please specify valid roles!  ${roleA} does not exist.  Please use \`!artr <from role A> <to role B>\``);
                 }
@@ -32,8 +32,8 @@ module.exports = {
                 }
 
                 message.guild.members.forEach(function(member) {
-                    if(member.roles.has(roleA)) {
-                        member.addRole(roleB);
+                    if(member.roles.has(roleA.id)) {
+                        member.addRole(roleB.id);
                     }
                 });
             }
