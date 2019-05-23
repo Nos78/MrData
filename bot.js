@@ -14,6 +14,7 @@ const config = require('./config.json');
 const configSecret = require('./config-secret.json');
 const db = require('./db');
 const fs = require('fs');
+const cmdLog = './cmdExec.log';
 
 // Set up the logger for debug/info
 const logger = require('winston');
@@ -62,6 +63,18 @@ try {
 } catch (error) {
     logger.info(`Failed to access config.deleteCallingCommand; update your config.json with this member.  Error: ${JSON.stringify(error)}`);
     client.deleteCallingCommand = false;
+}
+
+try {
+    var stream = fs.createWriteStream(cmdLog, {flags:'a'}); 
+    client.cmdLogStream = stream;
+    if(stream == null) {
+        logger.info(`Unable to initialise file stream for cmdExec.log`);
+    } else {
+        stream.write(new Date().toISOString() + ` bot started`) + `/n`;
+    }
+} catch (error) {
+    logger.info(`Unable to write ${cmdLog}`);
 }
 
 //
@@ -243,6 +256,21 @@ client.on('message', async message => {
                 client.myselfMaximum = 0;
             }
         }
+
+        if(client.cmdLogStream == null) {
+            logger.info("No open logfile stream");
+            client.cmdLogStream = fs.createWriteStream(cmdLog, {flags:'a'});
+        }
+        try {
+            nowDateTimeStr = new Date().toISOString();
+            logger.debug(`${nowDateTimeStr} - Writing to log file...`);
+            client.cmdLogStream.write(nowDateTimeStr + ':' + "\n");
+            client.cmdLogStream.write("    " + `executing ${cmd.name}` + "\n");
+            client.cmdLogStream.write("    " + `called by ${message.author.username}` + "\n\n");
+        } catch (e) {
+            logger.error(e);
+        }
+
         cmd.execute(message, args);
         if (client.deleteCallingCommand) {
             message.delete;
