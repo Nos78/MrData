@@ -14,5 +14,6 @@
   "debugLevel": "none",
   "rolesPathAndFilename": "./roles/roles.",
   "rolesExtension": ".json",
-  "deleteCallingCommand":  false
+  "deleteCallingCommand":  false,
+  "botCreator": "515622530371944448"
 }

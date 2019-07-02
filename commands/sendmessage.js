@@ -18,11 +18,8 @@ module.exports = {
     args: true,
     guildOnly: true,
     execute(message, args) {
-        var userToChange = null;
-        var newNickname = "";
-
         if (library.Admin.isAdmin(message.author.id, message.guild.id, message.client)) {
-            msgToSend = library.collateArgs(0, args);
+            var msgToSend = library.collateArgs(0, args);
             message.channel.send(msgToSend);
             message.delete();
         }
