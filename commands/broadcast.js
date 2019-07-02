@@ -3,7 +3,7 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: broadcast.js
- * @Last modified time: 2019-07-02T02:45:35+01:00
+ * @Last modified time: 2019-07-02T03:03:58+01:00
  */
 
 const library = require('../library');
@@ -33,7 +33,7 @@ module.exports = {
                             var msgToSend = library.collateArgs(0, args);
                             logger.debug(`sending to ${channel.name} on guild server ${guild.name}`);
                             logger.debug(`message: '${msgToSend}'`);
-                            channel.send(message);
+                            channel.send(msgToSend);
                         } else {
                             logger.debug(`Unable to send to ${channel.name} on guild server ${guild.name}`);
                         }
