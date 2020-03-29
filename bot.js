@@ -5,7 +5,7 @@
  * @Project: MrData
  * @Filename: bot.js
  * @Last modified by:
- * @Last modified time: 2020-03-29T19:20:32+01:00
+ * @Last modified time: 2020-03-29T23:20:56+01:00
  */
 
 // Configure the Discord bot client
@@ -181,6 +181,11 @@ client.on('message', async message => {
                 return;
             }
         }
+    }
+
+    if (!(message.content && message.content.startsWith(config.prefix))) {
+      // Not prefixed, do not continue
+      return;
     }
 
     // split up the message into the command word and any additional arguements
