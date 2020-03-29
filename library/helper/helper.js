@@ -3,7 +3,7 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: helper.js
- * @Last modified time: 2020-03-29T19:03:02+01:00
+ * @Last modified time: 2020-03-29T21:06:30+01:00
  */
 
  const format = require('../format/format.js');
@@ -20,8 +20,8 @@
          }
        }
 
-       if (count > 25) {
-         count = 25;
+       if (count > 24) {
+         count = 24;
        }
        return count;
      },
