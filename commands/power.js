@@ -4,8 +4,8 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: power.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-18T23:50:23+01:00
+ * @Last modified by:
+ * @Last modified time: 2020-03-29T17:32:12+01:00
  */
 
 const Discord = require('discord.js');
@@ -35,6 +35,25 @@ module.exports = {
             success_message: ""
         };
 
+        var maxRankCount = 10;
+
+        if (args.length == 2) {
+          if ((args[0] == '-c' || args[0] == '-count') && !isNaN(args[1])) {
+            maxRankCount = args[1];
+          }
+        }
+
+        if(maxRankCount < 1) {
+          // not a member, print the error message and exit
+          message.channel.send({
+              embed: {
+                  color: config.powerColor,
+                  description: `${message.author}, that command makes no sense - you cannot print a ranking table containing ${maxRankCount} users!`
+              }
+          });
+          return;
+        }
+
         logger.debug(`Executing power, args: ${JSON.stringify(args)}`);
         switch (args.length) {
             case 0:
@@ -50,7 +69,7 @@ module.exports = {
                  */
                 db.scores.findByUserAndGuild(message.author.id, message.guild.id)
                     .then(author_score => {
-                        db.scores.findByGuild(message.guild.id, 'total_power DESC LIMIT 10')
+                        db.scores.findByGuild(message.guild.id, `total_power DESC LIMIT ${maxRankCount}`)
                             .then(top10 => {
                                 logger.debug(`findByGuild().then() called for ${message.guild}`);
                                 if (top10 == null || top10.length == 0) {
@@ -66,7 +85,7 @@ module.exports = {
                                     const embed = new Discord.RichEmbed()
                                         .setTitle("Total Power Leaderboard")
                                         .setAuthor(message.client.user.username, message.client.user.avatarURL)
-                                        .setDescription("Our top 10 total power scores!")
+                                        .setDescription(`Our top ${maxRankCount} total power scores!`)
                                         .setColor(config.powerColor);
                                     var c = 1;
                                     for (const data of top10) {
