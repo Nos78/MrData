@@ -3,7 +3,7 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: hostileshipsdestroyed.js
- * @Last modified time: 2019-05-08T16:43:27+01:00
+ * @Last modified time: 2020-03-29T19:14:42+01:00
  */
 
 const Discord = require('discord.js');
@@ -16,7 +16,7 @@ const logger = require('winston');
 
 module.exports = {
     name: 'hostileshipsdestroyed',
-    description: 'See the top 10 hostile ships destroyed scores, or set your own hostile ships destroyed score.',
+    description: 'See the top 10 hostile ships destroyed scores, or set your own hostile ships destroyed score. **Custom top X** - *Use !hsd -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['hsd'],
     args: false,
     usage: '<number>',
@@ -33,6 +33,19 @@ module.exports = {
             success_message: ""
         };
 
+        var maxRankCount = library.Helper.parseMaxRankCount(args);
+
+        if(maxRankCount < 1) {
+          // not a member, print the error message and exit
+          message.channel.send({
+              embed: {
+                  color: config.hostileshipsdestroyedColor,
+                  description: `${message.author}, that command makes no sense - you cannot print a ranking table containing ${maxRankCount} users!`
+              }
+          });
+          return;
+        }
+
         logger.debug(`Executing hostileshipsdestroyed, args: ${JSON.stringify(args)}`);
         switch (args.length) {
             case 0:
@@ -48,7 +61,7 @@ module.exports = {
                  */
                 db.scores.findByUserAndGuild(message.author.id, message.guild.id)
                     .then(author_score => {
-                        db.scores.findByGuild(message.guild.id, 'hostiles_destroyed DESC LIMIT 10')
+                        db.scores.findByGuild(message.guild.id, `hostiles_destroyed DESC LIMIT ${maxRankCount}`)
                             .then(top10 => {
                                 logger.debug(`findByGuild().then() called for ${message.guild}`);
                                 if (top10 == null || top10.length == 0) {
@@ -64,7 +77,7 @@ module.exports = {
                                     const embed = new Discord.RichEmbed()
                                         .setTitle("hostile ships destroyed Leaderboard")
                                         .setAuthor(message.client.user.username, message.client.user.avatarURL)
-                                        .setDescription("Our top 10 Hostile Ships Destroyed scores!")
+                                        .setDescription(`Our top ${maxRankCount} Hostile Ships Destroyed scores!`)
                                         .setColor(config.hostileshipsdestroyedColor);
                                     var c = 1;
                                     for (const data of top10) {

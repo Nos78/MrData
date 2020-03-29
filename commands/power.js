@@ -5,7 +5,7 @@
  * @Project: MrData
  * @Filename: power.js
  * @Last modified by:
- * @Last modified time: 2020-03-29T17:32:12+01:00
+ * @Last modified time: 2020-03-29T19:10:41+01:00
  */
 
 const Discord = require('discord.js');
@@ -18,7 +18,7 @@ const logger = require('winston');
 
 module.exports = {
     name: 'power',
-    description: 'See the top 10 power scores, or set your own power score.',
+    description: 'See the top 10 power scores, or set your own power score. **Custom top X** - *Use !p -c X* or *!power -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['p'],
     args: false,
     usage: '<number>',
@@ -35,13 +35,7 @@ module.exports = {
             success_message: ""
         };
 
-        var maxRankCount = 10;
-
-        if (args.length == 2) {
-          if ((args[0] == '-c' || args[0] == '-count') && !isNaN(args[1])) {
-            maxRankCount = args[1];
-          }
-        }
+        var maxRankCount = library.Helper.parseMaxRankCount(args);
 
         if(maxRankCount < 1) {
           // not a member, print the error message and exit

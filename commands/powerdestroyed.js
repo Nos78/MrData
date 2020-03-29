@@ -4,8 +4,8 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: powerdestroyed.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-18T23:50:30+01:00
+ * @Last modified by:
+ * @Last modified time: 2020-03-29T19:10:03+01:00
  */
 
 const Discord = require('discord.js');
@@ -18,7 +18,7 @@ const logger = require('winston');
 
 module.exports = {
     name: 'powerdestroyed',
-    description: 'See the top 10 power destroyed scores, or set your own power destroyed score.',
+    description: 'See the top 10 power destroyed scores, or set your own power destroyed score.  **Custom top X** - *Use !pd -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['pd'],
     args: false,
     usage: '<number>',
@@ -35,6 +35,19 @@ module.exports = {
             success_message: ""
         };
 
+        var maxRankCount = library.Helper.parseMaxRankCount(args);
+
+        if(maxRankCount < 1) {
+          // not a member, print the error message and exit
+          message.channel.send({
+              embed: {
+                  color: config.powerDestroyedColor,
+                  description: `${message.author}, that command makes no sense - you cannot print a ranking table containing ${maxRankCount} users!`
+              }
+          });
+          return;
+        }
+
         logger.debug(`Executing powerdestroyed, args: ${JSON.stringify(args)}`);
         switch (args.length) {
             case 0:
@@ -50,7 +63,7 @@ module.exports = {
                  */
                 db.scores.findByUserAndGuild(message.author.id, message.guild.id)
                     .then(author_score => {
-                        db.scores.findByGuild(message.guild.id, 'power_destroyed DESC LIMIT 10')
+                        db.scores.findByGuild(message.guild.id, `power_destroyed DESC LIMIT ${maxRankCount}`)
                             .then(top10 => {
                                 logger.debug(`findByGuild().then() called for ${message.guild}`);
                                 if (top10 == null || top10.length == 0) {
@@ -66,7 +79,7 @@ module.exports = {
                                     const embed = new Discord.RichEmbed()
                                         .setTitle("Power Destroyed Leaderboard")
                                         .setAuthor(message.client.user.username, message.client.user.avatarURL)
-                                        .setDescription("Our top 10 power destroyed scores!")
+                                        .setDescription(`Our top ${maxRankCount} power destroyed scores!`)
                                         .setColor(config.powerDestroyedColor);
                                     var c = 1;
                                     for (const data of top10) {

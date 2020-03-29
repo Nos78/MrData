@@ -5,18 +5,18 @@
  * @Project: MrData
  * @Filename: id.js
  * @Last modified by:
- * @Last modified time: 2019-05-06T18:47:04+01:00
+ * @Last modified time: 2020-03-29T19:22:05+01:00
  */
 
  const config = require('../config.json');
 
  module.exports = {
- 	name: 'deletecallingcommand',
- 	description: 'Returns the discord Id of the specified user.  If no parameter is specified, it returns the sender\'s Id',
- 	cooldown: 60,
- 	args: false,
+  name: 'deletecallingcommand',
+  description: 'Returns the discord Id of the specified user.  If no parameter is specified, it returns the sender\'s Id',
+  cooldown: 60,
+  args: false,
   usage: '<@memberName>',
- 	async execute(message, args) {
+  async execute(message, args) {
     var findThisUser = null;
     var desc = "";
 
@@ -27,7 +27,7 @@
         desc = `${message.author}, your id is `;
         break;
       case 1:
-        member = message.mentions.members.first();
+        var member = message.mentions.members.first();
         desc = `${message.author}, the id of ${member.displayname} is `;
         findThisUser = member.id;
         break;
@@ -39,5 +39,5 @@
          description: `${desc}`
        }});
      }
- 	},
+  },
  };

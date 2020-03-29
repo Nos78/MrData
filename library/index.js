@@ -4,8 +4,8 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: index.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-18T23:33:54+01:00
+ * @Last modified by:
+ * @Last modified time: 2020-03-29T18:27:57+01:00
  */
 
 'use strict';
@@ -14,12 +14,14 @@
 const format = require('./format/format.js');
 const admin = require('./admin/admin.js');
 const league = require('./league/league.js');
+const helper = require('./helper/helper.js');
 
 module.exports = {
   Format: format,
   Admin: admin,
   League: league,
-  
+  Helper: helper,
+
   collateArgs: function(index, args) {
       var returnString = "";
       if (index < args.length) {
