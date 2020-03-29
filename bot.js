@@ -4,8 +4,8 @@
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
  * @Filename: bot.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-11T01:36:09+01:00
+ * @Last modified by:
+ * @Last modified time: 2020-03-29T19:20:32+01:00
  */
 
 // Configure the Discord bot client
@@ -66,7 +66,7 @@ try {
 }
 
 try {
-    var stream = fs.createWriteStream(cmdLog, {flags:'a'}); 
+    var stream = fs.createWriteStream(cmdLog, {flags:'a'});
     client.cmdLogStream = stream;
     if(stream == null) {
         logger.info(`Unable to initialise file stream for cmdExec.log`);
@@ -262,7 +262,7 @@ client.on('message', async message => {
             client.cmdLogStream = fs.createWriteStream(cmdLog, {flags:'a'});
         }
         try {
-            nowDateTimeStr = new Date().toISOString();
+            var nowDateTimeStr = new Date().toISOString();
             logger.debug(`${nowDateTimeStr} - Writing to log file...`);
             client.cmdLogStream.write(nowDateTimeStr + ':' + "\n");
             client.cmdLogStream.write("    " + `executing ${cmd.name}` + "\n");
