@@ -6,13 +6,16 @@
   "author": "BanderDragon#5699",
   "dependencies": {
     "bluebird": "^3.5.4",
+    "bufferutil": "^4.0.1",
     "discord.js": "^11.5.0",
+    "libsodium-wrappers": "^0.7.6",
     "pg": "^7.11.0",
     "pg-monitor": "^1.1.0",
     "pg-promise": "^8.7.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@discordjs/uws": "^10.149.0",
     "eslint": "^5.16.0"
   },
   "scripts": {
