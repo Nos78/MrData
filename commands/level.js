@@ -212,6 +212,9 @@ module.exports = {
                     score.hostiles_total_damage = 0
                     score.resources_mined = 0
                     score.current_level = new_score.current_level
+                    score.alliances_help = 0
+                    score.missions = 0
+
                 } else if (score.length == 0) {
                     score.guild_id = new_score.guild_discord_id
                     score.resources_raided = 0
@@ -224,6 +227,8 @@ module.exports = {
                     score.hostiles_total_damage = 0
                     score.resources_mined = 0
                     score.current_level = new_score.current_level
+                    score.alliances_help = 0
+                    score.missions = 0
                 } else {
                     score.current_level = new_score.current_level
                 }

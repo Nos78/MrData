@@ -56,7 +56,9 @@ class ScoresRepository {
           hostilesDestroyed: values.hostiles_destroyed,
           hostilesTotalDamage: values.hostiles_total_damage,
           resourcesMined: values.resources_mined,
-          currentLevel: values.current_level
+          currentLevel: values.current_level,
+          alliancesHelpSent: values.alliances_help,
+          missions: values.missions
       });
     }
 
@@ -111,10 +113,10 @@ function createColumnsets(pgp) {
         const table = new pgp.helpers.TableName({table: 'scores', schema: 'public'});
 
         cs.insert = new pgp.helpers.ColumnSet(['user_id'], {table});
-        cs.update = cs.insert.extend({name:'guild_id', mod:'^'});
-        cs.update = cs.insert.extend({name:'power_destroyed', mod:'bigint', def:0});
-        cs.update = cs.insert.extend({name:'resources_raided', mod:'bigint', def:0});
-        cs.update = cs.insert.extend({name:'total_power', mod:'bigint', def:0});
+        cs.update = cs.insert.extend({ name: 'guild_id', mod:'^'});
+        cs.update = cs.insert.extend({ name: 'power_destroyed', mod:'bigint', def:0});
+        cs.update = cs.insert.extend({ name: 'resources_raided', mod:'bigint', def:0});
+        cs.update = cs.insert.extend({ name: 'total_power', mod:'bigint', def:0});
         cs.update = cs.insert.extend({ name: 'pvp_ships_destroyed', mod: 'int', def: 0 });
         cs.update = cs.insert.extend({ name: 'pvp_kd_ratio', mod: 'float', def: 0.0 });
         cs.update = cs.insert.extend({ name: 'pvp_total_damage', mod: 'bigint', def: 0 });
@@ -122,6 +124,8 @@ function createColumnsets(pgp) {
         cs.update = cs.insert.extend({ name: 'hostiles_total_damage', mod: 'bigint', def: 0 });
         cs.update = cs.insert.extend({ name: 'resources_mined', mod: 'int', def: 0 });
         cs.update = cs.insert.extend({ name: 'current_level', mod: 'smallint', def: 0 });
+        cs.update = cs.insert.extend({ name: 'alliances_help', mod: 'int', def: 0 });
+        cs.update = cs.insert.extend({ name: 'missions', mod: 'smallint', def: 0 });
     }
     return cs;
 }

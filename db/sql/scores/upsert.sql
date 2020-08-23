@@ -1,4 +1,4 @@
-/**
+-/**
  * Inserts or replaces a user's score record for a given guild_id.
  * Using CTE, make sure the user Id exists
  *
@@ -29,7 +29,7 @@ INSERT INTO
   scores (
 		user_id, guild_id, power_destroyed, resources_raided,
 		total_power, pvp_ships_destroyed, pvp_kd_ratio, pvp_total_damage,
-		hostiles_destroyed, hostiles_total_damage, resources_mined, current_level
+		hostiles_destroyed, hostiles_total_damage, resources_mined, current_level, alliances_help, missions
 	)
 SELECT
   userAndGuild.u, userAndGuild.g,
@@ -37,7 +37,8 @@ SELECT
 	${totalPower}, ${pvpShipsDestroyed},
 	${pvpKdRatio}, ${pvpTotalDamage},
 	${hostilesDestroyed}, ${hostilesTotalDamage},
-	${resourcesMined}, ${currentLevel}
+	${resourcesMined}, ${currentLevel},
+	${alliancesHelpSent}, ${missions}
 FROM
     userAndGuild
 ON CONFLICT (user_id, guild_id) DO UPDATE SET
@@ -50,5 +51,7 @@ ON CONFLICT (user_id, guild_id) DO UPDATE SET
   hostiles_destroyed = ${hostilesDestroyed},
   hostiles_total_damage = ${hostilesTotalDamage},
   resources_mined = ${resourcesMined},
-  current_level = ${currentLevel}
+  current_level = ${currentLevel},
+  alliances_help = ${alliancesHelpSent},
+  missions = ${missions}
 RETURNING *

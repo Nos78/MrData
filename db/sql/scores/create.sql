@@ -26,6 +26,8 @@ CREATE TABLE ${schema~}.scores
     hostiles_total_damage BIGINT NOT NULL DEFAULT 0,
     resources_mined INT NOT NULL DEFAULT 0,
     current_level SMALLINT NOT NULL DEFAULT 0,
+    alliances_help INT NOT NULL DEFAULT 0,
+    missions SMALLINT NOT NULL DEFAULT 0,
     UNIQUE (user_id, guild_id),
     PRIMARY KEY(user_id, guild_id)
 );

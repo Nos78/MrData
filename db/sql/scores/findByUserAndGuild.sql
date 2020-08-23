@@ -22,7 +22,9 @@ SELECT
 	scores.hostiles_destroyed,
 	scores.hostiles_total_damage,
 	scores.resources_mined,
-	scores.current_level
+	scores.current_level,
+	scores.alliances_help,
+	scores.missions
 FROM
 	scores
 JOIN users ON users.id = scores.user_id

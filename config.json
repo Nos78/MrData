@@ -15,5 +15,7 @@
   "rolesPathAndFilename": "./roles/roles.",
   "rolesExtension": ".json",
   "deleteCallingCommand":  false,
-  "botCreator": "515622530371944448"
+  "botCreator": "515622530371944448",
+  "alliancesHelpSent": 8190976,
+  "missions": 14318999
 }

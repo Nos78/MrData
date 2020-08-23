@@ -1,9 +1,11 @@
 /**
- * @Date:   2019-05-08T16:01:08+01:00
+ * @Author: BanderDragon
+ * @Date:   2020-21-08T16:42:00+01:00
  * @Email:  noscere1978@gmail.com
  * @Project: MrData
- * @Filename: kdratio.js
- * @Last modified time: 2020-03-29T19:13:17+01:00
+ * @Filename: missionscompleted.js
+ * @Last modified by:
+ * @Last modif8ied time: 2020-21-08T16:42:00+01:00
  */
 
 const Discord = require('discord.js');
@@ -15,10 +17,10 @@ const library = require('../library');
 const logger = require('winston');
 
 module.exports = {
-    name: 'kdratio',
-    description: 'See the top 10 kill/death ratio scores, or set your own kill/death ratio score. **Custom top X** - *Use !kd -count X*, where X is a number between 1 and 25, to show the top X scores!',
-    aliases: ['kd'],
-    args: false,
+    name: 'missionscompleted',
+    description: 'See the missions completed top 10, or set your own missions completed score.  **Custom top X** - *Use !ahs -count X*, where X is a number between 1 and 30, to show the top X scores!',
+    aliases: ['m', 'mis', 'missions'],
+    args: false ,
     usage: '<number>',
     cooldown: 3,
     guildOnly: true,
@@ -27,27 +29,27 @@ module.exports = {
         // This will configured in the switch statement below
         // And committed to the database after.
         var new_score = {
-            user_discord_id: 0,
-            guild_discord_id: message.guild.id,
-            pvp_kd_ratio: 0,
-            success_message: ""
-        };
+			user_discord_id: 0,
+			guild_discord_id: message.guild.id,
+			missions: 0,
+			success_message: ""
+		};
 
-        var maxRankCount = library.Helper.parseMaxRankCount(args);
+    var maxRankCount = library.Helper.parseMaxRankCount(args);
 
-        if(maxRankCount < 1) {
-          // not a member, print the error message and exit
-          message.channel.send({
-              embed: {
-                  color: config.kdratioColor,
-                  description: `${message.author}, that command makes no sense - you cannot print a ranking table containing ${maxRankCount} users!`
-              }
-          });
-          return;
-        }
+    if(maxRankCount < 1) {
+      // not a member, print the error message and exit
+      message.channel.send({
+          embed: {
+              color: config.missionsColor,
+              description: `${message.author}, that command makes no sense - you cannot print a ranking table containing ${maxRankCount} users!`
+          }
+      });
+      return;
+    }
 
-        logger.debug(`Executing kdratio, args: ${JSON.stringify(args)}`);
-        switch (args.length) {
+		logger.debug(`Executing missionscompleted, args: ${JSON.stringify(args)}`);
+		switch(args.length) {
             case 0:
                 /*
  				 */
@@ -61,24 +63,24 @@ module.exports = {
                  */
                 db.scores.findByUserAndGuild(message.author.id, message.guild.id)
                     .then(author_score => {
-                        db.scores.findByGuild(message.guild.id, `pvp_kd_ratio DESC LIMIT ${maxRankCount}`)
+                        db.scores.findByGuild(message.guild.id, `missions DESC LIMIT ${maxRankCount}`)
                             .then(top10 => {
                                 logger.debug(`findByGuild().then() called for ${message.guild}`);
                                 if (top10 == null || top10.length == 0) {
                                     logger.debug(`No records found for ${message.guild}`);
                                     message.channel.send({
                                         embed: {
-                                            color: config.kdratioColor,
+                                            color: config.missionsColor,
                                             description: `${message.author}, *No* records were found for **${message.client.guilds.get(message.guild.id).name}**`
                                         }
                                     });
                                 } else {
                                     logger.debug(`Displaying the league table for ${message.guild}`);
                                     const embed = new Discord.RichEmbed()
-                                        .setTitle("kill/death ratio Leaderboard")
+                                        .setTitle("Missions Completed Leaderboard")
                                         .setAuthor(message.client.user.username, message.client.user.avatarURL)
-                                        .setDescription(`Our top ${maxRankCount} Kill/Death ratio scores!`)
-                                        .setColor(config.kdratioColor);
+                                        .setDescription(`Our top ${maxRankCount} missions completed leaders!`)
+                                        .setColor(config.missionsColor);
                                     var c = 1;
                                     for (const data of top10) {
                                         var top10member = message.client.guilds.get(message.guild.id).members.get(data.user_id);
@@ -88,69 +90,67 @@ module.exports = {
                                         } else {
                                             displayName = top10member.displayName;
                                         }
-                                        embed.addField(`${c}. ${displayName}`, `${library.Format.numberWithCommas(data.pvp_kd_ratio)}`);
+                                        embed.addField(`${c}. ${displayName}`, `${library.Format.numberWithCommas(data.missions)}`);
                                         c++;
                                     }
                                     if (author_score == null || author_score.length == 0) {
                                         embed.addField(`*You have not yet set any scores!*`);
                                     } else {
-                                        logger.debug(`${message.author} score ${author_score.pvp_kd_ratio}`);
-                                        embed.addField(`*Your personal kill/death ratio score is*`, `*${library.Format.numberWithCommas(author_score.pvp_kd_ratio)}*`);
+                                        logger.debug(`${message.author} score ${author_score.missions}`);
+                                        embed.addField(`*Your personal missions completed is*`, `*${library.Format.numberWithCommas(author_score.missions)}*`);
                                     }
-                                    logger.debug(`Sending embed mesage ${embed}`);
+                                    logger.debug(`Sending embed mesage${embed}`);
                                     return message.channel.send({ embed });
                                 } // endif top10
                             }); // db.scores.findByGuild
                     });
                 return;
 
-            case 1:
+			case 1:
 				/*
 				 * Parameter could be a name or a number
 				 */
 
                 // remove commas from args[0] - these should not be present in a name
                 // but the user might input a comma-formatted number
+                //
                 args[0] = library.Format.stripCommas(args[0]);
-                if (isNaN(args[0])) {
-                    logger.debug(`Checking if this is a name...`);
-                    let member = message.mentions.members.first();
-                    if (member) {
-                        logger.debug(`Finding ${member.displayName} score record...`)
-                        db.scores.findByUserAndGuild(member.id, message.guild.id)
-                            .then(score => {
-                                let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
-                                if (score != null) {
-                                    logger.debug(`${member.displayName} score record located...`)
-                                    desc = `${member.displayName} kill/death ratio is ${library.Format.numberWithCommas(score.resources_raided)}`
-                                } // endif
-                                message.channel.send({
-                                    embed: {
-                                        color: config.kdratioColor,
-                                        description: `${desc}`
-                                    } // Embed
+				if(isNaN(args[0])) {
+					logger.debug(`Checking if this is a name...`);
+          let member = message.mentions.members.first();
+          if(member) {
+            logger.debug(`Finding ${member.displayName} score record...`);
+            db.scores.findByUserAndGuild(member.id, message.guild.id)
+              .then (score => {
+                let desc = `Unable to find ${member.displayName} in my database.  They need to log their scores for you to view them!`;
+								if(score!=null) {
+									logger.debug(`${member.displayName} score record located...`)
+									desc = `${member.displayName} missions completed is ${library.Format.numberWithCommas(score.missions)}`
+								} // endif
+								message.channel.send({embed: {
+										color: config.missionsColor,
+										description: `${desc}`
+									} // Embed
                                 }); // message.channel.send
                                 return;
-                            }); // db.findByUserAndGuild
+                        }); // db.findByUserAndGuild
                     } else {
                         // not a member, print the error message and exit
-                        message.channel.send({
-                            embed: {
-                                color: config.kdratioColor,
-                                description: `${message.author}, please use \`!power abc\`, where abc is a number or an actual person!}`
-                            }
-                        });
-                        return;
-                    } // endif member
-                } else {
-                    // Parameter is a number, configure the relevant information object
-                    // This will be sent to the database once we drop out of the switch
-                    logger.debug(`User is ${message.author.username}: Configuring the score...`)
-                    new_score.pvp_kd_ratio = args[0];
-                    new_score.user_discord_id = message.author.id;
-                    new_score.success_message = `Thank you, ${message.author}, your kill/death ratio is set to ${library.Format.numberWithCommas(new_score.pvp_kd_ratio)}`;
-                }
-                break;
+                        message.channel.send({embed: {
+                            color: config.missionsColor,
+                            description: `${message.author}, please use \`!missionscompleted abc\`, where abc is a number or an actual person!}`
+                        }});
+						return;
+					} // endif member
+				} else {
+					// Parameter is a number, configure the relevant information object
+					// This will be sent to the database once we drop out of the switch
+					logger.debug(`User is ${message.author.username}: Configuring the score...`)
+					new_score.missions = args[0];
+					new_score.user_discord_id = message.author.id;
+					new_score.success_message = `Thank you, ${message.author}, your missions completed is set to ${library.Format.numberWithCommas(new_score.missions)}`;
+				}
+				break;
             case 2:
                 {
                     /*
@@ -162,14 +162,14 @@ module.exports = {
                     // remove commas from args[1] - the user might input a comma-formatted number
                     args[1] = library.Format.stripCommas(args[1]);
                     if (member && !isNaN(args[1])) {
-                        // The command seems to be of the form !power @name number
+                        // The command seems to be of the form !missionscompleted @name number
                         let allowedRole = message.guild.roles.find("name", "Admin");
                         if (!message.member.roles.has(allowedRole.id)) {
                             // Sender in not priveleged, warn and exit. Do not drop
                             // out of the switch statement.
                             message.channel.send({
                                 embed: {
-                                    color: config.kdratioColor,
+                                    color: config.missionsColor,
                                     description: `${message.author}, only an Administrator can set the score of other users`
                                 }
                             });
@@ -177,24 +177,24 @@ module.exports = {
                         } else {
                             // admin is allowed access to the command
                             // Configure the information object
-                            new_score.pvp_kd_ratio = args[1];
+                            new_score.missions = args[1];
                             new_score.user_discord_id = member.id;
-                            new_score.success_message = `Thank you, ${message.author}, ${member.displayName} kill/death ratio is set to ${library.Format.numberWithCommas(new_score.pvp_kd_ratio)}`
+                            new_score.success_message = `Thank you, ${message.author}, ${member.displayName} missions completed is set to ${library.Format.numberWithCommas(new_score.missions)}`
                         }
                     }
                     break;
                 }
-        }
+		}
 
-        //
-        // COMMIT TO THE DATABASE!
-        //
-        // We have the relevant information object (new_score)
-        // Add this into the database
-        //
-        // 1. Get existing record (if exists, go directly to 4)
-        // 2. Check if the guild_discord_id exists (and add).
-        // 3. Check if the user_discord_id exists (and add).
+		//
+		// COMMIT TO THE DATABASE!
+		//
+		// We have the relevant information object (new_score)
+		// Add this into the database
+    //
+		// 1. Get existing record (if exists, go directly to 4)
+		// 2. Check if the guild_discord_id exists (and add).
+		// 3. Check if the user_discord_id exists (and add).
         // 4. Upsert the new score data
         db.scores.findByUserAndGuild(new_score.user_discord_id, new_score.guild_discord_id)
             .then(score => {
@@ -202,41 +202,42 @@ module.exports = {
                     score = [];
                     score.user_id = new_score.user_discord_id
                     score.guild_id = new_score.guild_discord_id
-                    score.resources_raided = 0
+                    score.missions = new_score.missions
                     score.power_destroyed = 0
                     score.total_power = 0
                     score.pvp_ships_destroyed = 0
-                    score.pvp_kd_ratio = new_score.pvp_kd_ratio
+                    score.pvp_kd_ratio = 0
                     score.pvp_total_damage = 0
                     score.hostiles_destroyed = 0
                     score.hostiles_total_damage = 0
                     score.resources_mined = 0
                     score.current_level = 0
+                    score.resources_raided = 0
                     score.alliances_help = 0
-                    score.missions = 0
                 } else if (score.length == 0) {
+                    score.user_id = new_score.user_discord_id
                     score.guild_id = new_score.guild_discord_id
-                    score.resources_raided = 0
+                    score.missions = new_score.missions
                     score.power_destroyed = 0
                     score.total_power = 0
                     score.pvp_ships_destroyed = 0
-                    score.pvp_kd_ratio = new_score.pvp_kd_ratio
+                    score.pvp_kd_ratio = 0
                     score.pvp_total_damage = 0
                     score.hostiles_destroyed = 0
                     score.hostiles_total_damage = 0
                     score.resources_mined = 0
                     score.current_level = 0
+                    score.resources_raided = 0
                     score.alliances_help = 0
-                    score.missions = 0
                 } else {
-                    score.pvp_kd_ratio = new_score.pvp_kd_ratio
+                    score.missions = new_score.missions
                 }
                 logger.debug("Calling db.scores.upsert()");
                 db.scores.upsert(score).then((result) => {
                     if (result == null) {
                         message.channel.send({
                             embed: {
-                                color: config.kdratioColor,
+                                color: config.powerColor,
                                 description: `${message.author}, an error occured, and I was unable to commit your information into my database.`
                             }
                         });
@@ -244,12 +245,13 @@ module.exports = {
                     else { // no records added?
                         message.channel.send({
                             embed: {
-                                color: config.kdratioColor,
+                                color: config.powerColor,
                                 description: new_score.success_message
                             }
                         });
                     }
                 })
+                library.League.outputTables(message.client);
             })
     } // execute
 } // module.exports
