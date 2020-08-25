@@ -6,6 +6,8 @@
  * @Last modified time: 2020-03-29T18:42:59+01:00
  */
 
+const { serializeError } = require("serialize-error");
+
 //
 // format.js
 // =========
@@ -54,5 +56,21 @@ module.exports = {
         return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
     else
         return text;
+    },
+
+    //
+    // Turns an error object into a plain object
+    //
+    plainTextError: function(error) {
+        return serializeError(error);
+    },
+
+    //
+    // Method to stringify an error
+    // Uses the serialize-error NPM module
+    //
+    stringifyError: function(error) {
+        let serializedError = this.plainTextError(error);
+        return JSON.stringify(serializedError);
     }
 }
