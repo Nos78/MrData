@@ -1,18 +1,15 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-10T19:54:25+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: privilegedrole.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-11T01:01:04+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2020-08-25 02:55:43 
+ * @Last Modified by:   BanderDragon 
+ * @Last Modified time: 2020-08-25 02:55:43 
  */
 
 const library = require('../library');
 
 module.exports = {
     name: 'privilegedrole',
-    description: `This command is used by Admins to add a role to the guild priveleged roles  list.`,
+    description: `This command is used by Admins to add a role to the guild privileged roles list.`,
     aliases: ['priv'],
     args: true,
     guildOnly: true,
