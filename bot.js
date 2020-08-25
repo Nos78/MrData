@@ -1,11 +1,8 @@
-/**
+/*
  * @Author: BanderDragon
- * @Date:   2019-03-13T18:13:07+00:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: bot.js
- * @Last modified by:
- * @Last modified time: 2020-03-29T23:20:56+01:00
+ * @Date: 2020-08-25 02:54:40 
+ * @Last Modified by:   BanderDragon
+ * @Last Modified time: 2020-08-25 02:54:40 
  */
 
 // Configure the Discord bot client
@@ -15,6 +12,9 @@ const configSecret = require('./config-secret.json');
 const db = require('./db');
 const fs = require('fs');
 const cmdLog = './cmdExec.log';
+
+// Set up the library functions
+const library = require('./library');
 
 // Set up the logger for debug/info
 const logger = require('winston');
@@ -242,7 +242,7 @@ client.on('message', async message => {
         const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
         if (now < expirationTime) {
-            const timeLeft = (expirationTime - now) / 1000;
+            //const timeLeft = (expirationTime - now) / 1000;
             //return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${cmd.name}\` command.`);
         }
     }
@@ -281,8 +281,28 @@ client.on('message', async message => {
             message.delete;
         }
     } catch (error) {
-        logger.error(error);
-        message.reply('there was an error trying to execute that command!');
+        let errorJSON = library.Format.stringifyError(error);
+        let stack = error.stack.toString();
+
+        logger.error(errorJSON);
+        //message.reply('there was an error trying to execute that command!');
+        if(logger.level === 'silly' || logger.level === 'debug' || logger.level === 'error') {
+            const embed = new Discord.RichEmbed()
+                .setTitle(`${error.name} : Unexpected Error (${error.name}) in the bagging area`)
+                .setAuthor(message.client.user.username, message.client.user.avatarURL)
+                .setDescription(`An unexpected error occurred : ${error.message}`)
+                .setColor(config.hostilestotaldamageColor);
+            embed.addField("Stack trace:", `length: ${stack.length} characters`);
+            for(let i = 0; i < Math.ceil(stack.length / 255); i++) {
+                let start = i * 256;
+                let end = start + 256;
+                if (end > stack.length) {
+                    end = stack.length;
+                }
+                embed.addField(`${stack.substring(start, end)}`, `${start}, ${end}`);
+            }
+            message.channel.send({ embed });
+        }
     }
 });
 
