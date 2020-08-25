@@ -1,9 +1,8 @@
-/**
- * @Date:   2019-05-06T08:09:56+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: admin.js
- * @Last modified time: 2019-07-02T02:45:13+01:00
+/*
+ * @Author: BanderDragon
+ * @Date: 2020-08-25 02:46:57 
+ * @Last Modified by:   BanderDragon 
+ * @Last Modified time: 2020-08-25 02:46:57 
  */
 
 const logger = require('winston');

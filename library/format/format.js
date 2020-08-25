@@ -1,9 +1,8 @@
-/**
- * @Date:   2020-03-29T16:40:40+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: format.js
- * @Last modified time: 2020-03-29T18:42:59+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2020-08-25 02:53:40 
+ * @Last Modified by:   BanderDragon
+ * @Last Modified time: 2020-08-25 02:53:40 
  */
 
 const { serializeError } = require("serialize-error");

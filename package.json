@@ -12,6 +12,7 @@
     "pg": "^7.11.0",
     "pg-monitor": "^1.1.0",
     "pg-promise": "^8.7.2",
+    "serialize-error": "^7.0.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
