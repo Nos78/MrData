@@ -6,6 +6,8 @@
  * @Last modified time: 2020-03-29T19:22:20+01:00
  */
 
+const package = require('../package.json');
+
 module.exports = {
 	name: 'uptime',
 	cooldown: 30,
@@ -20,6 +22,6 @@ module.exports = {
     let minutes = Math.floor(totalSeconds / 60);
     let seconds = totalSeconds % 60;
     let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
-    message.channel.send(`${message.author}, I have been active for ${uptime}`);
+    message.channel.send(`${package.name} v.${package.version} (c) The Bot Factory ${package.license} licenced.\nReport issues at ${package.bugs.url}\n\n${message.author}, I have been active for ${uptime}`);
 	},
 };
