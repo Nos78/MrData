@@ -1,5 +1,5 @@
 {
-  "prefix": "!",
+  "prefix": "&",
   "powerColor": 16776960,
   "powerDestroyedColor": 44678,
   "resourcesRaidedColor": 7798918,
@@ -11,11 +11,12 @@
   "levelColor": 969005,
   "resourcesminedColor": 1341220,
   "pvptotaldamageColor": 16711680,
-  "debugLevel": "none",
+  "debugLevel": "silly",
   "rolesPathAndFilename": "./roles/roles.",
   "rolesExtension": ".json",
   "deleteCallingCommand":  false,
   "botCreator": "515622530371944448",
   "alliancesHelpSent": 8190976,
-  "missions": 14318999
+  "missions": 14318999,
+  "tempDir": "./tmp/"
 }
