@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon 
  * @Date: 2020-08-25 02:55:21 
- * @Last Modified by:   BanderDragon 
- * @Last Modified time: 2020-08-25 02:55:21 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-08-25 03:40:14
  */
 
 const db = require('../db');
@@ -35,13 +35,34 @@ module.exports = {
                             });
                         } else {
                             // Not a member, we can get deleted!
-                            let retVal = db.scores.removeUserFromGuild(memberId, message.guild.id);
-                            message.channel.send({
-                                embed: {
-                                    color: config.resourcesminedColor,
-                                    description: `${message.author}, user ${memberId} was removed - ${retVal} records where deleted.`
-                                }
-                            });
+                            db.scores.removeUserFromGuild(memberId, message.guild.id)
+                                .then(db_object => {
+                                    if(db_object) {
+                                        if (db_object.rowCount == 0) {
+                                            message.channel.send({
+                                                embed: {
+                                                    color: config.resourcesminedColor,
+                                                    description: `${message.author}, the operation to delete user ${memberId} appears to have been successful - however, ${db_object.rowCount} records where deleted.  This might indicate that you had input a user ID that did not exist.`
+                                                }
+                                            });
+                                        } else {
+                                            message.channel.send({
+                                                embed: {
+                                                    color: config.resourcesminedColor,
+                                                    description: `${message.author}, user ${memberId} was removed - ${db_object.rowCount} records where deleted.`
+                                                }
+                                            });
+                                        }
+                                    }
+                                    else {
+                                        message.channel.send({
+                                            embed: {
+                                                color: config.resourcesminedColor,
+                                                description: `${message.author}, there seems to have been a problem deleting user ${memberId} - I could not confirm what, if anything, was deleted.`
+                                            }
+                                        });
+                                    }
+                                });
                         }
                     } else {
                         message.channel.send({
