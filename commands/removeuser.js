@@ -73,6 +73,15 @@ module.exports = {
                         });
                     }
                 break;
+
+                default:
+                    message.channel.send({
+                        embed: {
+                            color: config.powerDestroyedColor,
+                            description: `${message.author}, this command requires a user ID in the form of a number - see datahelp removeuser for more information.`
+                        }
+                    });
+                break;
             }
         } else {
             message.channel.send({
