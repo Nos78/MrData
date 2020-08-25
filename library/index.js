@@ -15,12 +15,14 @@ const format = require('./format/format.js');
 const admin = require('./admin/admin.js');
 const league = require('./league/league.js');
 const helper = require('./helper/helper.js');
+const config = require('./config/config.js');
 
 module.exports = {
   Format: format,
   Admin: admin,
   League: league,
   Helper: helper,
+  Config: config,
 
   collateArgs: function(index, args) {
       var returnString = "";
