@@ -67,6 +67,14 @@ class ScoresRepository {
         return this.db.result('DELETE FROM scores USING users WHERE users.user_id = $1', +userId, r => r.rowCount);
     }
 
+    // Tries to delete a user's scores by id, from a given guild, and returns the number of records deleted
+    removeUserFromGuild(userId, guildId) {
+        return this.db.result(sql.deleteByUserAndGuild, {
+          userId: userId,
+          guildId: guildId
+        });
+    }
+    
     // Tries to find a user's scores from id;
     findByUser(userId) {
         return this.db.manyOrNone(sql.findByUser, {
