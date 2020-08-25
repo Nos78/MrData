@@ -1,4 +1,4 @@
--/**
+/**
  * Inserts or replaces a user's score record for a given guild_id.
  * Using CTE, make sure the user Id exists
  *
