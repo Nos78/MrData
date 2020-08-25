@@ -18,5 +18,8 @@
   "botCreator": "515622530371944448",
   "alliancesHelpSent": 8190976,
   "missions": 14318999,
-  "tempDir": "./tmp/"
+  "tempDir": "./tmp/",
+  "userConfigurationPath": "./config/",
+  "userConfigurationFilePrefix": "config.",
+  "userConfigurationExtension": ".json"
 }
