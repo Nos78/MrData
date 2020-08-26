@@ -1,4 +1,11 @@
-const library = require('../library');
+/*
+ * @Author: BanderDragon 
+ * @Date: 2020-08-25 02:55:56 
+ * @Last Modified by:   BanderDragon 
+ * @Last Modified time: 2020-08-25 02:55:56 
+ */
+
+ const library = require('../library');
 
 module.exports = {
 	name: 'isadmin',
