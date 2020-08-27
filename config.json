@@ -23,5 +23,9 @@
   "userConfigurationFilePrefix": "config.",
   "userConfigurationExtension": ".json",
   "messageSuccessColor": 43520,
-  "messageErrorColor": 11141120
+  "messageErrorColor": 11141120,
+  "helpTextParamsTemplate": {
+    "name": "",
+    "value": ""
+  }
 }

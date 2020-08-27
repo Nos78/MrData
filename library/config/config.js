@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-26 00:01:53
+ * @Last Modified time: 2020-08-26 21:30:52
  */
  
 /* 
@@ -14,26 +14,63 @@
 
 const logger = require('winston');
 const config = require('../../config.json');
+const pkg = require('../../package.json');
+const packageLock = require('../../package-lock.json');
+const process = require('process');
 
 var fs = require('fs');
-var userConfigPath = config.userConfigurationPath;
-const userConfigExt = config.userConfigurationExt;
-
 var path = require('path');
 
 module.exports = {
 
-    /**
-     * Returns the applications absolute path
-     */
-    appPath: function() {
-        return path.dirname(require.main.filename);
+    populateHelpTextParameter: function(key, value) {
+        var parameter = config.helpTextParamsTemplate;
+        parameter.name = key;
+        parameter.value = value;
+
+        return parameter;
     },
 
-    /**
-     * returns the full path, prefixed with the application root directory
-     * @param {string} relativePath 
-     */
+    getHelpTextParameters: function(client) {
+        var parameters = [];
+        parameters.push(this.populateHelpTextParameter("BOTNAME", this.botName(client)));
+        return parameters;
+    },
+
+    packageName: function() {
+        return pkg.name;
+    },
+
+    packageVersion: function() {
+        return pkg.version;
+    },
+    
+    packageLicense: function() {
+        return pkg.license;
+    },
+
+    nodeName: function() {
+        return process.release.name;
+    },
+
+    nodeVersion: function() {
+        return process.version;
+    },
+
+    discordJsVersion: function() {
+        const discordKey = Object.keys(packageLock.dependencies).find(key => key.includes("discordjs"));
+        return packageLock.dependencies[discordKey].version;
+    },
+    
+    botName: function(client) {
+        return client.user.username;
+    },
+
+    appPath: function() {
+        return path.dirname(require.main.filename);
+        
+    },
+
     absolutePath: function(relativePath) {
         // Check if a ~ has been specified (this is not required, but clearly signifies the path is relative)
         var firstChar = relativePath.charAt(0);
@@ -66,7 +103,7 @@ module.exports = {
         return fullPath;
     },
     
-    /*
+   /*
     * The following are wrappers for storing and loading the 
     * user-defined config files - the user-defined config files allow
     * configuration to be customised on a per-guild basis.
@@ -76,12 +113,24 @@ module.exports = {
     * massive code changes. If the API remains static, we can switch from
     * a file storage system to a database with relative ease.
     */
-    serializeConfigObjToString: function(gid, configString, client) {
 
+    /**
+     * 
+     * @param {*} configObj 
+     */
+    serializeConfigObjToString: function(configObj) {
+        var returnString = "";
+        try {
+            returnString = JSON.stringify(configObj)
+        }
+        catch (e) {
+            logger.error(`Unable to serialise config string - exception ${e.name}`)
+        }
     },
 
-    parseConfigStringToObj: function(gid, configString, client) { 
-        var returnObj;
+    parseConfigStringToObj: function(configString) { 
+        var returnObj = null;
+        
         try {
             returnObj = JSON.parse(configString);
         } catch (e) {
