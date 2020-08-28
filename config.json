@@ -21,5 +21,11 @@
   "tempDir": "./tmp/",
   "userConfigurationPath": "./config/",
   "userConfigurationFilePrefix": "config.",
-  "userConfigurationExtension": ".json"
+  "userConfigurationExtension": ".json",
+  "messageSuccessColor": 43520,
+  "messageErrorColor": 11141120,
+  "helpTextParamsTemplate": {
+    "name": "",
+    "value": ""
+  }
 }
