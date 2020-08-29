@@ -30,15 +30,15 @@ module.exports = {
                     var roleId = role.id;
                     if (roles.length > 0) {
                         if (roles.find(role => role === roleId)) {
-                            return message.channel.send(`${message.author}, the role *${roleStr}* already exists in the privleged list.`);
+                            return message.channel.send(`${message.author}, the role *${roleStr}* already exists in the privileged list.`);
                         }
                     }
                     roles.push(roleId);
 
                     if (library.Admin.writeRoles(roles, message.guild.id) == false) {
-                        return message.channel.send(`${message.author}, unable to save the role *${roleStr}* to the privleged list.`);
+                        return message.channel.send(`${message.author}, unable to save the role *${roleStr}* to the privileged list.`);
                     } else {
-                        return message.channel.send(`${message.author}, the role *${roleStr}* has been successfully added to the privleged list.`);
+                        return message.channel.send(`${message.author}, the role *${roleStr}* has been successfully added to the privileged list.`);
                     }
                 } else {
                     return message.channel.send(`${message.author}, the role you specified does not exist.`);
