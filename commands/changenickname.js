@@ -12,7 +12,7 @@ const library = require('../library');
 
 module.exports = {
     name: 'changenickname',
-    description: `Use this command to change your nickname. Privleged users can change other user's nicknames, but this will fail if that user has higher discord privileges than me.`,
+    description: `Use this command to change your nickname. Privileged users can change other user's nicknames, but this will fail if that user has higher discord privileges than me.`,
     aliases: ['nick', 'changenick'],
     usage: '`!changenickname <newnickname>`\nAdmin only: `!changenickname <@user> <newnickname>`',
     args: true,
@@ -34,7 +34,7 @@ module.exports = {
                 break;
 
             case 2:
-                // This version of the command is privleged only...
+                // This version of the command is privileged only...
                 if (library.Admin.hasPrivilegedRole(message.member, message.guild.id)) {
                     // Go for it...
                     userToChange = message.mentions.members.first().id;

@@ -8,7 +8,8 @@
 
 const logger = require('winston');
 
-const { prefix } = require('../config.json');
+const config = require('../config.json');
+const library = require('../library');
 
 module.exports = {
 	name: 'datahelp',
@@ -24,7 +25,7 @@ module.exports = {
       data.push('You can get general help by visiting my webpage, at **https://mrdata.thebotfactory.net**\n');
       data.push('**Here\'s a list of all my commands:**');
       data.push('\t\t!' + commands.map(command => command.name).join(',\n\t\t!'));
-      data.push(`\nYou can send \`${prefix}${this.name} [command name]\` to get info on a specific command!`);
+      data.push(`\nYou can send \`${config.prefix}${this.name} [command name]\` to get info on a specific command!`);
 
       return message.author.send(data, { split: true })
 				.then(() => {
@@ -48,7 +49,7 @@ module.exports = {
 
     if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
     if (command.description) data.push(`**Description:** ${command.description}`);
-    if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
+    if (command.usage) data.push(`**Usage:** ${config.prefix}${command.name} ${command.usage}`);
 
     data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
 
