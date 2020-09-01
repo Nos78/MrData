@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2020-08-25 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-26 08:09:12
+ * @Last Modified time: 2020-09-01 22:34:07
  */
 
 // Configure the Discord bot client
@@ -13,11 +13,20 @@ const db = require('./db');
 const fs = require('fs');
 const cmdLog = './cmdExec.log';
 
+const webPush = require('./web-push');
+
+//const webPushApp =  new webPush.WebPush();
+//webPushApp.initialise();
+
 // Set up the library functions
 const library = require('./library');
 
 // Set up the logger for debug/info
 const logger = require('winston');
+const { WebPush } = require('./web-push/web-push');
+const anotherWebApp = new WebPush();
+anotherWebApp.initialise();
+//anotherWebApp.sendTest();
 
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
@@ -136,6 +145,35 @@ client.on("ready", () => {
             }
         });
 
+    db.userGlobalSettings.exists()
+        .then(data => {
+            if(data.rows[0].exists == false) {
+                // Table does not exists, lets create it...
+                logger.debug(`No userGlobalSettings table found!  Creating...`);
+                db.userGlobalSettings.create();
+                logger.debug(`userGlobalSettings configured.`)
+            }
+        });
+
+    db.userGuildSettings.exists()
+        .then(data => {
+            if(data.rows[0].exists == false) {
+                // Table does not exists, lets create it...
+                logger.debug(`No userGuildSettings table found!  Creating...`);
+                db.userGuildSettings.create();
+                logger.debug(`userGuildSettings configured.`)
+            }
+        });
+
+    db.guildSettings.exists()
+        .then(data => {
+            if(data.rows[0].exists == false) {
+                // Table does not exists, lets create it...
+                logger.debug(`No guildSettings table found!  Creating...`);
+                db.guildSettings.create();
+                logger.debug(`guildSettings configured.`)
+            }
+        });
     /* Populate the database with the guilds we are online in. */
     //for (x = 0; x < client.guilds.size; x++) {
     client.guilds.forEach((guild) => {

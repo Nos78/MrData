@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 02:56:13 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-30 06:00:06
+ * @Last Modified time: 2020-09-01 21:03:11
  */
 
 const format = require('../format/format.js');
@@ -314,7 +314,6 @@ module.exports = {
      * @returns {string}
      */
     parseName: function (name) {
-        name
         name = name.replace('@', '');
         name = name.replace(':', '');
         name = name.replace('```', '');
@@ -325,6 +324,13 @@ module.exports = {
         return name;
     },
 
+    parseIdNumber: function (number) {
+        number = number.replace('@', '');
+        number = number.replace('<', '');
+        number = number.replace('>', '');
+        return number;
+    },
+    
     /**
      * Parses the given string and extracts any number
      * @param {string} text 

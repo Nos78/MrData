@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-28 23:57:30
+ * @Last Modified time: 2020-09-01 20:48:21
  */
  
 /* 
@@ -25,6 +25,13 @@ const userConfigExt = config.userConfigurationExt;
 var path = require('path');
 
 module.exports = {
+
+    /**
+     * Gets my command prefix from the config
+     */
+    getPrefix: function() {
+        return config.prefix;
+    },
 
     /**
      * Populates the template string, where key is the TEMPLATE name to be replaced and
@@ -54,6 +61,22 @@ module.exports = {
         var parameters = [];
         parameters.push(this.populateHelpTextParameter("BOTNAME", this.botName(client)));
         return parameters;
+    },
+
+    /**
+     * A specific version that utilise the above helpTextParameter commands to replace occurrences
+     * of the templated parameters in a given string. This function takes as an additional parameter
+     * the message that initiated the command.
+     * @param {*} text 
+     * @param {*} message 
+     */
+    replaceHelpTextParameters: function(text, message) {
+        var templates = library.Config.getHelpTextParameters(client);
+        var returnText = text;
+        templates.forEach(function(template) {
+            returnText += returnText.replace(template.name, template.value);
+        });
+        return returnText;
     },
 
     /**

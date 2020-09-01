@@ -11,7 +11,7 @@
   "levelColor": 969005,
   "resourcesminedColor": 1341220,
   "pvptotaldamageColor": 16711680,
-  "debugLevel": "none",
+  "debugLevel": "info",
   "rolesPathAndFilename": "./roles/roles.",
   "rolesExtension": ".json",
   "deleteCallingCommand":  false,
@@ -31,5 +31,8 @@
   "helpTextParamsTemplate": {
     "name": "",
     "value": ""
+  },
+  "webPushPublic": {
+    "firebaseSenderId": 351645999964
   }
 }

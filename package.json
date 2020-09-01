@@ -6,9 +6,13 @@
   "author": "BanderDragon#5699",
   "dependencies": {
     "bluebird": "^3.5.4",
+    "body-parser": "^1.19.0",
     "bufferutil": "^4.0.1",
     "discord.js": "^11.5.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "fast-csv": "^4.3.1",
+    "firebase-admin": "^9.1.1",
     "libsodium-wrappers": "^0.7.6",
     "loadavg-windows": "^1.1.1",
     "moment": "^2.27.0",
@@ -16,6 +20,7 @@
     "pg-monitor": "^1.1.0",
     "pg-promise": "^8.7.2",
     "serialize-error": "^7.0.1",
+    "web-push": "^3.4.4",
     "winston": "^3.2.1"
   },
   "devDependencies": {
