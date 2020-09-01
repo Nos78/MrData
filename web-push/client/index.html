@@ -18,12 +18,14 @@
                     return messaging.getToken();
                 })
                 .then(async function (token) {
-                    // print the token on the HTML page
-                    tokenElement.innerHTML = "Token is " + token;
                     var url = new URL(window.location.href);
                     var userId = url.searchParams.get("userId");
                     var guildId = url.searchParams.get("guildId");
                     console.log(userId);
+                    // print the token on the HTML page
+                    tokenElement.innerHTML = "Token is: " + token + "<br/>" +
+                        "User id is: " + userId + "<br/>" +
+                        "Guild id is: " + guildId + "<br/>";
                     await fetch(`/subscribe?userId=${userId}&guildId=${guildId}`, {
                         method: 'POST',
                         body: JSON.stringify({token: `${token}`}),

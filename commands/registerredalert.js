@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 20:15:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-01 22:31:53
+ * @Last Modified time: 2020-09-01 23:14:58
  */
 
 const Discord = require('discord.js');
@@ -25,6 +25,6 @@ module.exports = {
         var msg = library.Helper.sendWaitMessage("Please wait...", message.channel);
         var userId = library.Helper.parseIdNumber(message.author.id);
         var guildId = library.Helper.parseIdNumber(message.guild.id);
-        library.Helper.editWaitSuccessMessage(msg, `Please visit https://thebotfactory.net:5000/?userId=${userId}?guildId=${guildId}`)
+        library.Helper.editWaitSuccessMessage(msg, `Please visit https://thebotfactory.net:5000/?userId=${userId}&guildId=${guildId}`)
     }
 }
