@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 01:22:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-01 01:57:00
+ * @Last Modified time: 2020-09-02 06:50:19
  */
 
 'use strict';
@@ -193,8 +193,8 @@ class UserGuildSettingsRepository {
      * @returns {Promise<Result>} On resolution of the promise, returns the row
      * or null. A failure produces a QueryResultError.
      */
-    findUserSettingsById(userId) {
-        return this.db.oneOrNone(sql.find, userId);
+    findUserSettingsById(userId, guildId) {
+        return this.db.oneOrNone(sql.find, {userDiscordId: userId, guildDiscordId: guildId});
     }
 
     /**
