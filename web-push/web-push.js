@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-30 06:18:57 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-02 04:41:26
+ * @Last Modified time: 2020-09-02 23:07:00
  */
 
 // push.js - web push server module
@@ -132,16 +132,41 @@ class WebPush {
         //});
 
         app.post('/subscribe', (req, res) => {
-            const settings = {"pushToken": req.body.token};
-            const userId = req.query.userId;
-            const guildId = req.query.guildId;
             res.status(200).json({"success": true});
+            const userId = req.query.userId;
             if(userId) {
+                const guildId = req.query.guildId;
+                var settings = null;
                 if(guildId) {
-                    db.userGuildSettings.upsert(userId, guildId, settings);
+                    db.userGuildSettings.findUserSettingsById(userId, guildId)
+                        .then(userGuildSettings => {
+                            settings = library.Settings.addPushTokenToSettings(
+                                    library.Settings.getSettingsFromRecord(userGuildSettings),
+                                    req.body.token)
+                                .catch(err => {
+                                    logger.error("app.post: /subscribe - failed to add pushToken to user guild settings");
+                                    settings = null;
+                                });
+                            if(settings) {
+                                db.userGuildSettings.upsert(userId, guildId, settings);
+                            }
+                        });
                 } else {
-                    db.userGlobalSettings.upsert(userId, settings);
+                    db.userGlobalSettings.findUserSettingsById(userId)
+                        .then(userGlobalSettings => {
+                            settings = library.Settings.addPushTokenToSettings(
+                                    library.Settings.getSettingsFromRecord(userGlobalSettings),
+                                    req.body.token)
+                                .catch(err => {
+                                    logger.error("app.post: /subscribe - failed to add pushToken to user global settings");
+                                    settings = null;
+                                });
+                            if(settings) {
+                                db.userGlobalSettings.upsert(userId, settings);
+                            }
+                        });
                 }
+                }/* TODO Add db.userGlobalSettings */
             }
         });
 

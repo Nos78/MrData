@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 00:31:03 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-01 00:35:31
+ * @Last Modified time: 2020-09-02 19:55:10
  */
 
 WITH selectGuildId AS (
@@ -26,4 +26,5 @@ INSERT INTO
         ${settings}
     FROM
         userIdAndGuild
+ON CONFLICT DO NOTHING
 RETURNING *

@@ -17,6 +17,7 @@ const league = require('./league/league.js');
 const helper = require('./helper/helper.js');
 const config = require('./config/config.js');
 const discord = require('./discord/discord.js');
+const settings = require('./settings/settings.js');
 
 module.exports = {
   Format: format,
@@ -25,6 +26,7 @@ module.exports = {
   Helper: helper,
   Config: config,
   Discord: discord,
+  Settings: settings,
 
   collateArgs: function(index, args) {
       var returnString = "";
