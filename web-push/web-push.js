@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-30 06:18:57 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-01 21:17:07
+ * @Last Modified time: 2020-09-02 04:41:26
  */
 
 // push.js - web push server module
@@ -21,14 +21,15 @@ const db = require('../db');
 // Configure firebase
 const firebase = require("firebase-admin");
 
-// Global constants
-const defaultPort = 5000;
-
 // Load Secret Keys
 const configSecret = require('../config-secret.json');
 const config = require('../config.json');
 
 const logger = require('winston');
+
+// Global constants
+const clientPort = configSecret.webPush.clientPort; // the port of the web app
+const displayPort = config.webPush.clientDisplayPort; // the port the user sees; may be different than the app port, for example, if behind an nginx reverse proxy
 
 const payload = {
     notification: {
@@ -50,6 +51,7 @@ class WebPush {
         this._serviceAccount = null;
         this._firebaseAdmin = null;
         this._userId = null;
+        this._defaultPort = clientPort;
     }
     // GETTERS
     get app() {
@@ -59,8 +61,8 @@ class WebPush {
         return this._server;
     }
 
-    get _defaultPort() {
-        return defaultPort;
+    get defaultPort() {
+        return this._defaultPort;
     }
 
     get serviceAccount() {
@@ -90,6 +92,10 @@ class WebPush {
 
     set firebaseAdmin(firebaseAdmin) {
         this._firebaseAdmin = firebaseAdmin;
+    }
+
+    set defaultPort(portNumber) {
+        this._defaultPort = portNumber;
     }
 
     set userId(userId) {
@@ -138,12 +144,8 @@ class WebPush {
                 }
             }
         });
-        
-        app.get('/', function(req, res) {
-            this._userId = req.query("userId");
-        });
 
-        app.set('port', configSecret.webPush.clientPort || this._defaultPort());
+        app.set('port', this._defaultPort);
 
         const server = app.listen(app.get('port'), () => {
             logger.info(`Express webPush app running → PORT ${server.address().port}`);
