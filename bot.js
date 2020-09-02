@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2020-08-25 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-01 22:34:07
+ * @Last Modified time: 2020-09-02 07:02:54
  */
 
 // Configure the Discord bot client
@@ -13,7 +13,7 @@ const db = require('./db');
 const fs = require('fs');
 const cmdLog = './cmdExec.log';
 
-const webPush = require('./web-push');
+//const global.webPush = require('./web-push');
 
 //const webPushApp =  new webPush.WebPush();
 //webPushApp.initialise();
@@ -24,8 +24,9 @@ const library = require('./library');
 // Set up the logger for debug/info
 const logger = require('winston');
 const { WebPush } = require('./web-push/web-push');
-const anotherWebApp = new WebPush();
-anotherWebApp.initialise();
+global.webPushApp = new WebPush();
+global.webPushApp.initialise();
+
 //anotherWebApp.sendTest();
 
 logger.remove(logger.transports.Console);
