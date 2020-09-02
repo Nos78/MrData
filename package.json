@@ -16,6 +16,7 @@
     "libsodium-wrappers": "^0.7.6",
     "loadavg-windows": "^1.1.1",
     "moment": "^2.27.0",
+    "node-fetch": "^2.6.0",
     "pg": "^7.11.0",
     "pg-monitor": "^1.1.0",
     "pg-promise": "^8.7.2",
