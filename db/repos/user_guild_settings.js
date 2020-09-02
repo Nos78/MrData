@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 01:22:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-02 06:50:19
+ * @Last Modified time: 2020-09-02 06:51:05
  */
 
 'use strict';
@@ -190,6 +190,7 @@ class UserGuildSettingsRepository {
     /**
      * Finds the record for a given discord user id.
      * @param {string} userId 
+     * @param {string} guildId 
      * @returns {Promise<Result>} On resolution of the promise, returns the row
      * or null. A failure produces a QueryResultError.
      */
