@@ -2,12 +2,21 @@
 <html>
 
 <head>
-    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
     <script>
         firebase.initializeApp({
-            'messagingSenderId': `351645999964`
+            apiKey: "AIzaSyAmaQpj-HpYZHOLL08737doT4QM1xIcnkw",
+            authDomain: "mr-data-fcm.firebaseapp.com",
+            databaseURL: "https://mr-data-fcm.firebaseio.com",
+            projectId: "mr-data-fcm",
+            storageBucket: "mr-data-fcm.appspot.com",
+            messagingSenderId: "351645999964",
+            appId: "1:351645999964:web:1748b1dbb38c49c31c1799",
+            measurementId: "G-KH2FXB7E6M"
         })
+        firebase.analytics();
         const messaging = firebase.messaging();
         async function initFirebaseMessagingRegistration() {
             messaging
