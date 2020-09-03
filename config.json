@@ -11,7 +11,7 @@
   "levelColor": 969005,
   "resourcesminedColor": 1341220,
   "pvptotaldamageColor": 16711680,
-  "debugLevel": "info",
+  "debugLevel": "none",
   "rolesPathAndFilename": "./roles/roles.",
   "rolesExtension": ".json",
   "deleteCallingCommand":  false,
@@ -34,5 +34,9 @@
   },
   "webPushPublic": {
     "firebaseSenderId": 351645999964
+  },
+  "webPush": {
+    "clientAddr": "http://localhost",
+    "clientDisplayPort": 5000
   }
 }
