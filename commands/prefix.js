@@ -10,7 +10,6 @@
 
 const library = require('../library');
 const config = require('../config.json');
-const library = require('../library');
 
 module.exports = {
     name: 'showprefix',
@@ -19,7 +18,7 @@ module.exports = {
     args: false,
     guildOnly: true,
     execute(message, args) {
-        msg = library.Helper.sendStandardWaitMessage(channel);
+        let msg = library.Helper.sendStandardWaitMessage(message.channel);
         var prefix = library.System.getPrefix(message.guild.id);
         return library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author}, the command prefix for ${message.author.guild.name} is ${prefix}`);
     }
