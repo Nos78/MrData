@@ -1,3 +1,10 @@
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-03-10
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-01 01:49:33
+ */
+
 'use strict';
 
 const QueryFile = require('pg-promise').QueryFile;
@@ -47,6 +54,38 @@ module.exports = {
         findByUser: sql('scores/findByUser.sql'),
         findByGuild: sql('scores/findByGuild.sql'),
         findByUserAndGuild: sql('scores/findByUserAndGuild.sql')
+    },
+
+    guild_settings: {
+        create: sql('guild_settings/create.sql'),
+        exists: sql('guild_settings/exists.sql'),
+        empty: sql('guild_settings/empty.sql'),
+        insert: sql('guild_settings/insert.sql'),
+        update: sql('guild_settings/update.sql'),
+        remove: sql('guild_settings/delete.sql'),
+        find: sql('guild_settings/find.sql')
+    },
+
+    user_guild_settings: {
+        create: sql('user_guild_settings/create.sql'),
+        exists: sql('user_guild_settings/exists.sql'),
+        empty: sql('user_guild_settings/empty.sql'),
+        insert: sql('user_guild_settings/insert.sql'),
+        update: sql('user_guild_settings/update.sql'),
+        remove: sql('user_guild_settings/delete.sql'),
+        removeByUserId: sql('user_guild_settings/deleteByUserId.sql'),
+        removeByGuildId: sql('user_guild_settings/deleteByGuildId.sql'),
+        find: sql('user_guild_settings/find.sql')
+    },
+
+    user_global_settings: {
+        create: sql('user_global_settings/create.sql'),
+        exists: sql('user_global_settings/exists.sql'),
+        empty: sql('user_global_settings/empty.sql'),
+        insert: sql('user_global_settings/insert.sql'),
+        update: sql('user_global_settings/update.sql'),
+        remove: sql('user_global_settings/delete.sql'),
+        find: sql('user_global_settings/find.sql')
     }
 };
 

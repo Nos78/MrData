@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-06T08:09:56+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: guilds.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-06T20:54:27+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-06 08:09:56 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-08-31 21:08:01
  */
 
 'use strict';
