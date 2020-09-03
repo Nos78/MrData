@@ -20,6 +20,6 @@ module.exports = {
     execute(message, args) {
         let msg = library.Helper.sendStandardWaitMessage(message.channel);
         var prefix = library.System.getPrefix(message.guild.id);
-        return library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author}, the command prefix for ${message.author.guild.name} is ${prefix}`);
+        return library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author}, the command prefix for ${message.guild.name} is ${prefix}`);
     }
 }
