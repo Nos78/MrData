@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-30 06:18:57 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-03 22:25:50
+ * @Last Modified time: 2020-09-03 23:11:18
  */
 
 // push.js - web push server module
@@ -134,10 +134,10 @@ class WebPush {
         app.post('/subscribe', (req, res) => {
             res.status(200).json({"success": true});
             const userId = req.query.userId;
-            if(userId) {
+            if(userId && userId != 'null') {
                 const guildId = req.query.guildId;
                 var settings = null;
-                if(guildId) {
+                if(guildId && guildId != 'null') {
                     db.userGuildSettings.findUserSettingsById(userId, guildId)
                         .then(userGuildSettings => {
                             try {
