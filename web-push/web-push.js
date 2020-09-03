@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-30 06:18:57 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-02 23:07:00
+ * @Last Modified time: 2020-09-03 22:25:50
  */
 
 // push.js - web push server module
@@ -140,13 +140,15 @@ class WebPush {
                 if(guildId) {
                     db.userGuildSettings.findUserSettingsById(userId, guildId)
                         .then(userGuildSettings => {
-                            settings = library.Settings.addPushTokenToSettings(
+                            try {
+                                settings = library.Settings.addPushTokenToSettings(
                                     library.Settings.getSettingsFromRecord(userGuildSettings),
                                     req.body.token)
-                                .catch(err => {
-                                    logger.error("app.post: /subscribe - failed to add pushToken to user guild settings");
-                                    settings = null;
-                                });
+                            }
+                            catch(err) {
+                                logger.error("app.post: /subscribe - failed to add pushToken to user guild settings");
+                                settings = null;
+                            }
                             if(settings) {
                                 db.userGuildSettings.upsert(userId, guildId, settings);
                             }
@@ -166,8 +168,7 @@ class WebPush {
                             }
                         });
                 }
-                }/* TODO Add db.userGlobalSettings */
-            }
+            }/* TODO Add db.userGlobalSettings */
         });
 
         app.set('port', this._defaultPort);
