@@ -10,7 +10,6 @@
 
 const library = require('../library');
 const config = require('../config.json');
-const library = require('../library');
 
 module.exports = {
     name: 'setprefix',
@@ -20,7 +19,7 @@ module.exports = {
     usage: '<new prefix>, where the new prefix can be a single character of your choice, from !"£*$%^&+?~:;',
     guildOnly: true,
     execute(message, args) {
-        msg = library.Helper.sendStandardWaitMessage(channel);
+        msg = library.Helper.sendStandardWaitMessage(message.channel);
         if (library.Admin.isAdmin(message.author.id, message.guild.id, message.client)) {
             if (args.length != 1) {
                 return library.Helper.editWaitErrorMessage(msg, `Insufficient parameters!  Please use ${library.System.getPrefix(message.guild.id)}${this.name} <new prefix>`);
