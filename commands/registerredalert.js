@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 20:15:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-02 06:30:29
+ * @Last Modified time: 2020-09-02 20:01:07
  */
 
 const Discord = require('discord.js');
@@ -37,13 +37,14 @@ module.exports = {
             displayAddress += `:${webPort}`;
         }
         if(displayAddress.length > 0) {
-            var msgText = `${displayAddress}:5000/?userId=${userId}&guildId=${guildId}`;
+            var msgText = `${displayAddress}/?userId=${userId}&guildId=${guildId}`;
 
             fetch(`${displayAddress}`, {timeout: 2000})
                 .then(res => {
                     console.log(res);
                 if(res.status == 200) {
-                    library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author} - call me paranoid, but for your added security and to comply ` +
+                    library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author} - I have sent you a direct message containing a link ` +
+                        `that you need to open using the device you wish to be notified on.  Call me paranoid, but for your added security and to comply ` +
                         `with any prevailing privacy legislation in your region, you need to explicitly opt-in to receive red alert messages.\n\n` +
                         `Be assured, **I do not, and will not, engage in unsolicited messaging!**  Any message you receive from me will be ` +
                         `as a *direct result of a red alert action raised by you or your fellow alliance members.*\n\n` +
@@ -53,7 +54,8 @@ module.exports = {
                         `discord app, but rather are delivered via your web browser!  This means that regardless of your discord notification settings, ` +
                         `you will be able to receive these notifications.\n\n **PLEASE NOTE:** *You will only be alerted if another alliance member ` +
                         `uses the alert command* - sadly, I am no miracle worker - I can only alert you when the alarm is raised.\n\nTo complete your ` +
-                        `registration, please visit the following webpage:\n${msgText}`);
+                        `registration, please visit the web page that I have sent to you via direct message.\n`);
+                    message.author.send(`Please visit the following link: \n${msgText}`);
                 } else {
                     library.Helper.editWaitErrorMessage(msg, `I am sorry, ${message.author}, the registration link appears to be undergoing difficulties - ` +
                         `http status code ${res.status}, ${res.statusText} was received.\n\nIt appears that my registration web page is currently not functioning correctly.  ` +

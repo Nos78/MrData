@@ -20,3 +20,4 @@ SELECT
   selectUserId.id, ${settings}
 FROM
     selectUserId
+ON CONFLICT DO NOTHING

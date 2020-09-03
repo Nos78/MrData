@@ -2,10 +2,12 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 01:22:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-02 06:51:05
+ * @Last Modified time: 2020-09-02 19:57:16
  */
 
 'use strict';
+
+const { loggers } = require('winston');
 
 const sql = require('../sql').user_guild_settings;
 
@@ -123,12 +125,17 @@ class UserGuildSettingsRepository {
      * @memberof UserGuildSettingsRepository
      */
     upsert(userId, guildId, settings) {
-        return this.add(userId, guildId, settings)
-          .then (record => {
-            if (record == null) {
-              return this.update(userId, guildId, settings);
-            }
-        })
+        if(!userId || !guildId) {
+            loggers.error(`userGuildSettings - upsert(${userId}, ${guildId} - null parameter detected`);
+            return null;
+        } else {
+            return this.add(userId, guildId, settings)
+                .then (record => {
+                if (record == null) {
+                  return this.update(userId, guildId, settings);
+                }
+            })
+        }
     }
 
     /**
@@ -142,6 +149,7 @@ class UserGuildSettingsRepository {
     update(userId, guildId, settings) {
         return this.db.one(sql.update, {
             userDiscordId: userId,
+            guildDiscordId: guildId,
             settings: settings
         });
     }
