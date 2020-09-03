@@ -16,22 +16,28 @@ const admin = require('./admin/admin.js');
 const league = require('./league/league.js');
 const helper = require('./helper/helper.js');
 const config = require('./config/config.js');
+const discord = require('./discord/discord.js');
+const settings = require('./settings/settings.js');
+const system = require('./system/system.js');
 
 module.exports = {
-  Format: format,
-  Admin: admin,
-  League: league,
-  Helper: helper,
-  Config: config,
+    Format: format,
+    Admin: admin,
+    League: league,
+    Helper: helper,
+    Config: config,
+    Discord: discord,
+    Settings: settings,
+    System: system,
 
-  collateArgs: function(index, args) {
-      var returnString = "";
-      if (index < args.length) {
-          returnString = args[index];
-          for(var i = index + 1; i < args.length; i++) {
-              returnString = returnString + " " + args[i];
-          }
-      }
-      return returnString;
-  }
+    collateArgs: function(index, args) {
+        var returnString = "";
+        if (index < args.length) {
+            returnString = args[index];
+            for(var i = index + 1; i < args.length; i++) {
+                returnString = returnString + " " + args[i];
+            }
+        }
+        return returnString;
+    }
 }

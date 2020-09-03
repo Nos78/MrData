@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon
  * @Date: 2020-08-25 02:54:40 
- * @Last Modified by:   BanderDragon
- * @Last Modified time: 2020-08-25 02:54:40 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-08-26 08:09:12
  */
 
 // Configure the Discord bot client
@@ -32,6 +32,7 @@ const client = new Discord.Client({
     token: config.token,
     autorun: true
 });
+
 
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -87,6 +88,14 @@ client.on("ready", () => {
     logger.info('Connected');
     logger.info('Logged in as: ');
     logger.info(client.user.username + ' - (' + client.user.id + ')');
+
+    // Replace templated parameters in help text with real data
+    var templates = library.Config.getHelpTextParameters(client);
+    client.commands.forEach(function(command) {
+        templates.forEach(function(template) {
+            command.description = command.description.replace(template.name, template.value);
+        })
+    });
     // Update the bot activity text to reflect the connections status
     client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
     logger.info(`${client.user.username} Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -211,7 +220,7 @@ client.on('message', async message => {
         if (cmd.usage) {
             reply += `\nThe proper usage would be: \`${config.prefix}${cmd.name} ${cmd.usage}\``;
         }
-        return message.channel.send(reply);
+        return library.Helper.sendErrorMessage(reply, message.channel);
     }
 
     // Check if a specified role is required
@@ -251,6 +260,7 @@ client.on('message', async message => {
 
     // try to execute the command
     // and exit gracefully on error
+
     try {
         if (me) {
             client.myselfCount++;

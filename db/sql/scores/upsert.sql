@@ -1,15 +1,10 @@
-/**
- * Inserts or replaces a user's score record for a given guild_id.
- * Using CTE, make sure the user Id exists
- *
- * @Author: BanderDragon
- * @Date:   2019-03-10T14:40:47+00:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: upsert.sql
- * @Last modified by:
- * @Last modified time: 2019-05-07T22:43:18+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-03-10 14:40:47 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-04 00:07:47
  */
+
 WITH insUser AS (
 	INSERT INTO users (user_id)
 	VALUES (${userId})
