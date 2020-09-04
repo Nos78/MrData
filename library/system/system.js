@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-26 21:18:46 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-04 01:36:01
+ * @Last Modified time: 2020-09-04 22:46:26
  */
 const logger = require('winston');
 const config = require('../../config.json');
@@ -16,7 +16,7 @@ module.exports = {
             let settings = await this.getGuildSettings(guildId)
             if(settings) {
                 settings.prefix = prefix;
-                return db.guildSettings.upsert(guildId, settings).catch(err => {console.log(`${err}`)});
+                return await db.guildSettings.upsert(guildId, settings).catch(err => {console.log(`${err}`)});
             } else {
                 return null;
             }

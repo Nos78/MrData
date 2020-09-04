@@ -27,6 +27,7 @@ module.exports = {
                 var newPrefix = args[0];
                 if (newPrefix.match(/[!"£*$%^&+?~:;]{1}$/)) {
                     let result = await library.System.savePrefix(message.guild.id, newPrefix);
+
                     if(result) {
                         return library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author}, your new command prefix has been set to ${args[0]}`);
                     } else {
