@@ -154,7 +154,7 @@ module.exports = {
             case 2:
                 {
                     /*
-                     * This is a special case, for use with admin privleges only.
+                     * This is a special case, for use with admin privileges only.
                      * This allows an admin to specify a username and update their scores
                      * for that user.
                      */
