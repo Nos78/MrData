@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-30 06:18:57 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-03 23:11:18
+ * @Last Modified time: 2020-09-04 02:24:09
  */
 
 // push.js - web push server module
@@ -142,7 +142,7 @@ class WebPush {
                         .then(userGuildSettings => {
                             try {
                                 settings = library.Settings.addPushTokenToSettings(
-                                    library.Settings.getSettingsFromRecord(userGuildSettings),
+                                    library.Settings.getUserSettingsFromRecord(userGuildSettings),
                                     req.body.token)
                             }
                             catch(err) {
@@ -157,7 +157,7 @@ class WebPush {
                     db.userGlobalSettings.findUserSettingsById(userId)
                         .then(userGlobalSettings => {
                             settings = library.Settings.addPushTokenToSettings(
-                                    library.Settings.getSettingsFromRecord(userGlobalSettings),
+                                    library.Settings.getUserSettingsFromRecord(userGlobalSettings),
                                     req.body.token)
                                 .catch(err => {
                                     logger.error("app.post: /subscribe - failed to add pushToken to user global settings");

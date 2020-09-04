@@ -2,19 +2,29 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-03 23:01:25
+ * @Last Modified time: 2020-09-03 23:37:43
  */
 
 const logger = require('winston');
 const config = require('../../config.json');
 const helper = require('../helper/helper.js');
 
+function getSettingsFromRecord (dbRecord, newSettings) {
+    let settings = newSettings;
+    if(dbRecord) {
+        if(dbRecord.settings) {
+            settings = dbRecord.settings;
+        }
+    }
+    return settings;
+}
+
 module.exports = {
     /**
      * Create an initialise a new empty settings object
      * with all the required named fields pre-defined.
      */
-    newSettings: function () {
+    newUserSettings: function () {
         // From version v2.0.1, pushToken became an array
         // The name is therefore kept, so as not to break the database
         return {
@@ -22,24 +32,29 @@ module.exports = {
         }
     },
 
+    newGuildSettings: function () {
+        return {
+            "prefix": config.prefix
+        }
+    },
+
     convertPushTokenToArray: function (pushToken) {
         var returnArray = pushToken;
         if(!Array.isArray(pushToken)) {
             // Convert to array
-            var token = pushToken;
             returnArray = [pushToken];
         }
         return returnArray;
     },
 
-    getSettingsFromRecord: function (dbRecord) {
-        let settings = this.newSettings();
-        if(dbRecord) {
-            if(dbRecord.settings) {
-                settings = dbRecord.settings;
-            }
-        }
-        return settings;
+    getGuildSettingsFromRecord: function (dbRecord) {
+        let newSettings = this.newGuildSettings();
+        return getSettingsFromRecord(dbRecord, newSettings);
+    },
+
+    getUserSettingsFromRecord: function (dbRecord) {
+        let newSettings = this.newUserSettings();
+        return getSettingsFromRecord(dbRecord, newSettings);
     },
 
     addPushTokenToSettings: function (settings, pushToken) {
