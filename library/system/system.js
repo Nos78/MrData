@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-26 21:18:46 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-03 23:41:11
+ * @Last Modified time: 2020-09-04 01:36:01
  */
 const logger = require('winston');
 const config = require('../../config.json');
@@ -11,21 +11,26 @@ const Settings = require('../Settings/settings.js');
 const db = require('../../db');
 
 module.exports = {
-    savePrefix(guildId, prefix) {
-        var settings = this.getGuildSettings(guildId);
-        if(settings) {
-            settings.prefix = prefix;
+    savePrefix: async function(guildId, prefix) {
+        if(guildId && guildId != 'null') {
+            let settings = await this.getGuildSettings(guildId)
+            if(settings) {
+                settings.prefix = prefix;
+                return db.guildSettings.upsert(guildId, settings).catch(err => {console.log(`${err}`)});
+            } else {
+                return null;
+            }
         }
-        db.guildSettings.upsert(guildId, settings);
     },
 
-    getPrefix(guildId) {
-        return this.getPrefixFromDb(guildId);
+    getPrefix: async function(guildId) {
+        var prefix = await this.getPrefixFromDb(guildId);
+        return prefix;
     },
 
-    getPrefixFromDb: function(guildId) {
-        var prefix = Config.getPrefix();
-        var settings = this.getGuildSettings(guildId);
+    getPrefixFromDb: async function(guildId) {
+        var prefix = await Config.getPrefix();
+        var settings = await this.getGuildSettings(guildId);
         if(settings) {
             if(settings.prefix) {
                 prefix = settings.prefix;
@@ -34,13 +39,11 @@ module.exports = {
         return prefix;
     },
 
-    getGuildSettings: function(guildId) {
+    getGuildSettings: async function(guildId) {
         var settings = null;
         if(guildId && guildId != 'null') {
-            db.guildSettings.findGuildSettingsById(guildId)
-                .then(result => {
-                    return Settings.getGuildSettingsFromRecord(result);
-                });
+            let result = await db.guildSettings.findGuildSettingsById(guildId)
+            settings = await Settings.getGuildSettingsFromRecord(result);
         }
         return settings;
     }

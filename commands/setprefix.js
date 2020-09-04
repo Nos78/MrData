@@ -18,16 +18,20 @@ module.exports = {
     args: true,
     usage: '<new prefix>, where the new prefix can be a single character of your choice, from !"£*$%^&+?~:;',
     guildOnly: true,
-    execute(message, args) {
-        msg = library.Helper.sendStandardWaitMessage(message.channel);
+    async execute(message, args) {
+        let msg = library.Helper.sendStandardWaitMessage(message.channel);
         if (library.Admin.isAdmin(message.author.id, message.guild.id, message.client)) {
             if (args.length != 1) {
                 return library.Helper.editWaitErrorMessage(msg, `Insufficient parameters!  Please use ${library.System.getPrefix(message.guild.id)}${this.name} <new prefix>`);
             } else {
                 var newPrefix = args[0];
                 if (newPrefix.match(/[!"£*$%^&+?~:;]{1}$/)) {
-                    library.System.savePrefix(message.guild.id);
-                    return library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author}, your new command prefix has been set to ${args[0]}`);
+                    let result = await library.System.savePrefix(message.guild.id, newPrefix);
+                    if(result) {
+                        return library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author}, your new command prefix has been set to ${args[0]}`);
+                    } else {
+                        return library.Helper.editWaitErrorMessage(msg, `${message.author}, unfortunately I was unable to save your new command prefix.`);
+                    }
                 }
             }
         } else {

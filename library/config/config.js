@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-01 20:48:21
+ * @Last Modified time: 2020-09-04 00:25:21
  */
  
 /* 
@@ -19,8 +19,6 @@ const packageLock = require('../../package-lock.json');
 const process = require('process');
 
 var fs = require('fs');
-var userConfigPath = config.userConfigurationPath;
-const userConfigExt = config.userConfigurationExt;
 
 var path = require('path');
 
@@ -54,7 +52,7 @@ module.exports = {
     /**
      * Gets an array of template parameters, calling this.populateHelpTextParameter
      * with every template.
-     * @param {*} client 
+     * @param {Client} client 
      * @returns {array} an array of helpTextParams
      */
     getHelpTextParameters: function(client) {
