@@ -20,12 +20,13 @@ module.exports = {
 	execute(message, args) {
     const data = [];
     const { commands } = message.client;
+    const prefix = library.System.getPrefix(message.guild.id);
 
     if (!args.length) {
       data.push('You can get general help by visiting my webpage, at **https://mrdata.thebotfactory.net**\n');
       data.push('**Here\'s a list of all my commands:**');
       data.push('\t\t!' + commands.map(command => command.name).join(',\n\t\t!'));
-      data.push(`\nYou can send \`${config.prefix}${this.name} [command name]\` to get info on a specific command!`);
+      data.push(`\nYou can send \`${prefix}${this.name} [command name]\` to get info on a specific command!`);
 
       return message.author.send(data, { split: true })
 				.then(() => {
