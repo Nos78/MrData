@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-04 02:05:19
+ * @Last Modified time: 2020-09-04 22:28:10
  */
 
 // Configure the Discord bot client
@@ -232,11 +232,43 @@ client.on('message', async message => {
         }
     }
 
-    const prefix = await library.System.getPrefix(message.guild.id);
-
+    var prefix = await library.System.getPrefix(message.guild.id);
     if (!(message.content && message.content.startsWith(prefix))) {
-      // Not prefixed, do not continue
-      return;
+        // Hack to ensure !showprefix works, regardless of prefix specified
+        var found = false
+        if (prefix != config.prefix) {
+            if(!message.content.startsWith(config.prefix + 'showprefix')) {
+                var prefixCmd = client.commands.get('showprefix');
+                for(var i=0; i < prefixCmd.aliases.length; i++) {
+                    if(message.content.startsWith(config.prefix + prefixCmd.aliases[i])) {
+                        found = true;
+                        break;
+                    }
+                }
+            } else {
+                found = true;
+            }
+            
+            if(!found && !message.content.startsWith(config.prefix + 'datahelp')) {
+                var helpCmd = client.commands.get('datahelp');
+                for(var i=0; i < helpCmd.aliases.length; i++) {
+                    if(message.content.startsWith(config.prefix + helpCmd.aliases[i])) {
+                        found = true;
+                        break;
+                    }
+                }
+            } else {
+                found = true;
+            }
+
+            if(found) {
+                prefix = config.prefix;
+            }
+        }
+        if(!found) {
+            // Not prefixed, do not continue
+            return;
+        }
     }
 
     // split up the message into the command word and any additional arguements
