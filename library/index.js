@@ -29,9 +29,6 @@ module.exports = {
     Discord: discord,
     Settings: settings,
     System: system,
-  Config: config,
-  Discord: discord,
-  Settings: settings,
 
     collateArgs: function(index, args) {
         var returnString = "";
