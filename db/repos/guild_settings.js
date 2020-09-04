@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-31 20:55:32
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-01 02:22:44
+ * @Last Modified time: 2020-09-04 23:00:21
  */
 
 'use strict';
@@ -116,13 +116,12 @@ class GuildSettingsRepository {
      * @returns {Promise<Result>} A single row object containing the new record, or null. A failure returns a QueryResultError
      * @memberof GuildSettingsRepository
      */
-    upsert(guildId, settings) {
-        return this.add(guildId, settings)
-          .then (guild => {
-            if (guild == null) {
-              return this.update(guildId, settings);
-            }
-        })
+    async upsert(guildId, settings) {
+        var guildSettingsObj = await this.add(guildId, settings);
+        if (guildSettingsObj == null) {
+            guildSettingsObj = this.update(guildId, settings);
+        }
+        return guildSettingsObj;
     }
 
     /**
