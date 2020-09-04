@@ -7,7 +7,7 @@
 const logger = require('winston');
 const config = require('../../config.json');
 const Config = require('../config/config.js');
-const Settings = require('../Settings/settings.js');
+const Settings = require('../settings/settings.js');
 const db = require('../../db');
 
 module.exports = {
