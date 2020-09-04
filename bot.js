@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon
- * @Date: 2020-08-25 02:54:40 
+ * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-26 08:09:12
+ * @Last Modified time: 2020-09-04 02:05:19
  */
 
 // Configure the Discord bot client
@@ -158,6 +158,7 @@ client.on("ready", () => {
 client.on("guildCreate", guild => {
     // This event triggers when the bot joins a guild.
     logger.info(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+
     // Update the bot activity text to reflect the new stat
     client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
     db.guilds.add(guild.id)
@@ -192,13 +193,15 @@ client.on('message', async message => {
         }
     }
 
-    if (!(message.content && message.content.startsWith(config.prefix))) {
+    const prefix = await library.System.getPrefix(message.guild.id);
+
+    if (!(message.content && message.content.startsWith(prefix))) {
       // Not prefixed, do not continue
       return;
     }
 
     // split up the message into the command word and any additional arguements
-    const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const cmdName = args.shift().toLowerCase();
 
     // get the specified command name
@@ -218,7 +221,7 @@ client.on('message', async message => {
     if (cmd.args && !args.length) {
         let reply = `You didn't provide any arguments, ${message.author}!`;
         if (cmd.usage) {
-            reply += `\nThe proper usage would be: \`${config.prefix}${cmd.name} ${cmd.usage}\``;
+            reply += `\nThe proper usage would be: \`${prefix}${cmd.name} ${cmd.usage}\``;
         }
         return library.Helper.sendErrorMessage(reply, message.channel);
     }
