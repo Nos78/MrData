@@ -31,7 +31,7 @@ module.exports = {
                     if(result) {
                         return library.Helper.editWaitSuccessMessage(msg, `Thank you, ${message.author}, your new command prefix has been set to ${args[0]}`);
                     } else {
-                        return library.Helper.editWaitErrorMessage(msg, `${message.author}, unfortunately I was unable to save your new command prefix.`);
+                        return library.Helper.editWaitErrorMessage(msg, `${message.author}, an error occured - please confirm if I was able to save your new command prefix.`);
                     }
                 }
             }
