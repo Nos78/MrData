@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 20:15:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-05 01:42:18
+ * @Last Modified time: 2020-09-05 04:20:34
  */
 
 const Discord = require('discord.js');
@@ -67,13 +67,13 @@ module.exports = {
                             if(optionalText && optionalText.length > 0) {
                                 payload.notification.body += "\n\n" + optionalText;
                             }
-                            global.webPushApp.sendToDevice(token,
-                                payload, options)
-                                .then(result => {
-                                    msg = library.Helper.amendWaitMessage(msg, `Attempt to notify device ${count} was ${result}`);
-                                });
+                            var result = global.webPushApp.sendToDevice(token, payload, options);
+                            if(result.successCount > 0) {
+                                library.Helper.sendSuccessMessage(`Attempt to notify device ${count} succeeded, successCount: ${result.successCount}, failureCount: ${result.failureCount}`, message.channel);
+                            } else {
+                                library.Helper.sendErrorMessage(`Attempt to notify device ${count} failed, failureCount: ${result.failureCount}, successCount: ${result.successCount}`, message.channel);
+                            }
                             count++;
-    
                         });
                     }
                 });
