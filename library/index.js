@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-06T08:09:56+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: index.js
- * @Last modified by:
- * @Last modified time: 2020-03-29T18:27:57+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-06 08:09:56 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-05 00:27:34
  */
 
 'use strict';

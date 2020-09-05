@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 02:56:13 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-01 21:03:11
+ * @Last Modified time: 2020-09-05 00:39:59
  */
 
 const format = require('../format/format.js');
@@ -126,7 +126,12 @@ module.exports = {
     editWaitMessage: function(message, messageText) {
         return this.editMessage(message, messageText, config.messagePleaseWaitColor);
     },
-    
+
+    amendWaitMessage: function(message, messageText) {
+        var msgText = message.content + "\n\n" + messageText;
+        return this.editMessage(message, msgText, config.messagePleaseWaitColor);
+    },
+
     /**
      * Edits the given message object, returned by a previous call to
      * sendWaitMessage. The message will be changed into a standard success-styled message.
