@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 20:15:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-06 02:21:23
+ * @Last Modified time: 2020-09-06 07:17:31
  */
 
 const Discord = require('discord.js');
@@ -70,12 +70,12 @@ module.exports = {
                             var devices = pushTokens.length;
                             msg = library.Helper.editWaitMessage(msg, `It seems ${displayName} has registered ${devices} devices, ${message.author} - attempting to notify them...`);
                             var count = 0
+                            payload.notification.title = payload.notification.title.replace("@SERVERNAME", message.guild.name);
+                            payload.notification.body = payload.notification.body.replace("@MEMBERNAME", displayName);
+                            if(optionalText && optionalText.length > 0) {
+                                payload.notification.body += "\n\n" + optionalText;
+                            }
                             pushTokens.forEach(async token => {
-                                payload.notification.title = payload.notification.title.replace("@SERVERNAME", message.guild.name);
-                                payload.notification.body = payload.notification.body.replace("@MEMBERNAME", displayName);
-                                if(optionalText && optionalText.length > 0) {
-                                    payload.notification.body += "\n\n" + optionalText;
-                                }
                                 var result = await global.webPushApp.sendToDevice(token, payload, options);
                                 if(result.successCount > 0) {
                                     library.Helper.sendSuccessMessage(`Attempt to notify device ${count} succeeded, successCount: ${result.successCount}, failureCount: ${result.failureCount}`, message.channel);
