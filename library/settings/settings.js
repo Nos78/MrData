@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-03 23:37:43
+ * @Last Modified time: 2020-09-06 02:16:19
  */
 
 const logger = require('winston');
@@ -53,6 +53,11 @@ module.exports = {
     },
 
     getUserSettingsFromRecord: function (dbRecord) {
+        let newSettings = this.newUserSettings();
+        return getSettingsFromRecord(dbRecord, newSettings);
+    },
+
+    getUserGuildSettingsFromRecord: function (dbRecord) {
         let newSettings = this.newUserSettings();
         return getSettingsFromRecord(dbRecord, newSettings);
     },
