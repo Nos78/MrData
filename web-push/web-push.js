@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-30 06:18:57 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-05 04:22:08
+ * @Last Modified time: 2020-09-05 04:28:42
  */
 
 // push.js - web push server module
@@ -184,6 +184,7 @@ class WebPush {
         try {
             var result = await firebase.messaging().sendToDevice(token, payload, options)
             logger.info("Successfully sent message: ", result);
+            return result;
         } catch(err) {
             logger.error("Error sending message: ", err);
         }
