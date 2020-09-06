@@ -15,6 +15,7 @@ const helper = require('./helper/helper.js');
 const config = require('./config/config.js');
 const discord = require('./discord/discord.js');
 const settings = require('./settings/settings.js');
+const system = require('./system/system.js');
 
 module.exports = {
   Format: format,
@@ -24,6 +25,7 @@ module.exports = {
   Config: config,
   Discord: discord,
   Settings: settings,
+  System: system,
 
   collateArgs: function(index, args) {
       var returnString = "";
