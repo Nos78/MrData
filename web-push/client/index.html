@@ -101,7 +101,13 @@
         }
         messaging.onMessage(function (payload) {
             console.log("Message received. ", JSON.stringify(payload));
-            notificationElement.innerHTML = notificationElement.innerHTML + " " + payload.data.notification;
+            var msg = "";
+            if(payload.data) {
+                msg = payload.data.notification;
+            } else {
+                msg = payload.notification;
+            }
+            notificationElement.innerHTML = notificationElement.innerHTML + "<span style='color:#000000'>" + msg + "<br/><br/>To receive notifications in the usual manner, you should close this page!</span>";
         });
         messaging.onTokenRefresh(function () {
             messaging.getToken()
