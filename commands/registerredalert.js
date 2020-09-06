@@ -54,7 +54,7 @@ module.exports = {
                         `discord app, but rather are delivered via your web browser!  This means that regardless of your discord notification settings, ` +
                         `you will be able to receive these notifications.\n\n **PLEASE NOTE:** *You will only be alerted if another alliance member ` +
                         `uses the alert command* - sadly, I am no miracle worker - I can only alert you when the alarm is raised.\n\nTo complete your ` +
-                        `registration, please visit the web page that I have sent to you via direct message.\n`);
+                        `registration, please visit the web page that I have sent to you via direct message.\n\n**UNFORTUNATELY** Safari does not support this feature, so get a proper browser.  Or better yet, stop being sheep and get a real mobile phone.`);
                     message.author.send(`Please visit the following link: \n${msgText}`);
                 } else {
                     library.Helper.editWaitErrorMessage(msg, `I am sorry, ${message.author}, the registration link appears to be undergoing difficulties - ` +
