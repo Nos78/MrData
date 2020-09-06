@@ -6,6 +6,57 @@
     <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-messaging.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
     <script>
+        //
+        // Browser detection - TODO, move this to new script to keep code tidy!
+        //
+
+        // Opera 8.0+
+        var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+        // Firefox 1.0+
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+        // Safari 3.0+ "[object HTMLElementConstructor]" 
+        var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+        // Internet Explorer 6-11
+        var isIE = /*@cc_on!@*/false || !!document.documentMode;
+        // Edge 20+
+        var isEdge = !isIE && !!window.StyleMedia;
+        // Chrome 1 - 79
+        var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        // Edge (based on chromium) detection
+        var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
+        // Blink engine detection
+        var isBlink = (isChrome || isOpera) && !!window.CSS;
+        function browser() {
+            // Opera 8.0+
+            if(isOpera) {
+                return "Opera8.0+";
+            }
+            // Firefox 1.0+
+            if(isFirefox) {
+                return "firefox1.0+";
+            }
+            // Safari 3.0+ "[object HTMLElementConstructor]" 
+            if(isSafari) {
+                return "safari3.0+";
+            }
+            // Internet Explorer 6-11
+            if (isIE) {
+                return "IE6-11";
+            }
+            // Edge 20+
+            if (isEdge) {
+                return "Edge20+";
+            }
+            // Chrome 1 - 79
+            if (isChrome) {
+                return "Chrome1-79";
+            }
+            // Edge (based on chromium) detection
+            if (isBlink) {
+                return "Blink";
+            }
+        }
+
         firebase.initializeApp({
             apiKey: "AIzaSyAmaQpj-HpYZHOLL08737doT4QM1xIcnkw",
             authDomain: "mr-data-fcm.firebaseapp.com",
@@ -44,7 +95,7 @@
                     });
                 })
                 .catch(function (err) {
-                    errorElement.innerHTML = "Error: " + err;
+                    errorElement.innerHTML = "<span style='color:#FF0000'>I did not get notification permission.<br/>At this moment in timeError: " + err;
                     console.log("Didn't get notification permission", err);
                 });
         }
@@ -79,6 +130,16 @@
     <p>
         This is a web front-end for MrData.  Register for a test push notification by
         pressing the button below.<br/><br/></p><p>Join us on <a href="https://discord.gg/xzAs2yy">the Bot Factory Discord Server</a>.
+        <script>
+            if (isSafari) {
+                document.write("<br/><br/>Sadly, you are running a sub-standard browser, which does not support advanced and " +
+                                "modern features, such as push-notifications.  We are currently working on a solution " +
+                                "which will enable users of Half-Eaten fruit products to enjoy the same benefits as the " +
+                                "rest of the world.  Please bear with us whilst we develop such a tool.  In the meantime, " +
+                                "you might like to <a href='https://apps.apple.com/us/app/google-chrome/id535886823' target='_blank'>" +
+                                "visit the app store and install a man's browser!</a>");
+            }
+        </script>
         <br/><br/>
     </p>
     

@@ -46,5 +46,17 @@ module.exports = {
             settings = await Settings.getGuildSettingsFromRecord(result);
         }
         return settings;
+    },
+
+    getUserGuildSettings: function(userId, guildId) {
+        var settings = null;
+        if(userId && userId != 'null' && guildId && guildId != 'null') {
+            db.userGuildSettings.findGuildSettingsById(userId, guildId)
+                .then(result => {
+                    return Settings.getUserGuildSettingsFromRecord(result);
+                });
+        }
+        return settings;
     }
+
 }

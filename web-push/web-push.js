@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-30 06:18:57 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-04 02:24:09
+ * @Last Modified time: 2020-09-05 04:28:42
  */
 
 // push.js - web push server module
@@ -180,14 +180,14 @@ class WebPush {
         this._app = app;
     }
 
-    sendToDevice(token, payload, options) {
-        return firebase.messaging().sendToDevice(token, payload, options)
-            .then(function(response) {
-                logger.info("Successfully sent message: ", response);
-            })
-            .catch(function(error) {
-                logger.error("Error sending message: ", error);
-            });
+    async sendToDevice(token, payload, options) {
+        try {
+            var result = await firebase.messaging().sendToDevice(token, payload, options)
+            logger.info("Successfully sent message: ", result);
+            return result;
+        } catch(err) {
+            logger.error("Error sending message: ", err);
+        }
     }
 
     sendTest() {
