@@ -18,7 +18,7 @@ const logger = require('winston');
 var payload = {
     notification: {
       title: '@SERVERNAME Red Alert!',
-      body: '@MEMBERNAME - Your base is under attack!  We are attempting to defend you.  Please log in immediately and raise your shield.',
+      body: '@MEMBERNAME - Your base is under attack!  @NOTIFIER has raised the alarm.  Please log in immediately and raise your shield.',
     }
 };
 
@@ -45,7 +45,7 @@ module.exports = {
 
         var member = message.mentions.members.first();
         if (!member) {
-            member = library.Discord.getDiscordMember(args[0], message.guild);
+            member = library.Discord.getDiscordMemberByName(args[0], message.guild);
         }
 
         if(member) {
@@ -53,6 +53,21 @@ module.exports = {
 
             var optionalText = message.content.split(args[0])[1].substring(1);
 
+            // Collate required data for constructing the push message
+            const guildName = message.guild.name;
+            const msgSender = library.Discord.getDiscordMember(message.author.id, message.guild);
+            var senderName = "An alliance member";
+            if(msgSender) {
+                senderName = library.Discord.getDisplayName(msgSender);
+            }
+
+            // Now prepare the payload by replacing the templated strings
+            payload.notification.title = payload.notification.title.replace("@SERVERNAME", guildName);
+            payload.notification.body = payload.notification.body.replace("@MEMBERNAME", displayName);
+            payload.notification.body = payload.notification.body.replace("@NOTIFIER", senderName);
+            payload.notification.icon = message.client.user.displayAvatarURL;
+
+            // Go ahead and send the message to the users device(s)...
             db.userGuildSettings.findUserSettingsById(member.user.id, message.guild.id)
                 .then(userGuildSettings => {
                     var settings = library.Settings.getUserSettingsFromRecord(userGuildSettings);
@@ -69,11 +84,10 @@ module.exports = {
                             // Now do the good stuff...
                             var devices = pushTokens.length;
                             msg = library.Helper.editWaitMessage(msg, `It seems ${displayName} has registered ${devices} devices, ${message.author} - attempting to notify them...`);
-                            var count = 0
-                            payload.notification.title = payload.notification.title.replace("@SERVERNAME", message.guild.name);
-                            payload.notification.body = payload.notification.body.replace("@MEMBERNAME", displayName);
+                            var count = 0;
+
                             if(optionalText && optionalText.length > 0) {
-                                payload.notification.body += "\n\n" + optionalText;
+                                payload.notification.body += ("\n\n" + optionalText);
                             }
                             pushTokens.forEach(async token => {
                                 var result = await global.webPushApp.sendToDevice(token, payload, options);
