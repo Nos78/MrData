@@ -2,12 +2,28 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-29 04:25:58
+ * @Last Modified time: 2020-09-08 19:27:50
  */
 
 const logger = require('winston');
 const config = require('../../config.json');
 const helper = require('../helper/helper.js');
+
+// PRIVATE FUNCTIONS - Not to be exported
+
+/**
+ * 
+ * @param {string} parameterName 
+ * @param {string} parameterValue 
+ * @param {Guild} guild
+ * @returns 
+ */
+function findDiscordMember(parameterName, parameterValue, guild) {
+    if(!parameterName) {
+        throw 'findDiscordMember: parameterName was null!'
+    }
+    return guild.members.find(parameterName, parameterValue);
+}
 
 module.exports = {
     initialiseCommands: function (client) {
@@ -20,12 +36,29 @@ module.exports = {
      * @param {guild} guild 
      * @returns {member}
      */
-    getDiscordMember: function(name, guild) {
+    getDiscordMemberByName: function(name, guild) {
         // Get a 'clean' copy of the name
         name = helper.parseName(name);
 
         // return the member object from the members list
-        return guild.members.find("displayName", name);
+        return findDiscordMember("displayName", name, guild);
+    },
+
+    getDiscordMemberById: function(id, guild) {
+        id = helper.parseIdNumber(id);
+
+        return findDiscordMember("id", id, guild);
+    },
+
+    getDiscordMember: function(identifier, guild) {
+        var memberId = helper.parseIdNumber(identifier);
+        var memberName = helper.parseName(identifier);
+
+        if(isNaN(memberId)) {
+            return this.getDiscordMemberByName(memberName, guild);
+        } else {
+            return this.getDiscordMemberById(memberId, guild);
+        }
     },
 
     /**
