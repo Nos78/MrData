@@ -107,7 +107,7 @@
             } else {
                 msg = payload.notification;
             }
-            notificationElement.innerHTML = notificationElement.innerHTML + "<span style='color:#000000'>" + msg + "<br/><br/>To receive notifications in the usual manner, you should close this page!</span>";
+            notificationElement.innerHTML = notificationElement.innerHTML + "<span style='color:#000000'>" + "Your message content:<br/>" + JSON.stringify(msg) + "<br/><br/>To receive notifications in the usual manner, you should close this page!</span><br/>";
         });
         messaging.onTokenRefresh(function () {
             messaging.getToken()
@@ -131,11 +131,11 @@
 
 <body>
     <header>
-        <h1>Firebase Messaging (Push Notifications) Demo</h1>
+        <h1>MrData - RED ALERT (Push Notifications) System</h1>
     </header>
     <p>
-        This is a web front-end for MrData.  Register for a test push notification by
-        pressing the button below.<br/><br/></p><p>Join us on <a href="https://discord.gg/xzAs2yy">the Bot Factory Discord Server</a>.
+        This is a web front-end for MrData based on the Firebase Messaging System from Google.  Register for a push notification by
+        pressing the button below.<br/><br/></p><p>Join our development chat on <a href="https://discord.gg/xzAs2yy">the Bot Factory Discord Server</a>.
         <script>
             if (isSafari) {
                 document.write("<br/><br/>Sadly, you are running a sub-standard browser, which does not support advanced and " +
@@ -143,7 +143,7 @@
                                 "which will enable users of Half-Eaten fruit products to enjoy the same benefits as the " +
                                 "rest of the world.  Please bear with us whilst we develop such a tool.  In the meantime, " +
                                 "you might like to <a href='https://apps.apple.com/us/app/google-chrome/id535886823' target='_blank'>" +
-                                "visit the app store and install a man's browser!</a>");
+                                "visit the app store and install a man's browser, such as Chrome!</a>");
             }
         </script>
         <br/><br/>
