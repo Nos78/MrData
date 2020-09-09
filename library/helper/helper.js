@@ -2,10 +2,9 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 02:56:13 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-05 00:39:59
+ * @Last Modified time: 2020-09-09 01:41:54
  */
 
-const format = require('../format/format.js');
 const config = require('../../config.json');
 const Discord = require('discord.js');
 
@@ -299,7 +298,7 @@ module.exports = {
     parseMaxRankCount: function (args) {
         var count = 10;
         if (args.length == 2) {
-            count = format.stripCommas(args[1]);
+            count = global.library.Format.stripCommas(args[1]);
             if ((args[0] == '-c' || args[0] == '-count') && !isNaN(count)) {
                 args.length = 0;
             } else {
@@ -345,5 +344,5 @@ module.exports = {
         var regex = /[1234567890]*/g;
         let reg = new RegExp(regex);
         return text.match(reg).join('');
-    }
+    },
 }

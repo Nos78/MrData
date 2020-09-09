@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon
  * @Date: 2020-08-25 02:54:25 
- * @Last Modified by:   BanderDragon
- * @Last Modified time: 2020-08-25 02:54:25 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-09 03:41:52
  */
 
 const config = require('../config.json');
@@ -24,7 +24,7 @@ module.exports = {
       case 0:
         // No args specified, use the senders discord id.
         findThisUser = message.author.id;
-        desc = `${message.author}, your id is `;
+        desc = `${message.author}, your discord user id is `;
       break;
 
       case 1:

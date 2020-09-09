@@ -2,12 +2,16 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-06 02:16:19
+ * @Last Modified time: 2020-09-09 01:40:53
  */
 
 const logger = require('winston');
 const config = require('../../config.json');
-const helper = require('../helper/helper.js');
+var compareVersions = require('compare-versions');
+
+// global.library now contains the library,
+// so no longer need to require the other library
+// modules that are required in this module
 
 function getSettingsFromRecord (dbRecord, newSettings) {
     let settings = newSettings;
@@ -34,8 +38,48 @@ module.exports = {
 
     newGuildSettings: function () {
         return {
-            "prefix": config.prefix
+            "prefix": config.prefix,
+            "deleteCallingCommand": false,
+            "redalert": {},
+            "version": global.library.Config.packageVersion(),
+            "modified": true
         }
+    },
+
+    /**
+     * Backward compatibility function - new settings may be added at any time,
+     * so to ensure none of these changes break the code-base when loading older setting
+     * objects, this function will convert an old settings object to the newest definition.
+     * @param {Object} settings 
+     * @returns {Object} new settings
+     */
+    upgradeGuildSettings: function (settings) {
+        if(!settings) {
+            return this.newGuildSettings;
+        }
+        
+        var oldSettingsId = settings.version;
+        if(!oldSettingsId) {
+            oldSettingsId = '0.0.0';
+        }
+
+        var newSettings = this.newGuildSettings();
+
+        if(compareVersions.compare(newSettings.version, oldSettingsId, '<=')) {
+            return settings;
+        }
+
+        if(settings.prefix) {
+            newSettings.prefix = settings.prefix;
+        }
+        if(settings.deleteCallingCommand) {
+            newSettings.deleteCallingCommand = settings.deleteCallingCommand;
+        }
+        if(settings.redalert) {
+            newSettings.redalert = settings.redalert;
+        }
+
+        return newSettings;
     },
 
     convertPushTokenToArray: function (pushToken) {
@@ -62,6 +106,14 @@ module.exports = {
         return getSettingsFromRecord(dbRecord, newSettings);
     },
 
+    /**
+     * Adds a given pushToken to the settings.  Takes the array of push tokens from the settings,
+     * creating an array if it does not already exist, and adds the given push token to it.
+     * If the pushToken in the settings is a string, it will add this and the new token to the new array,
+     * to preserve compatibility with version 1.3., which stored only one pushToken as a string.
+     * @param {Object} settings 
+     * @param {string} pushToken 
+     */
     addPushTokenToSettings: function (settings, pushToken) {
         if(settings) {
             // Compatibility with v1.3.2 - previously only one token was stored, whereas now it is an array
@@ -73,6 +125,11 @@ module.exports = {
         return settings;
     },
 
+    /**
+     * Adds a given pushToken string to the pushTokens array.
+     * @param {Array} pushTokens 
+     * @param {string} pushToken 
+     */
     addPushTokenToArray: function (pushTokens, pushToken) {
         if(!pushTokens) {
             throw 'addPushTokenToArray: pushTokens parameter was null!'
@@ -90,6 +147,12 @@ module.exports = {
         return pushTokens;
     },
 
+    /**
+     * Checks to see if the given token exists in the tokens array.
+     * @param {string} tokenToCheck 
+     * @param {Array} tokens 
+     * @returns {boolean}
+     */
     checkIfTokenExists: function (tokenToCheck, tokens) {
         var result = false;
         if(tokenToCheck && tokens) {
