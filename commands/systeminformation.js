@@ -45,7 +45,6 @@ module.exports = {
         let pMinutes = Math.floor(pSeconds / 60);
         pSeconds %= 60;
         let processUptime = `${pDays} day, ${pHours} hours, ${pMinutes} minutes and ${Math.floor(pSeconds)} seconds`;
-        let resourceUse = process.resourceUsage();
         let memoryUse = process.memoryUsage();
         let memoryText = `** __${botName} process:__ **\n`;
         for (let key in memoryUse) {
