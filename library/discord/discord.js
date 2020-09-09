@@ -2,12 +2,11 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-08 19:38:20
+ * @Last Modified time: 2020-09-09 01:43:41
  */
 
 const logger = require('winston');
 const config = require('../../config.json');
-const helper = require('../helper/helper.js');
 
 // PRIVATE FUNCTIONS - Not to be exported
 
@@ -27,9 +26,6 @@ function findDiscordMember(parameterName, parameterValue, guild) {
 }
 
 module.exports = {
-    initialiseCommands: function (client) {
-
-    },
 
     /**
      * Gets the member object of a given member from a guild object, using the member name.
@@ -39,7 +35,7 @@ module.exports = {
      */
     getDiscordMemberByName: function(name, guild) {
         // Get a 'clean' copy of the name
-        name = helper.parseName(name);
+        name = global.library.Helper.parseName(name);
 
         // return the member object from the members list
         return findDiscordMember("displayName", name, guild);
@@ -53,7 +49,7 @@ module.exports = {
      * @returns {GuildMember} object being searched for
      */
     getDiscordMemberById: function(id, guild) {
-        id = helper.parseIdNumber(id);
+        id = global.library.Helper.parseIdNumber(id);
 
         return findDiscordMember("id", id, guild);
     },
@@ -68,8 +64,8 @@ module.exports = {
      * @returns {GuildMember} a member object
      */
     getDiscordMember: function(identifier, guild) {
-        var memberId = helper.parseIdNumber(identifier);
-        var memberName = helper.parseName(identifier);
+        var memberId = global.library.Helper.parseIdNumber(identifier);
+        var memberName = global.library.Helper.parseName(identifier);
 
         if(isNaN(memberId)) {
             return this.getDiscordMemberByName(memberName, guild);
@@ -85,7 +81,7 @@ module.exports = {
      * @param {Client} client 
      */
     getDiscordGuild: function(name, client) {
-        name = helper.parseName(name);
+        name = global.library.Helper.parseName(name);
 
         return client.guilds.find("name", name);
     },
@@ -116,5 +112,5 @@ module.exports = {
             }
         }
         return displayName;
-    },
+    }
 }

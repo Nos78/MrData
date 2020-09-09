@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-06 08:09:56 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-05 00:27:34
+ * @Last Modified time: 2020-09-08 20:38:10
  */
 
 'use strict';
@@ -16,6 +16,7 @@ const config = require('./config/config.js');
 const discord = require('./discord/discord.js');
 const settings = require('./settings/settings.js');
 const system = require('./system/system.js');
+const commands = require('./commands/commands.js');
 
 module.exports = {
   Format: format,
@@ -26,6 +27,7 @@ module.exports = {
   Discord: discord,
   Settings: settings,
   System: system,
+  Commands: commands,
 
   collateArgs: function(index, args) {
       var returnString = "";

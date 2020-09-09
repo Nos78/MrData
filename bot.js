@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-08 20:11:43
+ * @Last Modified time: 2020-09-09 01:29:31
  */
 
 // Configure the Discord bot client
@@ -13,8 +13,6 @@ const db = require('./db');
 const fs = require('fs');
 const cmdLog = './cmdExec.log';
 
-const commandsModulePath = config.commandsModule;
-
 //const global.webPush = require('./web-push');
 
 //const webPushApp =  new webPush.WebPush();
@@ -22,6 +20,14 @@ const commandsModulePath = config.commandsModule;
 
 // Set up the library functions
 const library = require('./library');
+
+// Set up global access so that all modules can access the library
+// TODO - there has to be a better way of doing this:
+// - maybe move library into the client? (but this doesn't work for functions who cannot access, unless the client is passed)
+// Back-compatibility - leave definition of library variable above, and in other areas of the code.
+// The main problem being encountered is when one library module requires functions from other library modules.... I have been
+// referencing them individually, as doing require('../../library') is not working
+global.library = library;
 
 // Set up the logger for debug/info
 const logger = require('winston');
@@ -45,23 +51,9 @@ const client = new Discord.Client({
     autorun: true
 });
 
+// Initialise the commands module
+client.commands = library.Commands.initialiseCommands(client);
 
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync(commandsModulePath).filter(file => file.endsWith('.js'));
-
-//
-// Configure all the commands,
-// read commands directory and place
-// into the commands collection
-for (const file of commandFiles) {
-    const command = require(`${commandsModulePath}/${file}`);
-
-    // set a new item in the Collection
-    // with the key as the command name and the value as the exported module
-    client.commands.set(command.name, command);
-}
-
-//
 // initialise the cooldowns collection
 const cooldowns = new Discord.Collection();
 
@@ -76,6 +68,15 @@ try {
 } catch (error) {
     logger.info(`Failed to access config.deleteCallingCommand; update your config.json with this member.  Error: ${JSON.stringify(error)}`);
     client.deleteCallingCommand = false;
+}
+
+try {
+    // Initialise the settings for individual servers - these
+    // will be stored in the database, but a cached version in the client
+    // would be much more efficient...
+    client.guildSettings = [];
+} catch (error) {
+    logger.error(`Failed to initialise guild settings, ${JSON.stringify(error)}`);
 }
 
 try {
@@ -188,7 +189,26 @@ client.on("ready", () => {
                 logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table.`);
             }
         });
+
+        /* Cache the settings for this guild */
+        var settings = library.System.getGuildSettings(guild.id)
+            .then(settings => {
+                settings = library.Settings.upgradeGuildSettings(settings);
+                client.guildSettings[`${guild.id}`] = settings;
+                if (settings.modified) {
+                    library.System.saveGuildSettings(guild.id, settings)
+                        .then(result => {
+                            logger.info(`Upgraded settings JSON for ${guild.name}, ${guild.id}, result: ${!(result == null)}.`);
+                        });
+                }
+            });
+
+        // db.guildSettings.findGuildSettingsById(guild.id)
+        //     .then(result => {
+        //         library.System.getGuildSettings
+        //     })
     }); // end for
+
 });
 
 //
@@ -233,6 +253,8 @@ client.on('message', async message => {
             }
         }
     }
+
+    // Settings should be cached in the client
 
     var prefix = library.Config.getPrefix();
     if (message.guild) {
@@ -281,6 +303,7 @@ client.on('message', async message => {
         }
     }
 
+    message.channel.send(`This is a test message accessing dynamic settings for ${message.guild.name}: prefix ${library.Settings.getGuildSetting("prefix", message.guild.id)}`);
     // split up the message into the command word and any additional arguements
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const cmdName = args.shift().toLowerCase();
