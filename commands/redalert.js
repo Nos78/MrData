@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 20:15:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-06 02:21:23
+ * @Last Modified time: 2020-09-09 04:20:50
  */
 
 const Discord = require('discord.js');
@@ -90,6 +90,8 @@ module.exports = {
                     }
                 });
             
+        } else {
+            library.Helper.editWaitErrorMessage(msg, `Sorry, ${message.author}, that member (${args[0]}) was not found, therefore I am unable to send them an alert.`);
         }
     }
 }
