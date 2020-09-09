@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 20:15:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-08 19:08:12
+ * @Last Modified time: 2020-09-09 04:53:08
  */
 
 const Discord = require('discord.js');
@@ -15,7 +15,7 @@ const fetch = require("node-fetch");
 // Set up the logger for debug/info
 const logger = require('winston');
 
-var payload = {
+var payloadTemplate = {
     notification: {
       title: '@SERVERNAME Red Alert!',
       body: '@MEMBERNAME - Your base is under attack!  @NOTIFIER has raised the alarm.  Please log in immediately and raise your shield.',
@@ -60,6 +60,8 @@ module.exports = {
             if(msgSender) {
                 senderName = library.Discord.getDisplayName(msgSender);
             }
+            
+            var payload = payloadTemplate;
 
             // Now prepare the payload by replacing the templated strings
             payload.notification.title = payload.notification.title.replace("@SERVERNAME", guildName);
