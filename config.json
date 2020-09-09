@@ -1,5 +1,5 @@
 {
-  "prefix": "!",
+  "prefix": "^",
   "commandsModule": "./commands",
   "powerColor": 16776960,
   "powerDestroyedColor": 44678,
@@ -12,7 +12,7 @@
   "levelColor": 969005,
   "resourcesminedColor": 1341220,
   "pvptotaldamageColor": 16711680,
-  "debugLevel": "none",
+  "debugLevel": "silly",
   "rolesPathAndFilename": "./roles/roles.",
   "rolesExtension": ".json",
   "deleteCallingCommand":  false,

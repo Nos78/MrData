@@ -6,6 +6,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-messaging.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
     <script>
+        console.log(firebase.messaging.isSupported());
         //
         // Browser detection - TODO, move this to new script to keep code tidy!
         //
@@ -133,22 +134,29 @@
     <header>
         <h1>MrData - RED ALERT (Push Notifications) System</h1>
     </header>
-    <p>
-        This is a web front-end for MrData based on the Firebase Messaging System from Google.  Register for a push notification by
-        pressing the button below.<br/><br/></p><p>Join our development chat on <a href="https://discord.gg/xzAs2yy">the Bot Factory Discord Server</a>.
+    <p>This is a web front-end for MrData based on the Firebase Messaging System from Google.  Register for a push notification by
+        pressing the button below.<br/><br/></p><p>Join our development chat on <a href="https://discord.gg/xzAs2yy">the Bot Factory Discord Server</a>.</p>
+    <div class="form"><br/>Please help the development of Mr Data! Due to Covid-19, I am unemployed.  Creating & hosting the greatest 
+        STFC bot ever is not cheap.<br/>Sadly, the new red alert system will not function correctly on Apple devices unless I pay Apple 
+        £99 for a developer account.<br/>Don't give a corporate evil, such as Scopely, your money! Aid this unemployed bot-owner, developing in his free time on a shoe-string budget!<br/>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_s-xclick" />
+            <input type="hidden" name="hosted_button_id" value="CA4PYT8KZ3B32" />
+            <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+            <img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
+        </form></body></div>
         <script>
-            if (isSafari) {
-                document.write("<br/><br/>Sadly, you are running a sub-standard browser, which does not support advanced and " +
+            if (!firebase.messaging.isSupported()) {
+                document.write("<p><br/><br/>Sadly, you are running a sub-standard browser, which does not support advanced and " +
                                 "modern features, such as push-notifications.  We are currently working on a solution " +
                                 "which will enable users of Half-Eaten fruit products to enjoy the same benefits as the " +
                                 "rest of the world.  Please bear with us whilst we develop such a tool.  In the meantime, " +
                                 "you might like to <a href='https://apps.apple.com/us/app/google-chrome/id535886823' target='_blank'>" +
-                                "visit the app store and install a man's browser, such as Chrome!</a>");
+                                "visit the app store and install a man's browser, such as Chrome!</a></p>");
             }
         </script>
         <br/><br/>
-    </p>
-    
+   
     <div id="token" style="color:lightblue"></div>
     <div id="message" style="color:lightblue"></div>
     <div id="notification" style="color:green"></div>
