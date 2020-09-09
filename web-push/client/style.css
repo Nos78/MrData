@@ -73,3 +73,16 @@ button:hover {
     background-color: #073525;
     border: 1px solid #073525;
 }
+
+div.form
+{
+    display: block;
+    text-align: center;
+}
+form
+{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
