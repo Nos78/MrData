@@ -2,12 +2,29 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-29 04:25:58
+ * @Last Modified time: 2020-09-08 19:38:20
  */
 
 const logger = require('winston');
 const config = require('../../config.json');
 const helper = require('../helper/helper.js');
+
+// PRIVATE FUNCTIONS - Not to be exported
+
+/**
+ * Calls the guild.members.find() method, searching the parameterName type, using the 
+ * parameterValue as the string being searched for.
+ * @param {string} parameterName 
+ * @param {string} parameterValue 
+ * @param {Guild} guild
+ * @returns {GuildMember} object being searched
+ */
+function findDiscordMember(parameterName, parameterValue, guild) {
+    if(!parameterName) {
+        throw 'findDiscordMember: parameterName was null!'
+    }
+    return guild.members.find(parameterName, parameterValue);
+}
 
 module.exports = {
     initialiseCommands: function (client) {
@@ -17,15 +34,48 @@ module.exports = {
     /**
      * Gets the member object of a given member from a guild object, using the member name.
      * @param {string} name 
-     * @param {guild} guild 
-     * @returns {member}
+     * @param {Guild} guild 
+     * @returns {GuildMember}
      */
-    getDiscordMember: function(name, guild) {
+    getDiscordMemberByName: function(name, guild) {
         // Get a 'clean' copy of the name
         name = helper.parseName(name);
 
         // return the member object from the members list
-        return guild.members.find("displayName", name);
+        return findDiscordMember("displayName", name, guild);
+    },
+
+    /**
+     * Attempts to find the member object from the guild.members collection, using
+     * the id number of the member being searched for.
+     * @param {string} id 
+     * @param {Guild} guild 
+     * @returns {GuildMember} object being searched for
+     */
+    getDiscordMemberById: function(id, guild) {
+        id = helper.parseIdNumber(id);
+
+        return findDiscordMember("id", id, guild);
+    },
+
+    /**
+     * Wrapper for getDiscordMemberBy..., this function calls the
+     * relevant find function based on the content of the identifier
+     * parameter.  If identifier is a numeral, then getDiscordMemberById is
+     * invoked, and so on.
+     * @param {string} identifier something unique that describes the member being searched
+     * @param {Guild} guild object, usually from message.guild
+     * @returns {GuildMember} a member object
+     */
+    getDiscordMember: function(identifier, guild) {
+        var memberId = helper.parseIdNumber(identifier);
+        var memberName = helper.parseName(identifier);
+
+        if(isNaN(memberId)) {
+            return this.getDiscordMemberByName(memberName, guild);
+        } else {
+            return this.getDiscordMemberById(memberId, guild);
+        }
     },
 
     /**

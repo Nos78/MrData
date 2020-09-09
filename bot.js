@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-04 22:28:10
+ * @Last Modified time: 2020-09-08 20:11:43
  */
 
 // Configure the Discord bot client
@@ -12,6 +12,8 @@ const configSecret = require('./config-secret.json');
 const db = require('./db');
 const fs = require('fs');
 const cmdLog = './cmdExec.log';
+
+const commandsModulePath = config.commandsModule;
 
 //const global.webPush = require('./web-push');
 
@@ -45,14 +47,14 @@ const client = new Discord.Client({
 
 
 client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync(commandsModulePath).filter(file => file.endsWith('.js'));
 
 //
 // Configure all the commands,
 // read commands directory and place
 // into the commands collection
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
+    const command = require(`${commandsModulePath}/${file}`);
 
     // set a new item in the Collection
     // with the key as the command name and the value as the exported module
@@ -232,7 +234,10 @@ client.on('message', async message => {
         }
     }
 
-    var prefix = await library.System.getPrefix(message.guild.id);
+    var prefix = library.Config.getPrefix();
+    if (message.guild) {
+        prefix = await library.System.getPrefix(message.guild.id);
+    }
     if (!(message.content && message.content.startsWith(prefix))) {
         // Hack to ensure !showprefix works, regardless of prefix specified
         var found = false
@@ -266,6 +271,11 @@ client.on('message', async message => {
             }
         }
         if(!found) {
+            if(message.channel.type == 'dm') {
+                // Messages sent in DM cannot use custom command prefix
+                // so we must feedback this to the user
+                return library.Helper.sendErrorMessage(`${message.author}, when sending commands to ${library.Config.botName(message.client)} via direct messages, you cannot use your server's custom command prefix.\n\nDuring direct messages you should use my default prefix, which is **${library.Config.getPrefix()}**\nFor example:  *${library.Config.getPrefix()}datahelp*`, message.channel);
+            }
             // Not prefixed, do not continue
             return;
         }
