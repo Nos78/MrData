@@ -101,7 +101,16 @@
         }
         messaging.onMessage(function (payload) {
             console.log("Message received. ", JSON.stringify(payload));
-            notificationElement.innerHTML = notificationElement.innerHTML + " " + payload.data.notification;
+            var msg = "";
+            if(payload.data) {
+                msg = payload.data.notification;
+            } else {
+                msg = payload.notification;
+            }
+            // this will keep a message history on the page
+            notificationElement.innerHTML = notificationElement.innerHTML + "<span style='color:#000000'>" + msg + "<br/><br/>To receive notifications in the usual manner, you should close this page!</span>";
+            // show an alert box for the latest message
+            window.alert("Title: " + msg.title + "\n\n" + "Message: " + msg.body);
         });
         messaging.onTokenRefresh(function () {
             messaging.getToken()
