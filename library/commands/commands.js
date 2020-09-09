@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-08 20:02:01 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-08 20:56:12
+ * @Last Modified time: 2020-09-09 03:31:30
  */
 
 // Required modules
@@ -24,6 +24,10 @@ module.exports = {
      * @param {Client} - the discord client object
      * @returns {Collection} of commands
      */
+    commandsModuleAbsPath: function () {
+        return path.resolve(process.cwd(), commandsModulePath);
+    },
+
     initialiseCommands: function (client) {
         // get absolute module path
         const commandsModuleAbsPath = path.resolve(process.cwd(), commandsModulePath);
@@ -48,5 +52,33 @@ module.exports = {
 
     initialiseCooldowns: function () {
 
+    },
+
+    reloadCommand: function (cmdName, client) {
+        try {
+            var cmdFile = `${this.commandsModuleAbsPath()}/${cmdName}.js`;
+            var result = client.commands.delete(cmdName);
+            delete require.cache[require.resolve(cmdFile)];
+            var cmd = require(cmdFile);
+            var templates = global.library.Config.getHelpTextParameters(client);
+            cmd.description = this.resolveCommandDescription(cmd, templates);
+            return client.commands.set(cmdName, cmd);
+        } catch (err) {
+            logger.error(`Could not reload command ${cmdName}, error ${JSON.stringify(err)}`);
+        }
+    },
+
+    resolveCommandDescriptions(client) {
+        var templates = global.library.Config.getHelpTextParameters(client);
+        client.commands.forEach(function(command) {
+            command.description = this.resolveCommandDescription(command, templates);
+        }.bind(this));
+    },
+
+    resolveCommandDescription(command, templates) {
+        templates.forEach(function(template) {
+            command.description = command.description.replace(template.name, template.value);
+        });
+        return command.description;
     }
 }

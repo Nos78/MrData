@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 01:29:31
+ * @Last Modified time: 2020-09-09 03:45:03
  */
 
 // Configure the Discord bot client
@@ -12,11 +12,6 @@ const configSecret = require('./config-secret.json');
 const db = require('./db');
 const fs = require('fs');
 const cmdLog = './cmdExec.log';
-
-//const global.webPush = require('./web-push');
-
-//const webPushApp =  new webPush.WebPush();
-//webPushApp.initialise();
 
 // Set up the library functions
 const library = require('./library');
@@ -103,12 +98,8 @@ client.on("ready", () => {
     logger.info(client.user.username + ' - (' + client.user.id + ')');
 
     // Replace templated parameters in help text with real data
-    var templates = library.Config.getHelpTextParameters(client);
-    client.commands.forEach(function(command) {
-        templates.forEach(function(template) {
-            command.description = command.description.replace(template.name, template.value);
-        })
-    });
+    library.Commands.resolveCommandDescriptions(client);
+
     // Update the bot activity text to reflect the connections status
     client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
     logger.info(`${client.user.username} Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -203,10 +194,6 @@ client.on("ready", () => {
                 }
             });
 
-        // db.guildSettings.findGuildSettingsById(guild.id)
-        //     .then(result => {
-        //         library.System.getGuildSettings
-        //     })
     }); // end for
 
 });
@@ -303,7 +290,6 @@ client.on('message', async message => {
         }
     }
 
-    message.channel.send(`This is a test message accessing dynamic settings for ${message.guild.name}: prefix ${library.Settings.getGuildSetting("prefix", message.guild.id)}`);
     // split up the message into the command word and any additional arguements
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const cmdName = args.shift().toLowerCase();

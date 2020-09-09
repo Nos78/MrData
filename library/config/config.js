@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-04 00:25:21
+ * @Last Modified time: 2020-09-09 02:48:10
  */
  
 /* 
@@ -57,7 +57,7 @@ module.exports = {
      */
     getHelpTextParameters: function(client) {
         var parameters = [];
-        parameters.push(this.populateHelpTextParameter("BOTNAME", this.botName(client)));
+        parameters.push(this.populateHelpTextParameter("@BOTNAME", this.botName(client)));
         return parameters;
     },
 
