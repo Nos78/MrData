@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 01:43:41
+ * @Last Modified time: 2020-09-10 17:31:43
  */
 
 const logger = require('winston');
@@ -27,6 +27,24 @@ function findDiscordMember(parameterName, parameterValue, guild) {
 
 module.exports = {
 
+    // markdown property contains the various markdown tags used in discord.
+    markdown: {
+        "codeBlock": {
+            "single": '`',
+            "multi": '```'
+        },
+        "bold": '**',
+        "italic": '*',
+        "bolditalic": '***',
+        "underline": '__',
+        "strike": '~~',
+        "blockQuote": {
+            "single": '>',
+            "multi": '>>>'
+        },
+        "spolier": '||'
+    },
+    
     /**
      * Gets the member object of a given member from a guild object, using the member name.
      * @param {string} name 

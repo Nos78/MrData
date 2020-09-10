@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 02:48:10
+ * @Last Modified time: 2020-09-10 19:03:24
  */
  
 /* 
@@ -42,7 +42,7 @@ module.exports = {
      * @param {string} value the data to be inserted, replacing the template name.
      */
     populateHelpTextParameter: function(key, value) {
-        var parameter = config.helpTextParamsTemplate;
+        var parameter = Object.assign({}, config.helpTextParamsTemplate);
         parameter.name = key;
         parameter.value = value;
 
@@ -55,9 +55,12 @@ module.exports = {
      * @param {Client} client 
      * @returns {array} an array of helpTextParams
      */
-    getHelpTextParameters: function(client) {
+    getHelpTextParameters: function(client, guild = null) {
         var parameters = [];
         parameters.push(this.populateHelpTextParameter("@BOTNAME", this.botName(client)));
+        if(guild) {
+            parameters.push(this.populateHelpTextParameter("@SERVERNAME", global.library.Discord.getGuildName(guild)));
+        }
         return parameters;
     },
 
@@ -68,13 +71,53 @@ module.exports = {
      * @param {*} text 
      * @param {*} message 
      */
-    replaceHelpTextParameters: function(text, message) {
-        var templates = library.Config.getHelpTextParameters(client);
+    replaceHelpTextParameters: function(text, client) {
+        var templates = global.library.Config.getHelpTextParameters(client);
         var returnText = text;
         templates.forEach(function(template) {
             returnText += returnText.replace(template.name, template.value);
         });
         return returnText;
+    },
+
+    resolveTemplate(templatedText, templates) {
+        for(var i = 0; i < templates.length; i++) {
+            templatedText = templatedText.replace(templates[i].name, templates[i].value);
+        }
+        return templatedText;
+    },
+
+    replaceJsonTextParameters: function(json, client, guild = null) {
+        var newJson = {};
+        var templates = this.getHelpTextParameters(client, guild);
+        var jsonKeys = Object.keys(json);
+        var jsonLength = jsonKeys.length;
+        for(var i = 0; i < jsonLength; i++) {
+            var itemName = jsonKeys[i];
+            itemName = this.resolveTemplate(itemName, templates);
+
+            var itemValue = null;
+            
+            switch(global.library.Format.typeOf(json[jsonKeys[i]])) {
+                case 'object':
+                    itemValue = Object.assign({}, json[jsonKeys[i]]);
+                    itemValue = this.replaceJsonTextParameters(itemValue, client, guild);
+                    newJson[itemName] = itemValue;
+                    break;
+
+                case 'string':
+                    itemValue = json[jsonKeys[i]];
+                    itemValue = this.resolveTemplate(itemValue, templates);
+                    newJson[itemName] = itemValue;
+                    break;
+                    
+                default:
+                    itemValue = json[jsonKeys[i]];
+                    itemValue = this.resolveTemplate(itemValue, templates);
+                    newJson[itemName] = itemValue;
+            }
+        }
+        return newJson;
     },
 
     /**

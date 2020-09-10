@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-06 08:09:56 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-08 20:38:10
+ * @Last Modified time: 2020-09-10 15:41:52
  */
 
 'use strict';
@@ -29,6 +29,12 @@ module.exports = {
   System: system,
   Commands: commands,
 
+  /**
+   * Collate the args array, from index to the end, into one string, each term seperated by a space.
+   * @param {*} index 
+   * @param {*} args 
+   * @returns {string} collated args.
+   */
   collateArgs: function(index, args) {
       var returnString = "";
       if (index < args.length) {

@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 01:40:53
+ * @Last Modified time: 2020-09-10 19:33:43
  */
 
 const logger = require('winston');
@@ -14,7 +14,7 @@ var compareVersions = require('compare-versions');
 // modules that are required in this module
 
 function getSettingsFromRecord (dbRecord, newSettings) {
-    let settings = newSettings;
+    let settings = Object.assign({}, newSettings);
     if(dbRecord) {
         if(dbRecord.settings) {
             settings = dbRecord.settings;
@@ -25,8 +25,9 @@ function getSettingsFromRecord (dbRecord, newSettings) {
 
 module.exports = {
     /**
-     * Create an initialise a new empty settings object
+     * Create and initialise a new empty settings object
      * with all the required named fields pre-defined.
+     * @returns {Object} A json object
      */
     newUserSettings: function () {
         // From version v2.0.1, pushToken became an array
@@ -36,6 +37,38 @@ module.exports = {
         }
     },
 
+    /**
+     * Creates a JSON object describing each setting field.
+     * @returns {Object}
+     */
+    userSettingsDescription: function () {
+        return {
+            "pushToken": "An array of push tokens, each referring to a device. Used to send a push notification to a device."
+        }
+    },
+
+    /**
+     * Creates a JSON object describing each setting field.
+     * @returns {Object}
+     */
+    guildSettingsDescription: function (client, guild) {
+        return global.library.Config.replaceJsonTextParameters(
+        {
+            "prefix": "the command prefix used for @BOTNAME on @SERVERNAME.",
+            "deleteCallingCommand": "@BOTNAME will delete the command when printing the result.",
+            "redalert": {
+                "Not used": "The settings used for the red alert system on @SERVERNAME.  Not yet implemented."
+            },
+            "version": "the version of @BOTNAME that saved these settings.  Used for backward compatibility and avoiding breaking changes.",
+            "modified": "whether the settings have been modified in the cache and need to be saved to the database."
+        }, client, guild);
+    },
+
+    /**
+     * Create and initialise a new empty settings object
+     * with all the required named fields pre-defined.
+     * @returns {Object} A json object.
+     */
     newGuildSettings: function () {
         return {
             "prefix": config.prefix,
@@ -55,7 +88,7 @@ module.exports = {
      */
     upgradeGuildSettings: function (settings) {
         if(!settings) {
-            return this.newGuildSettings;
+            return Object.assign({}, this.newGuildSettings());
         }
         
         var oldSettingsId = settings.version;
@@ -63,7 +96,7 @@ module.exports = {
             oldSettingsId = '0.0.0';
         }
 
-        var newSettings = this.newGuildSettings();
+        var newSettings = Object.assign({}, this.newGuildSettings());
 
         if(compareVersions.compare(newSettings.version, oldSettingsId, '<=')) {
             return settings;
@@ -76,7 +109,7 @@ module.exports = {
             newSettings.deleteCallingCommand = settings.deleteCallingCommand;
         }
         if(settings.redalert) {
-            newSettings.redalert = settings.redalert;
+            newSettings.redalert = Object.assign({}, settings.redalert);
         }
 
         return newSettings;
@@ -92,17 +125,17 @@ module.exports = {
     },
 
     getGuildSettingsFromRecord: function (dbRecord) {
-        let newSettings = this.newGuildSettings();
+        let newSettings = Object.assign({}, this.newGuildSettings());
         return getSettingsFromRecord(dbRecord, newSettings);
     },
 
     getUserSettingsFromRecord: function (dbRecord) {
-        let newSettings = this.newUserSettings();
+        let newSettings = Object.assign({}, this.newUserSettings());
         return getSettingsFromRecord(dbRecord, newSettings);
     },
 
     getUserGuildSettingsFromRecord: function (dbRecord) {
-        let newSettings = this.newUserSettings();
+        let newSettings = Object.assign({}, his.newUserSettings());
         return getSettingsFromRecord(dbRecord, newSettings);
     },
 

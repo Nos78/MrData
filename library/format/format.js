@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon 
- * @Date: 2020-08-25 02:53:40 
- * @Last Modified by:   BanderDragon
- * @Last Modified time: 2020-08-25 02:53:40 
+ * @Date: 2019-03-14
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-10 18:08:59
  */
 
 const { serializeError } = require("serialize-error");
@@ -64,12 +64,21 @@ module.exports = {
         return serializeError(error);
     },
 
-    //
-    // Method to stringify an error
-    // Uses the serialize-error NPM module
-    //
+    /**
+     * Method to stringify an error - uses the serialize-error NPM module
+     * @param {Object} error 
+     */
     stringifyError: function(error) {
         let serializedError = this.plainTextError(error);
         return JSON.stringify(serializedError);
+    },
+
+    /**
+     * Method to return the type of an object - improves the default javascript typeof operator.
+     * @param {Object} obj
+     * @returns {string}
+     */
+    typeOf: function(obj) {
+        return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
     }
 }
