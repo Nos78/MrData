@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-09 03:26:15 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 03:35:30
+ * @Last Modified time: 2020-09-10 17:00:57
  */
 const library = require('../library');
 const config = require('../config.json');
@@ -20,10 +20,18 @@ module.exports = {
             let msg = library.Helper.sendStandardWaitMessage(message.channel);
             if(args[0] && args[0].length > 0) {
                 var cmdName = args[0];
-                var result = library.Commands.reloadCommand(cmdName, message.client);
-                library.Helper.editWaitSuccessMessage(msg, `${message.author}, command ${cmdName} has been successfully reloaded.`);
+                try {
+                    var result = library.Commands.reloadCommand(cmdName, message.client);
+                    if(result && result != false) {
+                        library.Helper.editWaitSuccessMessage(msg, `${message.author}, command **${cmdName}** has been successfully reloaded.`);
+                    } else {
+                        library.Helper.editWaitErrorMessage(msg, `${message.author}, reloading command **${cmdName}** was unsuccessful.`);
+                    }
+                } catch (error) {
+                    library.Helper.editWaitErrorMessage(msg, `${message.author}, reloading command **${cmdName}** was unsuccessful:\n\n\`\`\`${error}\`\`\``);
+                }
             } else {
-                library.Helper.editWaitErrorMessage(msg, `${message.author}, command ${this.name} requires a valid command name to reload.`);
+                library.Helper.editWaitErrorMessage(msg, `${message.author}, the ${this.name} command requires a valid name in order to reload it.`);
             }
         } else {
             library.Helper.sendErrorMessage(`Sorry, ${message.author}, but this command can only be performed by my owner`, message.channel);

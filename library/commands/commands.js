@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-08 20:02:01 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 03:31:30
+ * @Last Modified time: 2020-09-10 16:46:13
  */
 
 // Required modules
@@ -55,17 +55,55 @@ module.exports = {
     },
 
     reloadCommand: function (cmdName, client) {
+        var result = false;
         try {
-            var cmdFile = `${this.commandsModuleAbsPath()}/${cmdName}.js`;
-            var result = client.commands.delete(cmdName);
-            delete require.cache[require.resolve(cmdFile)];
-            var cmd = require(cmdFile);
-            var templates = global.library.Config.getHelpTextParameters(client);
-            cmd.description = this.resolveCommandDescription(cmd, templates);
-            return client.commands.set(cmdName, cmd);
+            var cmdFile = `${path.join(this.commandsModuleAbsPath(), cmdName + '.js')}`;
+            if(fs.existsSync(cmdFile)) {
+                result = client.commands.delete(cmdName);
+                delete require.cache[require.resolve(cmdFile)];
+                var cmd = require(cmdFile);
+                var templates = global.library.Config.getHelpTextParameters(client);
+                cmd.description = this.resolveCommandDescription(cmd, templates);
+                result = client.commands.set(cmdName, cmd);
+            } else {
+                return false;
+            }
         } catch (err) {
             logger.error(`Could not reload command ${cmdName}, error ${JSON.stringify(err)}`);
+            if(err.stack.includes("SyntaxError")) {
+                var stackLines = err.stack.split('\n');
+                var stackString = stackLines[0];
+                for(var i=1; i < 5; i++) {
+                    if(stackLines[i]) {
+                        stackString += '\n' + stackLines[i];
+                    }
+                }
+                throw `${cmdName}.js contains a syntax error and could not be reloaded:\n${stackString}`;
+            }
+            result = false;
         }
+        return result;
+    },
+
+    removeCommand: function (cmdName, client) {
+        var returnValue = "";
+        try {
+            var cmdFile = `${path.join(this.commandsModuleAbsPath(), cmdName + '.js')}`;
+            if(!fs.existsSync(cmdFile)) {
+                returnValue = `The file ${cmdName}.js does not exist. `;
+            }
+            var result = client.commands.delete(cmdName);
+            if(result) {
+                returnValue = true;
+            } else {
+                returnValue += `The command ${cmdName} could not be removed from my cache. `
+            }
+            delete require.cache[require.resolve(cmdFile)];
+        } catch (err) {
+            logger.error(`Could not reload command ${cmdName}, error ${JSON.stringify(err)}`);
+            returnValue += `Error: ${err.code}`
+        }
+        return returnValue;
     },
 
     resolveCommandDescriptions(client) {
