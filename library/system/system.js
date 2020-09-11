@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-26 21:18:46 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 01:39:49
+ * @Last Modified time: 2020-09-11 02:57:53
  */
 const logger = require('winston');
 const config = require('../../config.json');
@@ -12,6 +12,57 @@ const db = require('../../db');
 
 module.exports = {
 
+    /**
+     * Cache the entire settings Json object for a given guild to the client guild settings cache
+     * @param {string} guildId 
+     * @param {Object} settings 
+     * @param {Client} client 
+     */
+    cacheSettings: function(guildId, settings, client) {
+        if(settings) {
+            if(client) {
+                if (guildId && guildId != 'null') {
+                    // Mark the settings as modified, so they can be committed to the database later
+                    settings.modified = true;
+                    // Take a copy of the settings, as objects are passed by ref.
+                    client.guildSettings[`${guildId}`] = Object.assign({}, settings);
+                    // And return this object
+                    return client.guildSettings[`${guildId}`];
+                } else {
+                    throw `cacheSettings: guildId is null caching settings to guild ${guildId}`;
+                }
+            } else {
+                throw `cacheSettings: client is null caching settings to guild ${guildId}`;
+            }
+        } else {
+            throw `cacheSettings: settings is null caching to guild ${guildId}`;
+        }
+    },
+
+    /**
+     * Store a parameter in the cached copy of the settings Json object for a given guild
+     * @param {string} guildId 
+     * @param {string} parameterName 
+     * @param {any} parameterValue 
+     * @param {Client} client 
+     */
+    cacheParameter: function(guildId, parameterName, parameterValue, client) {
+        if(client) {
+            if (guildId && guildId != 'null') {
+                // objects are assigned by reference, no need to assign back to client
+                var settings = client.guildSettings[`${guildId}`];
+                // assign the new value to the named parameter
+                settings[`${parameterName}`] = parameterValue;
+                settings.modified = true;
+                return settings;
+            } else {
+                throw `cacheParameter: guildId is null caching parameter ${parameterName} to guild ${guildId}`;
+            }
+        } else {
+            throw `cacheParameter: client is null caching parameter ${parameterName} to guild ${guildId}`;
+        }
+    },
+    
     /**
      * Save the named parameter to the settings, and commit the settings to the database.
      * If the discord client is passed, the settings will be taken from the cache instead of
@@ -24,32 +75,31 @@ module.exports = {
      */
     saveParameter: async function(guildId, parameterName, parameterValue, client = null) {
         var settings = null;
+        var returnValue = null;
 
-        // If the client is available, get settings from client
+        // If the client is available, cache the parameter to client
         if(client) {
-            settings = client.guildSettings[`${guildId}`];
+            settings = this.cacheParameter(guildId, parameterName, parameterValue, client);
         } else {
-            settings = await this.getGuildSettings(guildId);
+            settings = this.getGuildSettings(guildId);
+            settings[`${parameterName}`] = parameterValue;
+            settings.modified = true;
         }
 
-        // assign the new value to the named parameter
-        settings[`${parameterName}`] = parameterValue;
-        settings.modified = true;
+        // If the settings were successfully modified, commit them to the Db immediately
+        if(settings.modified) {
+            // Update the database with the new settings (async, don't need return value)
+            returnValue = this.saveGuildSettings(guildId, settings)
+                .then(result => {
+                    logger.info(`Saved settings for ${guildId} to database, result: ${JSON.stringify(result)}`)
+                })
+                .catch(error => {
+                    logger.error(`System.saveParameter: An error occurred committing the settings (typeof ${global.library.Format.typeOf(settings)}) to the database for guild ${guildId}. Error: ${JSON.stringify(error)}`)
+                });
+        }
         
-        // save the settings to the client (cache them)
-        if(client) {
-            client.guildSettings[`${guildId}`] = settings;
-             settings[`${parameterName}`] = parameterValue;
-        }
-
-        // Update the database with the new settings (async, don't need return value)
-        this.saveGuildSettings(guildId, client.guildSettings)
-            .then(result => {
-                logger.info(`Saved settings for ${guildId} to database, result: ${JSON.stringify(result)}`)
-            });
-
-        // return the settings
-        return settings;
+        // return the returnValue
+        return returnValue;
     },
 
     /**
@@ -70,33 +120,42 @@ module.exports = {
         }
     },
 
+    /**
+     * Saves the command prefix to the given guild settings record. Caches the parameter to
+     * the client (if passed) and immediately commits the change to the database.
+     * @param {string} guildId 
+     * @param {string} prefix 
+     * @param {Client} client 
+     * @returns {Object} settings
+     */
     savePrefix: async function(guildId, prefix, client = null) {
+        var result = null;
         if(guildId && guildId != 'null') {
-            var settings = null;
-            if (client) {
-                settings = client.guildSettings[`${guildId}`];
-            } else {
-                settings = await this.getGuildSettings(guildId);
-            }
-            if(settings) {
-                settings.prefix = prefix;
-                settings.modified = false;
-                if(client) {
-                    client.guildSettings[`${guildId}`] = settings;
-                }
-                return await db.guildSettings.upsert(guildId, settings).catch(err => {console.log(`${err}`)});
-            } else {
-                return null;
-            }
+
+            result = this.saveParameter(guildId, 'prefix', prefix, client)
+                .then(res => {
+                    if(!res) {
+                        throw `savePrefix: call to this.saveParameter() - unexpected db return value ${JSON.stringify(res)}.`;
+                    }
+                })
+                .catch(err => {
+                    logger.error(`System.savePrefix: an error occurred committing the prefix (${prefix}) to the database for guild ${guildId}. Client present: ${!(client == null)}, Error: ${JSON.stringify(err)}`);
+                })
         }
+        return result;
     },
 
+    /**
+     * Gets the current command prefix for MrData from the guild settings - this always
+     * returns a value, defaulting to the value in config.prefix
+     * @param {string} guildId 
+     * @param {*} client 
+     * @returns {string} command prefix
+     */
     getPrefix: async function(guildId, client) {
         var prefix = null;
         if(guildId && guildId != 'null') {
-            if(client) {
-                prefix = client.guildSettings[`${guildId}`];
-            }
+            prefix = this.getParameter(guildId, 'prefix', client);
             if (!prefix) {
                 prefix = await this.getPrefixFromDb(guildId);
             }
@@ -106,6 +165,13 @@ module.exports = {
         return prefix;
     },
 
+    /**
+     * Gets the value from the named parameter for a key/value pair, taken
+     * from the settings objectfor a given guild id record of the database.
+     * @param {string} guildId 
+     * @param {string} parameterName 
+     * @returns {any} parameter value.
+     */
     getParameterFromDb: async function(guildId, parameterName) {
         var parameterValue = null;
         var settings = await this.getGuildSettings(guildId);
@@ -117,6 +183,10 @@ module.exports = {
         return parameterValue;
     },
 
+    /**
+     * Gets the command prefix from the settings object for a given guild id record in the database.
+     * @param {string} guildId 
+     */
     getPrefixFromDb: async function(guildId) {
         var prefix = await Config.getPrefix();
         var settings = await this.getGuildSettings(guildId);
@@ -129,9 +199,10 @@ module.exports = {
     },
 
     /**
-     * Commit the settings json object to the database
+     * Commit the settings object for a given guild id to the database
      * @param {string} guildId 
      * @param {Object} settings 
+     * @returns {Promise<result>} the row that has been upserted (added or inserted).
      */
     saveGuildSettings: function(guildId, settings) {
         var result = null;
@@ -142,25 +213,57 @@ module.exports = {
                     .catch(err => {
                         logger.error(`${err}`)
                     });
+            } else {
+                throw `saveGuildSettings: settings object was null saving to ${guildId} record.`;
             }
+        } else {
+            throw `saveGuildSettings: guildId was null saving settings for guild ${guildId} to database.`;
         }
         return result;
     },
 
     /**
-     * Get the settings json object from the database
+     * Get the settings object from the database for a given guild id.
      * @param {string} guildId
      * @returns {Object} settings
      */
-    getGuildSettings: async function(guildId) {
+    getGuildSettingsFromDb: async function(guildId) {
         var settings = null;
         if(guildId && guildId != 'null') {
-            let result = await db.guildSettings.findGuildSettingsById(guildId)
+            let result = await db.guildSettings.findGuildSettingsById(guildId);
             settings = await Settings.getGuildSettingsFromRecord(result);
         }
         return settings;
     },
 
+    /**
+     * Gets the settings object from the cache, or Db if not cached.
+     * @param {string} guildId 
+     * @param {Client} client 
+     * @returns {Object} settings Json
+     */
+    getGuildSettings: async function(guildId, client = null) {
+        var returnValue = null;
+        if(guildId && guildId != 'null') {
+            if(client) {
+                if(client.guildSettings[`${guildId}`]) {
+                    returnValue = client.guildSettings[`${guildId}`];
+                }
+            }
+
+            if(!returnValue) {
+                returnValue = this.getGuildSettingsFromDb(guildId);
+            }
+        }
+        return returnValue;
+    },
+
+    /**
+     * Gets the user-guild settings object for a given user and guild id primary key pair.
+     * @todo function is still in development
+     * @param {*} userId 
+     * @param {*} guildId 
+     */
     getUserGuildSettings: function(userId, guildId) {
         var settings = null;
         if(userId && userId != 'null' && guildId && guildId != 'null') {
@@ -170,5 +273,7 @@ module.exports = {
                 });
         }
         return settings;
-    }
+    },
+
+
 }

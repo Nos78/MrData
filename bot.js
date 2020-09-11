@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 03:45:03
+ * @Last Modified time: 2020-09-11 03:19:10
  */
 
 // Configure the Discord bot client
@@ -181,15 +181,17 @@ client.on("ready", () => {
             }
         });
 
-        /* Cache the settings for this guild */
+        /* Cache the settings for this guild - and upgrade them to the latest version if required */
         var settings = library.System.getGuildSettings(guild.id)
             .then(settings => {
+                var oldVersion = settings.version;
                 settings = library.Settings.upgradeGuildSettings(settings);
+                var newVersion = settings.version;
                 client.guildSettings[`${guild.id}`] = settings;
                 if (settings.modified) {
                     library.System.saveGuildSettings(guild.id, settings)
                         .then(result => {
-                            logger.info(`Upgraded settings JSON for ${guild.name}, ${guild.id}, result: ${!(result == null)}.`);
+                            logger.info(`Upgraded settings JSON for ${guild.name}, ${guild.id}, result: ${!(result == null)}. Old version: ${oldVersion}, new version: ${newVersion}`);
                         });
                 }
             });
@@ -265,7 +267,7 @@ client.on('message', async message => {
             
             if(!found && !message.content.startsWith(config.prefix + 'datahelp')) {
                 var helpCmd = client.commands.get('datahelp');
-                for(var i=0; i < helpCmd.aliases.length; i++) {
+                for(let i=0; i < helpCmd.aliases.length; i++) {
                     if(message.content.startsWith(config.prefix + helpCmd.aliases[i])) {
                         found = true;
                         break;
