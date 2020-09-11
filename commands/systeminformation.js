@@ -2,13 +2,13 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-27 21:33:10 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-05 00:00:07
+ * @Last Modified time: 2020-09-11 06:27:39
  */
 
 const { useCustomLoadavg } = require('loadavg-windows');
 const os = require('os');
 
-const package = require('../package.json');
+const pkg = require('../package.json');
 const library = require('../library');
 const Discord = require('discord.js');
 const moment = require('moment');
@@ -99,7 +99,7 @@ module.exports = {
         text += `\n\n\t\t\t** __System:__ **\n`;
         text += `** -** CPU Load averages [1m, 5m, 15m]: ${osLoad[0]}, ${osLoad[1]}, ${osLoad[2]}`
         text += `\n** - **1m CPU Utilization = ${Math.min(Math.floor(osLoad[0] * 100 / cores), 100)}%`
-        text += `\n\nReport issues at ${package.bugs.url}`
+        text += `\n\nReport issues at ${pkg.bugs.url}`
         text += `\n\n** __Uptime:__ **`
         text += `\n ** -** Current server time is ${serverTime}.\n ** -** I am located in the ${moment.tz.guess()} region.`
         text += `\n\n ** -** I have been active on discord for ${uptime}.`
