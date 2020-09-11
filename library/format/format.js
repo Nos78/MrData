@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-03-14
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-10 18:08:59
+ * @Last Modified time: 2020-09-11 06:01:07
  */
 
 const { serializeError } = require("serialize-error");
@@ -80,5 +80,23 @@ module.exports = {
      */
     typeOf: function(obj) {
         return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+    },
+
+    /**
+     * Generate a random number between two values, inclusive.
+     * @param {integer} min 
+     * @param {integer} max 
+     * @returns {integer} random number between @min and @max
+     */
+    between: function(min, max) {  
+        return Math.floor(
+            Math.random() * (max - min + 1) + min
+        )
+    },
+
+    randomString: function(stringsArray) {
+        var stringsCount = stringsArray.length;
+        var stringChoice = this.between(0, stringsCount - 1);
+        return stringsArray[stringChoice];
     }
 }
