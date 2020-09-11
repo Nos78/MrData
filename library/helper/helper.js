@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 02:56:13 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 01:41:54
+ * @Last Modified time: 2020-09-11 04:43:27
  */
 
 const config = require('../../config.json');
@@ -37,11 +37,18 @@ function createRichEmbed (title, description, author, authorAvatarURL, messages,
  */
 module.exports = {
 
+    URLs: {
+        "mrdata-home": "http://mrdata.thebotfactory.net/",
+        "fundMrData-qr": "http://mrdata.thebotfactory.net/mrdata-qr-donate.png",
+        "fundMrData-banner": "http://mrdata.thebotfactory.net/fundmrdata.png"
+    },
+    
     createEmbed: function(messageText, color) {
         return {
             embed: {
                 color: color,
-                description: messageText
+                description: messageText,
+                image: "http://mrdata.thebotfactory.net/mrdata-qr-donate.png"
             }
         }
     },
