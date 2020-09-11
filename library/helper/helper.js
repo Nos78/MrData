@@ -80,7 +80,7 @@ module.exports = {
                 thumbnail: {"url": this.URLs.fundMrDataQr},
                 fields: [
                     {"name": `${global.library.Format.randomString(fundingTitles)}`,
-                    "value": `${global.library.Format.randomString(fundingTexts)}\n[Please give what you can - if you can](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CA4PYT8KZ3B32&source=url)}`, "inline": false},
+                    "value": `${global.library.Format.randomString(fundingTexts)}\n[Please give what you can - if you can](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CA4PYT8KZ3B32&source=url)`, "inline": false},
                 ]
             }
         }
