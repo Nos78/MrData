@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-03-29
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 03:10:21
+ * @Last Modified time: 2020-09-12 22:04:40
  */
 
 const config = require('../../config.json');
@@ -48,6 +48,16 @@ module.exports = {
         var showAdvert = global.library.System.getCachedParameter(channel.guild.id, 'showAdvert', channel.client);
         var cachedMessageId = global.library.System.getCachedParameter(channel.guild.id, 'messageId', channel.client);
 
+        var uniqueId = null;
+        if(cachedMessageId) {
+            var ids = cachedMessageId.split("::");
+
+            cachedMessageId = ids[0];
+            if(ids.length > 1) {
+                uniqueId = ids[1];
+            }
+        }
+
         if(showAdvert) {
             // Start a timer for the next advert
             setTimeout(function() {
@@ -58,10 +68,13 @@ module.exports = {
                     channel.client);}, config.timeBetweenAdverts * 1000);
             // Set parameter to prevent adverts until the timeout is called
             global.library.System.cacheParameter(channel.guild.id, 'showAdvert', false, channel.client);
+            global.library.System.cacheParameter(channel.guild.id, 'uniqueId', messageId, channel.client);
+        } else {
+            global.library.System.cacheParameter(channel.guild.id, 'uniqueId', null, channel.client);
         }
         
         // Attach the advert
-        if(showAdvert || (messageId != null && cachedMessageId == messageId)) {
+        if(showAdvert || ((uniqueId != null && uniqueId != 'null') && (messageId != null && cachedMessageId == messageId))) {
             return {
                 embed: {
                     color: color,
@@ -134,9 +147,12 @@ module.exports = {
      * @returns {Promise<Message>}
      */
     sendMessage: async function(messageText, channel, color = 16777215) {
-        return channel.send(await this.createEmbed(messageText, channel, color))
+        var uniqueID = global.library.Funding.makeId(16);
+        return channel.send(await this.createEmbed(messageText, channel, color, uniqueID))
             .then(msg => {
-                global.library.System.cacheParameter(channel.guild.id, 'messageId', msg.id, channel.client);
+                const uniqueId = global.library.System.getCachedParameter(channel.guild.id, 'uniqueId', channel.client);
+                global.library.System.cacheParameter(channel.guild.id, 'messageId', msg.id + "::" + uniqueId, channel.client);
+                global.library.System.cacheParameter(channel.guild.id, 'uniqueId', null, channel.client);
                 return msg;
             });
     },

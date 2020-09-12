@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-26 21:18:46 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-11 13:40:08
+ * @Last Modified time: 2020-09-12 21:57:06
  */
 const logger = require('winston');
 const config = require('../../config.json');
@@ -120,6 +120,13 @@ module.exports = {
         }
     },
 
+    /**
+     * Gets a property from the settings cache without querying the database
+     * @param {string} guildId 
+     * @param {string} parameterName 
+     * @param {Client} client 
+     * @returns {any} the property value
+     */
     getCachedParameter: function(guildId, parameterName, client) {
         return client.guildSettings[`${guildId}`][`${parameterName}`];
     },
