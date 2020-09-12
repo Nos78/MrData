@@ -182,7 +182,7 @@ client.on("ready", () => {
         });
 
         /* Cache the settings for this guild - and upgrade them to the latest version if required */
-        var settings = library.System.getGuildSettings(guild.id)
+        var settings = library.System.getGuildSettings(guild.id, client)
             .then(settings => {
                 var oldVersion = settings.version;
                 settings = library.Settings.upgradeGuildSettings(settings);
