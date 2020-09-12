@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-10 19:33:43
+ * @Last Modified time: 2020-09-12 03:20:03
  */
 
 const logger = require('winston');
@@ -60,7 +60,7 @@ module.exports = {
                 "Not used": "The settings used for the red alert system on @SERVERNAME.  Not yet implemented."
             },
             "version": "the version of @BOTNAME that saved these settings.  Used for backward compatibility and avoiding breaking changes.",
-            "modified": "whether the settings have been modified in the cache and need to be saved to the database."
+            "modified": "whether the settings have been modified in the cache and need to be saved to the database.",
         }, client, guild);
     },
 
@@ -75,7 +75,8 @@ module.exports = {
             "deleteCallingCommand": false,
             "redalert": {},
             "version": global.library.Config.packageVersion(),
-            "modified": true
+            "modified": true,
+            "showAdvert": true
         }
     },
 
@@ -135,7 +136,7 @@ module.exports = {
     },
 
     getUserGuildSettingsFromRecord: function (dbRecord) {
-        let newSettings = Object.assign({}, his.newUserSettings());
+        let newSettings = Object.assign({}, this.newUserSettings());
         return getSettingsFromRecord(dbRecord, newSettings);
     },
 

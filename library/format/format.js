@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-03-14
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-11 06:01:07
+ * @Last Modified time: 2020-09-12 02:26:23
  */
 
 const { serializeError } = require("serialize-error");
@@ -98,5 +98,19 @@ module.exports = {
         var stringsCount = stringsArray.length;
         var stringChoice = this.between(0, stringsCount - 1);
         return stringsArray[stringChoice];
+    },
+
+
+    encodeDataInColor: function(color, data) {
+        var lowOrder32 = color;
+        var highOrder = data;
+        return lowOrder32 * (2 ** 32) + highOrder;
+    },
+
+    decodeDataFromColor: function(encodedColor) {
+        const lowOrder32 = Math.floor(encodedColor / (2 ** 32));
+        const highOrder = encodedColor - lowOrder32 * (2 ** 32);
+
+        return [lowOrder32, highOrder];
     }
 }

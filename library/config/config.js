@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-10 19:03:24
+ * @Last Modified time: 2020-09-12 03:24:10
  */
  
 /* 
@@ -180,6 +180,10 @@ module.exports = {
         return client.user.username;
     },
 
+    botAvatar: function(client) {
+        return client.user.avatarURL;
+    },
+
     /**
      * Returns the applications absolute path
      * @returns {string}
@@ -247,21 +251,5 @@ module.exports = {
         } catch (e) {
             logger.error(`Unable to parse config string - exception ${e.name}`)
         }
-    },
-    
-    exportConfig: function (client) {
-
-    },
-
-    importConfig: function (client) {
-
-    },
-
-    exportGuildConfig: function (gid, client) {
-
-    },
-
-    importGuildConfig: function (gid, client) {
-
     }
 }

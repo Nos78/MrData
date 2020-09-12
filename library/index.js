@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-06 08:09:56 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-10 15:41:52
+ * @Last Modified time: 2020-09-12 01:13:22
  */
 
 'use strict';
@@ -17,6 +17,7 @@ const discord = require('./discord/discord.js');
 const settings = require('./settings/settings.js');
 const system = require('./system/system.js');
 const commands = require('./commands/commands.js');
+const funding = require('./funding/funding.js');
 
 module.exports = {
   Format: format,
@@ -28,7 +29,8 @@ module.exports = {
   Settings: settings,
   System: system,
   Commands: commands,
-
+  Funding: funding,
+  
   /**
    * Collate the args array, from index to the end, into one string, each term seperated by a space.
    * @param {*} index 

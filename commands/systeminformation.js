@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-27 21:33:10 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-11 06:27:39
+ * @Last Modified time: 2020-09-12 03:27:49
  */
 
 const { useCustomLoadavg } = require('loadavg-windows');
@@ -10,9 +10,7 @@ const os = require('os');
 
 const pkg = require('../package.json');
 const library = require('../library');
-const Discord = require('discord.js');
 const moment = require('moment');
-const momentTz = require('moment-timezone');
 const process = require('process');
 
 module.exports = {
@@ -86,7 +84,7 @@ module.exports = {
         text += `\n${memoryText2}`
         text += `\n\n\t\tCPU resources: *(Num. cores, CPU description(s), process cycles vs system load)*`
         let cpuModel = cpus[0].model;
-        cpuModelsText = `*${cpuModel}*\n`;
+        let cpuModelsText = `*${cpuModel}*\n`;
         for(let i=1; i < cores; i++) {
             if (cpuModel.localeCompare(cpus[i].model) != 0) {
                 cpuModelsText += `, *${cpus[i]}*\n`;

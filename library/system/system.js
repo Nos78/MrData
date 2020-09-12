@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-26 21:18:46 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-11 02:57:53
+ * @Last Modified time: 2020-09-11 13:40:08
  */
 const logger = require('winston');
 const config = require('../../config.json');
@@ -113,11 +113,15 @@ module.exports = {
      */
     getParameter: async function(guildId, parameterName, client = null) {
         if(client) {
-            return client.guildSettings[`${guildId}`][`${parameterName}`];
+            return this.getCachedParameter(guildId, parameterName, client);
         } else {
             var result = await this.getParameterFromDb(guildId, parameterName);
             return result;
         }
+    },
+
+    getCachedParameter: function(guildId, parameterName, client) {
+        return client.guildSettings[`${guildId}`][`${parameterName}`];
     },
 
     /**
