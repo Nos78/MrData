@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon
- * @Date: 2020-08-25 02:54:40 
+ * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-26 08:09:12
+ * @Last Modified time: 2020-09-11 03:19:10
  */
 
 // Configure the Discord bot client
@@ -16,8 +16,21 @@ const cmdLog = './cmdExec.log';
 // Set up the library functions
 const library = require('./library');
 
+// Set up global access so that all modules can access the library
+// TODO - there has to be a better way of doing this:
+// - maybe move library into the client? (but this doesn't work for functions who cannot access, unless the client is passed)
+// Back-compatibility - leave definition of library variable above, and in other areas of the code.
+// The main problem being encountered is when one library module requires functions from other library modules.... I have been
+// referencing them individually, as doing require('../../library') is not working
+global.library = library;
+
 // Set up the logger for debug/info
 const logger = require('winston');
+const { WebPush } = require('./web-push/web-push');
+global.webPushApp = new WebPush();
+global.webPushApp.initialise();
+
+//anotherWebApp.sendTest();
 
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
@@ -33,23 +46,9 @@ const client = new Discord.Client({
     autorun: true
 });
 
+// Initialise the commands module
+client.commands = library.Commands.initialiseCommands(client);
 
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-//
-// Configure all the commands,
-// read commands directory and place
-// into the commands collection
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-
-    // set a new item in the Collection
-    // with the key as the command name and the value as the exported module
-    client.commands.set(command.name, command);
-}
-
-//
 // initialise the cooldowns collection
 const cooldowns = new Discord.Collection();
 
@@ -64,6 +63,15 @@ try {
 } catch (error) {
     logger.info(`Failed to access config.deleteCallingCommand; update your config.json with this member.  Error: ${JSON.stringify(error)}`);
     client.deleteCallingCommand = false;
+}
+
+try {
+    // Initialise the settings for individual servers - these
+    // will be stored in the database, but a cached version in the client
+    // would be much more efficient...
+    client.guildSettings = [];
+} catch (error) {
+    logger.error(`Failed to initialise guild settings, ${JSON.stringify(error)}`);
 }
 
 try {
@@ -90,12 +98,8 @@ client.on("ready", () => {
     logger.info(client.user.username + ' - (' + client.user.id + ')');
 
     // Replace templated parameters in help text with real data
-    var templates = library.Config.getHelpTextParameters(client);
-    client.commands.forEach(function(command) {
-        templates.forEach(function(template) {
-            command.description = command.description.replace(template.name, template.value);
-        })
-    });
+    library.Commands.resolveCommandDescriptions(client);
+
     // Update the bot activity text to reflect the connections status
     client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
     logger.info(`${client.user.username} Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -136,6 +140,35 @@ client.on("ready", () => {
             }
         });
 
+    db.userGlobalSettings.exists()
+        .then(data => {
+            if(data.rows[0].exists == false) {
+                // Table does not exists, lets create it...
+                logger.debug(`No userGlobalSettings table found!  Creating...`);
+                db.userGlobalSettings.create();
+                logger.debug(`userGlobalSettings configured.`)
+            }
+        });
+
+    db.userGuildSettings.exists()
+        .then(data => {
+            if(data.rows[0].exists == false) {
+                // Table does not exists, lets create it...
+                logger.debug(`No userGuildSettings table found!  Creating...`);
+                db.userGuildSettings.create();
+                logger.debug(`userGuildSettings configured.`)
+            }
+        });
+
+    db.guildSettings.exists()
+        .then(data => {
+            if(data.rows[0].exists == false) {
+                // Table does not exists, lets create it...
+                logger.debug(`No guildSettings table found!  Creating...`);
+                db.guildSettings.create();
+                logger.debug(`guildSettings configured.`)
+            }
+        });
     /* Populate the database with the guilds we are online in. */
     //for (x = 0; x < client.guilds.size; x++) {
     client.guilds.forEach((guild) => {
@@ -147,7 +180,24 @@ client.on("ready", () => {
                 logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table.`);
             }
         });
+
+        /* Cache the settings for this guild - and upgrade them to the latest version if required */
+        var settings = library.System.getGuildSettings(guild.id)
+            .then(settings => {
+                var oldVersion = settings.version;
+                settings = library.Settings.upgradeGuildSettings(settings);
+                var newVersion = settings.version;
+                client.guildSettings[`${guild.id}`] = settings;
+                if (settings.modified) {
+                    library.System.saveGuildSettings(guild.id, settings)
+                        .then(result => {
+                            logger.info(`Upgraded settings JSON for ${guild.name}, ${guild.id}, result: ${!(result == null)}. Old version: ${oldVersion}, new version: ${newVersion}`);
+                        });
+                }
+            });
+
     }); // end for
+
 });
 
 //
@@ -158,6 +208,7 @@ client.on("ready", () => {
 client.on("guildCreate", guild => {
     // This event triggers when the bot joins a guild.
     logger.info(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+
     // Update the bot activity text to reflect the new stat
     client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
     db.guilds.add(guild.id)
@@ -192,13 +243,57 @@ client.on('message', async message => {
         }
     }
 
-    if (!(message.content && message.content.startsWith(config.prefix))) {
-      // Not prefixed, do not continue
-      return;
+    // Settings should be cached in the client
+
+    var prefix = library.Config.getPrefix();
+    if (message.guild) {
+        prefix = await library.System.getPrefix(message.guild.id);
+    }
+    if (!(message.content && message.content.startsWith(prefix))) {
+        // Hack to ensure !showprefix works, regardless of prefix specified
+        var found = false
+        if (prefix != config.prefix) {
+            if(!message.content.startsWith(config.prefix + 'showprefix')) {
+                var prefixCmd = client.commands.get('showprefix');
+                for(var i=0; i < prefixCmd.aliases.length; i++) {
+                    if(message.content.startsWith(config.prefix + prefixCmd.aliases[i])) {
+                        found = true;
+                        break;
+                    }
+                }
+            } else {
+                found = true;
+            }
+            
+            if(!found && !message.content.startsWith(config.prefix + 'datahelp')) {
+                var helpCmd = client.commands.get('datahelp');
+                for(let i=0; i < helpCmd.aliases.length; i++) {
+                    if(message.content.startsWith(config.prefix + helpCmd.aliases[i])) {
+                        found = true;
+                        break;
+                    }
+                }
+            } else {
+                found = true;
+            }
+
+            if(found) {
+                prefix = config.prefix;
+            }
+        }
+        if(!found) {
+            if(message.channel.type == 'dm') {
+                // Messages sent in DM cannot use custom command prefix
+                // so we must feedback this to the user
+                return library.Helper.sendErrorMessage(`${message.author}, when sending commands to ${library.Config.botName(message.client)} via direct messages, you cannot use your server's custom command prefix.\n\nDuring direct messages you should use my default prefix, which is **${library.Config.getPrefix()}**\nFor example:  *${library.Config.getPrefix()}datahelp*`, message.channel);
+            }
+            // Not prefixed, do not continue
+            return;
+        }
     }
 
     // split up the message into the command word and any additional arguements
-    const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const cmdName = args.shift().toLowerCase();
 
     // get the specified command name
@@ -218,7 +313,7 @@ client.on('message', async message => {
     if (cmd.args && !args.length) {
         let reply = `You didn't provide any arguments, ${message.author}!`;
         if (cmd.usage) {
-            reply += `\nThe proper usage would be: \`${config.prefix}${cmd.name} ${cmd.usage}\``;
+            reply += `\nThe proper usage would be: \`${prefix}${cmd.name} ${cmd.usage}\``;
         }
         return library.Helper.sendErrorMessage(reply, message.channel);
     }

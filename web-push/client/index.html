@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
+    <script>
+        console.log(firebase.messaging.isSupported());
+        //
+        // Browser detection - TODO, move this to new script to keep code tidy!
+        //
+
+        // Opera 8.0+
+        var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+        // Firefox 1.0+
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+        // Safari 3.0+ "[object HTMLElementConstructor]" 
+        var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+        // Internet Explorer 6-11
+        var isIE = /*@cc_on!@*/false || !!document.documentMode;
+        // Edge 20+
+        var isEdge = !isIE && !!window.StyleMedia;
+        // Chrome 1 - 79
+        var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        // Edge (based on chromium) detection
+        var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
+        // Blink engine detection
+        var isBlink = (isChrome || isOpera) && !!window.CSS;
+        function browser() {
+            // Opera 8.0+
+            if(isOpera) {
+                return "Opera8.0+";
+            }
+            // Firefox 1.0+
+            if(isFirefox) {
+                return "firefox1.0+";
+            }
+            // Safari 3.0+ "[object HTMLElementConstructor]" 
+            if(isSafari) {
+                return "safari3.0+";
+            }
+            // Internet Explorer 6-11
+            if (isIE) {
+                return "IE6-11";
+            }
+            // Edge 20+
+            if (isEdge) {
+                return "Edge20+";
+            }
+            // Chrome 1 - 79
+            if (isChrome) {
+                return "Chrome1-79";
+            }
+            // Edge (based on chromium) detection
+            if (isBlink) {
+                return "Blink";
+            }
+        }
+
+        firebase.initializeApp({
+            apiKey: "AIzaSyAmaQpj-HpYZHOLL08737doT4QM1xIcnkw",
+            authDomain: "mr-data-fcm.firebaseapp.com",
+            databaseURL: "https://mr-data-fcm.firebaseio.com",
+            projectId: "mr-data-fcm",
+            storageBucket: "mr-data-fcm.appspot.com",
+            messagingSenderId: "351645999964",
+            appId: "1:351645999964:web:1748b1dbb38c49c31c1799",
+            measurementId: "G-KH2FXB7E6M"
+        })
+        firebase.analytics();
+        const messaging = firebase.messaging();
+        async function initFirebaseMessagingRegistration() {
+            messaging
+                .requestPermission()
+                .then(function () {
+                    messageElement.innerHTML = "Got notification permission";
+                    console.log("Got notification permission");
+                    return messaging.getToken();
+                })
+                .then(async function (token) {
+                    var url = new URL(window.location.href);
+                    var userId = url.searchParams.get("userId");
+                    var guildId = url.searchParams.get("guildId");
+                    console.log(userId);
+                    // print the token on the HTML page
+                    tokenElement.innerHTML = "Token is: " + token + "<br/>" +
+                        "User id is: " + userId + "<br/>" +
+                        "Guild id is: " + guildId + "<br/>";
+                    await fetch(`/subscribe?userId=${userId}&guildId=${guildId}`, {
+                        method: 'POST',
+                        body: JSON.stringify({token: `${token}`}),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                })
+                .catch(function (err) {
+                    errorElement.innerHTML = "<span style='color:#FF0000'>I did not get notification permission.<br/>At this moment in timeError: " + err;
+                    console.log("Didn't get notification permission", err);
+                });
+        }
+        messaging.onMessage(function (payload) {
+            console.log("Message received. ", JSON.stringify(payload));
+            var msg = "";
+            if(payload.data) {
+                msg = payload.data.notification;
+            } else {
+                msg = payload.notification;
+            }
+            notificationElement.innerHTML = notificationElement.innerHTML + "<span style='color:#000000'>" + "Your message content:<br/>" + JSON.stringify(msg) + "<br/><br/>To receive notifications in the usual manner, you should close this page!</span><br/>";
+        });
+        messaging.onTokenRefresh(function () {
+            messaging.getToken()
+                .then(function (refreshedToken) {
+                    console.log('Token refreshed.');
+                    tokenElement.innerHTML = "Token is " + refreshedToken;
+
+                }).catch(function (err) {
+                    errorElement.innerHTML = "Error: " + err;
+                    console.log('Unable to retrieve refreshed token ', err);
+                });
+        });
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Push Notifications using Node.js and Firebase Messaging Web Push</title>
+    <link rel="icon" type="image/png" href="https://d2cy1obokpvee9.cloudfront.net/manifest/favicon-196x196.png" sizes="196x196" class="next-head">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>MrData - RED ALERT (Push Notifications) System</h1>
+    </header>
+    <p>This is a web front-end for MrData based on the Firebase Messaging System from Google.  Register for a push notification by
+        pressing the button below.<br/><br/></p><p>Join our development chat on <a href="https://discord.gg/xzAs2yy">the Bot Factory Discord Server</a>.</p>
+    <div class="form"><br/>Please help the development of Mr Data! Due to Covid-19, I am unemployed.  Creating & hosting the greatest 
+        STFC bot ever is not cheap.<br/>Sadly, the new red alert system will not function correctly on Apple devices unless I pay Apple 
+        £99 for a developer account.<br/>Don't give a corporate evil, such as Scopely, your money! Aid this unemployed bot-owner, developing in his free time on a shoe-string budget!<br/>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_s-xclick" />
+            <input type="hidden" name="hosted_button_id" value="CA4PYT8KZ3B32" />
+            <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+            <img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
+        </form></body></div>
+        <script>
+            if (!firebase.messaging.isSupported()) {
+                document.write("<p><br/><br/>Sadly, you are running a browser which does not support push notifications. " +
+                                "We are currently working on a solution which will enable users of Half-Eaten fruit products " +
+                                "to enjoy the same benefits as the rest of the world.  Unfortunately, this requires an Apple developer " +
+                                "account, which costs £99.  Without your generous donations, this may never happen.</p>");
+            }
+        </script>
+        <br/><br/>
+   
+    <div id="token" style="color:lightblue"></div>
+    <div id="message" style="color:lightblue"></div>
+    <div id="notification" style="color:green"></div>
+    <div id="error" style="color:red"></div>
+    <script>
+        messageElement = document.getElementById("message")
+        tokenElement = document.getElementById("token")
+        notificationElement = document.getElementById("notification")
+        errorElement = document.getElementById("error")
+    </script><p>
+    <button onclick="initFirebaseMessagingRegistration()"><span style="color:black">Enable Firebase Messaging</span></button></p>
+</html>

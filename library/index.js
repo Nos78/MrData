@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-06T08:09:56+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: index.js
- * @Last modified by:
- * @Last modified time: 2020-03-29T18:27:57+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-06 08:09:56 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-12 01:13:22
  */
 
 'use strict';
@@ -16,6 +13,11 @@ const admin = require('./admin/admin.js');
 const league = require('./league/league.js');
 const helper = require('./helper/helper.js');
 const config = require('./config/config.js');
+const discord = require('./discord/discord.js');
+const settings = require('./settings/settings.js');
+const system = require('./system/system.js');
+const commands = require('./commands/commands.js');
+const funding = require('./funding/funding.js');
 
 module.exports = {
   Format: format,
@@ -23,7 +25,18 @@ module.exports = {
   League: league,
   Helper: helper,
   Config: config,
-
+  Discord: discord,
+  Settings: settings,
+  System: system,
+  Commands: commands,
+  Funding: funding,
+  
+  /**
+   * Collate the args array, from index to the end, into one string, each term seperated by a space.
+   * @param {*} index 
+   * @param {*} args 
+   * @returns {string} collated args.
+   */
   collateArgs: function(index, args) {
       var returnString = "";
       if (index < args.length) {

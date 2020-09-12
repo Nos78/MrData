@@ -14,20 +14,27 @@ module.exports = {
     usage: '<role A> <role B>',
     guildOnly: true,
     execute(message, args) {
-
+        let msg = library.Helper.sendStandardWaitMessage(message.channel);
         if (library.Admin.isAdmin(message.author.id, message.guild.id, message.client)) {
             if (args.length < 2) {
                 return message.channel.send("Not enough parameters!  Please use `!artr <from role A> <to role B>`");
             } else {
-                let roleA = message.guild.roles.find("name", args[0]);
-                let roleB = message.guild.roles.find("name", args[1]);
+                let roleA = message.guild.roles.find("name", library.Helper.parseName(args[0]));
+                let roleB = message.guild.roles.find("name", library.Helper.parseName(args[1]));
                 if(roleA == null) {
-                  return message.channel.send(`Please specify valid roles!  ${roleA} does not exist.  Please use \`!artr <from role A> <to role B>\``);
+                    roleA = message.guild.roles.find("id", library.Helper.parseNumber(args[0]));
+                    if(roleA == null) {
+                        return library.Helper.editWaitErrorMessage(msg, `Please specify valid roles!  ${roleA} does not exist.  Please use \`!artr <from role A> <to role B>\``);
+                    }
                 }
                 if(roleB == null) {
-                  return message.channel.send(`Please specify valid roles!  ${roleB} does not exist.  Please use \`!artr <from role A> <to role B>\``);
+                    roleB = message.guild.roles.find("id", library.Helper.parseNumber(args[0]));
+                    if(roleB == null) {
+                        return library.Helper.editWaitErrorMessage(msg, `Please specify valid roles!  ${roleB} does not exist.  Please use \`!artr <from role A> <to role B>\``);
+                    }
                 }
                 
+                let members = [];
                 message.guild.members.forEach(function(member) {
                     let members = [];
                     if(member.roles.has(roleA.id)) {
@@ -35,6 +42,14 @@ module.exports = {
                         members.push(library.Discord.getDisplayName(member));
                     }
                 });
+
+                if (members) {
+                    // Notify the user that the command was successful
+                    let text = `${message.author}, your command was successfully completed.\n\n`;
+                    text += `The following members where copied from role ${roleA.name} to role ${roleB.name}:\n`;
+                    members.forEach(member => text+=` + **${member}**\n`);
+                    library.Helper.editWaitSuccessMessage(msg, text);
+                }
             }
         }
     }

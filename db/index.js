@@ -27,6 +27,9 @@ const initOptions = {
         obj.scores = new repos.Scores(obj, pgp);
         obj.users = new repos.Users(obj, pgp);
         obj.guilds = new repos.Guilds(obj, pgp);
+        obj.userGuildSettings = new repos.UserGuildSettings(obj, pgp);
+        obj.userGlobalSettings = new repos.UserGlobalSettings(obj, pgp);
+        obj.guildSettings = new repos.GuildSettings(obj, pgp);
     }
 };
 

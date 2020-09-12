@@ -1,5 +1,6 @@
 {
   "prefix": "!",
+  "commandsModule": "./commands",
   "powerColor": 16776960,
   "powerDestroyedColor": 44678,
   "resourcesRaidedColor": 7798918,
@@ -24,8 +25,20 @@
   "userConfigurationExtension": ".json",
   "messageSuccessColor": 43520,
   "messageErrorColor": 11141120,
+  "messagePleaseWaitColor": 170,
+  "messageGreen": 43520,
+  "messageRed": 11141120,
+  "messageBlue": 170,
   "helpTextParamsTemplate": {
     "name": "",
     "value": ""
-  }
+  },
+  "webPushPublic": {
+    "firebaseSenderId": 351645999964
+  },
+  "webPush": {
+    "clientAddr": "http://localhost",
+    "clientDisplayPort": 5000
+  },
+  "timeBetweenAdverts": 1800
 }
