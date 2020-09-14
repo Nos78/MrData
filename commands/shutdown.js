@@ -2,14 +2,14 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-09 02:55:51 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 03:38:00
+ * @Last Modified time: 2020-09-13 20:04:53
  */
 const library = require('../library');
 const process = require('process');
 
 module.exports = {
 	name: 'shutdown',
-	description: `Shuts down 1@BOTNAME - this command can only be performed by my owner.`,
+	description: `Shuts down @BOTNAME - this command can only be performed by my owner.`,
 	cooldown: 30,
 	args: false,
 	guildOnly: true,
