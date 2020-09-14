@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-10 15:33:21 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-10 19:36:48
+ * @Last Modified time: 2020-09-14 15:38:59
  */
 
 const library = require('../library');
@@ -47,7 +47,7 @@ module.exports = {
         }
         library.System.getGuildSettings(guildId)
             .then(settings => {
-                library.Helper.editWaitSuccessMessage(msg, `${message.author}, the settings for ${searchGuild.name} are \n\n${markdown.codeBlock.multi}${JSON.stringify(settings, null, 2)}${markdown.codeBlock.multi}`);
+                library.Helper.editWaitSuccessMessage(msg, `${message.author}, the settings for ${searchGuild.name} are \n\n${markdown.codeBlock.multi}json\n${JSON.stringify(settings, null, 2)}${markdown.codeBlock.multi}`);
             })
             .catch(error => {
                 library.Helper.editWaitErrorMessage(msg, `${message.author}, I was unable to retrieve the settings for ${searchGuild.name}. An error occured:\n\n${markdown.codeBlock.multi}${JSON.stringify(error, null, 2)}${markdown.codeBlock.multi}`);
