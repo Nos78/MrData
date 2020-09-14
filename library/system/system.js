@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-26 21:18:46 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 21:57:06
+ * @Last Modified time: 2020-09-14 16:01:42
  */
 const logger = require('winston');
 const config = require('../../config.json');
@@ -91,7 +91,8 @@ module.exports = {
             // Update the database with the new settings (async, don't need return value)
             returnValue = this.saveGuildSettings(guildId, settings)
                 .then(result => {
-                    logger.info(`Saved settings for ${guildId} to database, result: ${JSON.stringify(result)}`)
+                    logger.info(`Saved settings for ${guildId} to database, result: ${JSON.stringify(result)}`);
+                    return result;
                 })
                 .catch(error => {
                     logger.error(`System.saveParameter: An error occurred committing the settings (typeof ${global.library.Format.typeOf(settings)}) to the database for guild ${guildId}. Error: ${JSON.stringify(error)}`)
