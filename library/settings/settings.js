@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 03:20:03
+ * @Last Modified time: 2020-09-12 22:49:15
  */
 
 const logger = require('winston');
@@ -61,6 +61,7 @@ module.exports = {
             },
             "version": "the version of @BOTNAME that saved these settings.  Used for backward compatibility and avoiding breaking changes.",
             "modified": "whether the settings have been modified in the cache and need to be saved to the database.",
+            "helpDM": "indicates whether lengthy help text should be output to the channel or via DM to the user."
         }, client, guild);
     },
 
@@ -76,7 +77,8 @@ module.exports = {
             "redalert": {},
             "version": global.library.Config.packageVersion(),
             "modified": true,
-            "showAdvert": true
+            "showAdvert": true,
+            "helpDM": false
         }
     },
 
@@ -84,6 +86,8 @@ module.exports = {
      * Backward compatibility function - new settings may be added at any time,
      * so to ensure none of these changes break the code-base when loading older setting
      * objects, this function will convert an old settings object to the newest definition.
+     * 
+     * Compares existing settings against the default new settings.
      * @param {Object} settings 
      * @returns {Object} new settings
      */
@@ -102,15 +106,26 @@ module.exports = {
         if(compareVersions.compare(newSettings.version, oldSettingsId, '<=')) {
             return settings;
         }
-
-        if(settings.prefix) {
+        // added for version, 2.1.2
+        if(settings.hasOwnProperty('prefix')) {
+            // settings.prefix) {
             newSettings.prefix = settings.prefix;
-        }
-        if(settings.deleteCallingCommand) {
+        }   
+        // added for version, 2.1.2
+        if(settings.hasOwnProperty('deleteCallingCommand')) {
             newSettings.deleteCallingCommand = settings.deleteCallingCommand;
         }
-        if(settings.redalert) {
+        // added for version, 2.1.2
+        if(settings.hasOwnProperty('redalert')) {
             newSettings.redalert = Object.assign({}, settings.redalert);
+        }
+        // added for version 2.1.6
+        if(settings.hasOwnProperty('showAdvert')) {
+            newSettings.showAdvert = settings.showAdvert;
+        }
+        // added for version 2.1.7
+        if(settings.hasOwnProperty('helpDM')) {
+            newSettings = settings.helpDM;
         }
 
         return newSettings;

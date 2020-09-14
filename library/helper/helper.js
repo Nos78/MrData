@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-03-29
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 22:04:40
+ * @Last Modified time: 2020-09-14 16:15:13
  */
 
 const config = require('../../config.json');
@@ -44,37 +44,52 @@ module.exports = {
     },
     
     createEmbed: function(messageText, channel, color, messageId = null) {
-        // Check whether we can attach an advert
-        var showAdvert = global.library.System.getCachedParameter(channel.guild.id, 'showAdvert', channel.client);
-        var cachedMessageId = global.library.System.getCachedParameter(channel.guild.id, 'messageId', channel.client);
-
+        var showAdvert = false;
         var uniqueId = null;
-        if(cachedMessageId) {
-            var ids = cachedMessageId.split("::");
+        var cachedMessageId = null;
 
-            cachedMessageId = ids[0];
-            if(ids.length > 1) {
-                uniqueId = ids[1];
+        // Check whether we can attach an advert
+        if(channel && channel.type == 'dm') {
+            // Don't throttle adverts in DM
+            showAdvert = true;
+        }
+
+        if(channel.guild) {
+            showAdvert = global.library.System.getCachedParameter(channel.guild.id, 'showAdvert', channel.client);
+            cachedMessageId = global.library.System.getCachedParameter(channel.guild.id, 'messageId', channel.client);
+
+            if(cachedMessageId) {
+                var ids = cachedMessageId.split("::");
+    
+                cachedMessageId = ids[0];
+                if(ids.length > 1) {
+                    uniqueId = ids[1];
+                }
             }
         }
 
         if(showAdvert) {
             // Start a timer for the next advert
-            setTimeout(function() {
-                global.library.System.cacheParameter(
-                    channel.guild.id, 
-                    'showAdvert',
-                    true,
-                    channel.client);}, config.timeBetweenAdverts * 1000);
-            // Set parameter to prevent adverts until the timeout is called
-            global.library.System.cacheParameter(channel.guild.id, 'showAdvert', false, channel.client);
-            global.library.System.cacheParameter(channel.guild.id, 'uniqueId', messageId, channel.client);
+            if(channel.guild) {
+                setTimeout(function() {
+                    global.library.System.cacheParameter(
+                        channel.guild.id, 
+                        'showAdvert',
+                        true,
+                        channel.client);}, config.timeBetweenAdverts * 1000);
+                // Set parameter to prevent adverts until the timeout is called
+                global.library.System.cacheParameter(channel.guild.id, 'showAdvert', false, channel.client);
+                global.library.System.cacheParameter(channel.guild.id, 'uniqueId', messageId, channel.client);
+            }
         } else {
             global.library.System.cacheParameter(channel.guild.id, 'uniqueId', null, channel.client);
         }
         
         // Attach the advert
         if(showAdvert || ((uniqueId != null && uniqueId != 'null') && (messageId != null && cachedMessageId == messageId))) {
+            var guildText = "";
+            if (channel.guild) { guildText = ` on ${channel.guild.name}`; }
+
             return {
                 embed: {
                     color: color,
@@ -86,7 +101,7 @@ module.exports = {
                         "value": `${global.library.Format.randomString(global.library.Funding.texts)}\n[Please give what you can - if you can](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CA4PYT8KZ3B32&source=url)`, "inline": false},
                     ],
                     footer: {
-                        "text": `${global.library.Config.packageName()} version ${global.library.Config.packageVersion()}, running as ${global.library.Config.botName(channel.client)} on ${channel.guild.name}\n\u00A9 The Bot Factory, under ${global.library.Config.packageLicense()} licence.`,
+                        "text": `${global.library.Config.packageName()} version ${global.library.Config.packageVersion()}, running as ${global.library.Config.botName(channel.client)}${guildText}\n\u00A9 The Bot Factory, under ${global.library.Config.packageLicense()} licence.`,
                         "icon_url": `${global.library.Config.botAvatar(channel.client)}`
                     }
                 }
@@ -97,7 +112,6 @@ module.exports = {
                     color: color,
                     description: messageText,
                     image: {"url": this.URLs.fundMrDataBanner},
-                    thumbnail: {"url": this.URLs.fundMrDataQr},
                 }
             }
         }
@@ -150,9 +164,11 @@ module.exports = {
         var uniqueID = global.library.Funding.makeId(16);
         return channel.send(await this.createEmbed(messageText, channel, color, uniqueID))
             .then(msg => {
-                const uniqueId = global.library.System.getCachedParameter(channel.guild.id, 'uniqueId', channel.client);
-                global.library.System.cacheParameter(channel.guild.id, 'messageId', msg.id + "::" + uniqueId, channel.client);
-                global.library.System.cacheParameter(channel.guild.id, 'uniqueId', null, channel.client);
+                if(channel.guild) {
+                    const uniqueId = global.library.System.getCachedParameter(channel.guild.id, 'uniqueId', channel.client);
+                    global.library.System.cacheParameter(channel.guild.id, 'messageId', msg.id + "::" + uniqueId, channel.client);
+                    global.library.System.cacheParameter(channel.guild.id, 'uniqueId', null, channel.client);
+                }
                 return msg;
             });
     },

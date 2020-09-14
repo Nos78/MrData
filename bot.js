@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-11 03:19:10
+ * @Last Modified time: 2020-09-13 19:21:58
  */
 
 // Configure the Discord bot client
@@ -285,7 +285,7 @@ client.on('message', async message => {
             if(message.channel.type == 'dm') {
                 // Messages sent in DM cannot use custom command prefix
                 // so we must feedback this to the user
-                return library.Helper.sendErrorMessage(`${message.author}, when sending commands to ${library.Config.botName(message.client)} via direct messages, you cannot use your server's custom command prefix.\n\nDuring direct messages you should use my default prefix, which is **${library.Config.getPrefix()}**\nFor example:  *${library.Config.getPrefix()}datahelp*`, message.channel);
+                return library.Helper.sendErrorMessage(`${message.author}, I cannot understand your request.  Please note, when sending commands to ${library.Config.botName(message.client)} via direct messages, you cannot use your server's custom command prefix.\n\nDuring direct messages you should use my default prefix, which is **${library.Config.getPrefix()}**\nFor example:  *${library.Config.getPrefix()}datahelp*`, message.channel);
             }
             // Not prefixed, do not continue
             return;

@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-10T19:54:25+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: privilegedrole.js
- * @Last modified by:
- * @Last modified time: 2019-05-20T19:03:58+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-10 19:54:25 
+ * @Last Modified by:   BanderDragon 
+ * @Last Modified time: 2020-08-29 03:15:52 
  */
 
 const library = require('../library');
@@ -36,9 +33,10 @@ module.exports = {
                         return library.Helper.editWaitErrorMessage(msg, `Please specify valid roles!  ${roleB} does not exist.  Please use \`!artr <from role A> <to role B>\``);
                     }
                 }
-
+                
                 let members = [];
                 message.guild.members.forEach(function(member) {
+                    let members = [];
                     if(member.roles.has(roleA.id)) {
                         member.addRole(roleB.id);
                         members.push(library.Discord.getDisplayName(member));

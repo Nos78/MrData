@@ -11,7 +11,7 @@ const { initialiseCommands } = require('../library/discord/discord');
 
 module.exports = {
     name: 'guildinformation',
-    description: `Command **${config.prefix}${this.name}** returns information on a discord guild (a server).  @BOTNAME must be a member of the guild to provide information. The default command returns information on your server.`,
+    description: `Returns information on a discord guild (a server).  @BOTNAME must be a member of the guild to provide information. The default command returns information on your server.`,
     aliases: ['guildinfo', 'serverinfo', 'allianceinfo'],
     usage: `<guild name>`,
     args: false,
