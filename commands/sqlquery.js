@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-10 15:33:21 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-10 17:01:10
+ * @Last Modified time: 2020-09-14 15:37:36
  */
 
 const library = require('../library');
@@ -25,15 +25,15 @@ module.exports = {
                 var queryString = global.library.collateArgs(0, args);
                 var msgText = `${message.author}, `;
                 db.any(queryString)
-                    .then(result => {
-                        msgText += `the result of your SQL query is:\n\n\`\`\`${JSON.stringify(result, null, 4)}\`\`\``;
-                    })
-                    .catch(error => {
-                        msgText += `your query failed with the following error:\n\n\`\`\`${JSON.stringify(error)}\`\`\``
-                    })
-                    .finally(() => {
-                        library.Helper.editMessage(msg, msgText);
-                    });
+                .then(result => {
+                    msgText += `the result of your SQL query is:\n\n${global.library.Discord.markdown.codeBlock.multi}sql\n${JSON.stringify(result, null, 4)}${global.library.Discord.markdown.codeBlock.multi}`;
+                })
+                .catch(error => {
+                    msgText += `your query failed with the following error:\n\n${global.library.Discord.markdown.codeBlock.multi}${JSON.stringify(error)}${global.library.Discord.markdown.codeBlock.multi}`
+                })
+                .finally(() => {
+                    library.Helper.editMessage(msg, msgText);
+                });
             }
         } else {
             return library.Helper.editWaitErrorMessage(msg, `Sorry, ${message.author}, this command can only be used by my creator.`);
