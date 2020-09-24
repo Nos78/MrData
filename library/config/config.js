@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 03:24:10
+ * @Last Modified time: 2020-09-23 14:17:39
  */
  
 /* 
@@ -40,11 +40,16 @@ module.exports = {
      * a discord server).
      * @param {string} key the name of the templated string to be replaced with the value.
      * @param {string} value the data to be inserted, replacing the template name.
+     * @param {string} defaultValue optional data to be inserted if the value is null.
      */
-    populateHelpTextParameter: function(key, value) {
+    populateHelpTextParameter: function(key, value, defaultValue = '') {
         var parameter = Object.assign({}, config.helpTextParamsTemplate);
         parameter.name = key;
-        parameter.value = value;
+        if (value != null) {
+            parameter.value = value;
+        } else {
+            parameter.value = defaultValue;
+        }
 
         return parameter;
     },
@@ -60,6 +65,9 @@ module.exports = {
         parameters.push(this.populateHelpTextParameter("@BOTNAME", this.botName(client)));
         if(guild) {
             parameters.push(this.populateHelpTextParameter("@SERVERNAME", global.library.Discord.getGuildName(guild)));
+            parameters.push(this.populateHelpTextParameter("@GUILDPREFIX", global.library.System.getPrefix(guild.id, client), config.prefix));
+        } else {
+            parameters.push(this.populateHelpTextParameter("@GUILDPREFIX", config.prefix));
         }
         return parameters;
     },
