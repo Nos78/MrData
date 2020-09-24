@@ -1,43 +1,20 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-05T18:00:48+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: id.js
- * @Last modified by:
- * @Last modified time: 2020-03-29T19:22:05+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-05 18:00:48
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-24 19:43:37
  */
 
- const config = require('../config.json');
+const config = require('../config.json');
 
- module.exports = {
-  name: 'deletecallingcommand',
-  description: 'Returns the discord Id of the specified user.  If no parameter is specified, it returns the sender\'s Id',
-  cooldown: 60,
-  args: false,
-  usage: '<@memberName>',
-  async execute(message, args) {
-    var findThisUser = null;
-    var desc = "";
+module.exports = {
+    name: 'deletecallingcommand',
+    description: `Enables or disables the ${this.name} setting. This command is a shorthand variation of the settings command with the deletecallngcommand parameter set (or unset).`,
+    cooldown: 60,
+    category: 'config',
+    args: false,
+    usage: '<@memberName>',
+    execute(message, args) {
 
-    switch (args.length) {
-      case 0:
-        // No args specified, use the senders discord id.
-        findThisUser = message.author.id;
-        desc = `${message.author}, your id is `;
-        break;
-      case 1:
-        var member = message.mentions.members.first();
-        desc = `${message.author}, the id of ${member.displayname} is `;
-        findThisUser = member.id;
-        break;
-     }
-     if(findThisUser) {
-       desc = desc + findThisUser;
-       message.channel.send({embed: {
-         color:config.standardMessageColor,
-         description: `${desc}`
-       }});
-     }
-  },
+    },
  };
