@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 22:49:15
+ * @Last Modified time: 2020-09-25 08:39:59
  */
 
 const logger = require('winston');
@@ -78,7 +78,11 @@ module.exports = {
             "version": global.library.Config.packageVersion(),
             "modified": true,
             "showAdvert": true,
-            "helpDM": false
+            "helpDM": false,
+            "contributions": {
+                "target": 0,
+                "current": 0
+            }
         }
     },
 
@@ -125,9 +129,17 @@ module.exports = {
         }
         // added for version 2.1.7
         if(settings.hasOwnProperty('helpDM')) {
-            newSettings = settings.helpDM;
+            newSettings.helpDM = settings.helpDM;
         }
-
+        // added for version 2.1.10
+        if(settings.hasOwnProperty('contributions')) {
+            if(settings.contributions.hasOwnProperty('target')) {
+                newSettings.contributions.target = settings.contributions.target;
+            }
+            if(settings.contributions.hasOwnProperty('current')) {
+                newSettings.contributions.current = settings.contributions.current;
+            }
+        }
         return newSettings;
     },
 
