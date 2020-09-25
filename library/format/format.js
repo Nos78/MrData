@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-03-14
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 02:26:23
+ * @Last Modified time: 2020-09-25 10:08:42
  */
 
 const { serializeError } = require("serialize-error");
@@ -112,5 +112,90 @@ module.exports = {
         const highOrder = encodedColor - lowOrder32 * (2 ** 32);
 
         return [lowOrder32, highOrder];
+    },
+
+    textBarChart: function(value, numCharsPerLine, numLines, valueSuffix, maximum = 100, minimum = 0) {
+        // Some simple error checking
+        if(isNaN(numLines) || numLines < 3) {
+            return 'textBarChart: not enough lines requested. Cannot display a bar chart.';
+        }
+        if(isNaN(maximum) || isNaN(minimum) || maximum <= 0 || minimum >= maximum) {
+            return 'textBarChart: There was an error, maximum and/or minimum values are incorrectly set';
+        }
+        if(isNaN(value) || value < minimum || value > maximum) {
+            return 'textBarChart: cannot calculate a percentage - the given value falls outside the min/max boundaries';
+        }
+
+        // define our variables to calculate the box
+        var charsToLeft = 0;
+        var charsToRight = 0;
+
+        // Chars to define the box:
+        var boxTop = '_';
+        var boxBot = '¯';
+        var boxFill1 = ['/', '·', '\\', '·'];
+        var boxFill2 = ' ';
+        var boxEnd = '¦';
+        var boxStart = '¦';
+        var boxSep = '¦';
+        var output = '';
+        var numFormatCharsPerLine = boxEnd.length + boxSep.length + boxStart.length;
+
+        // More error checking
+        if(isNaN(numCharsPerLine) || numCharsPerLine <= (numFormatCharsPerLine + 4)) {
+            return 'textBarChart: There was an error, requested number of characters was too low'
+        }
+
+        // Get pretty strings for the values
+        var prettyMax = this.numberWithCommas(maximum);
+        var prettyMin = '';
+        if(minimum > 0) {
+            prettyMin = this.numberWithCommas(minimum);
+        }
+        var prettyValue = this.numberWithCommas(value);
+        // Calculate the percentage, to nearest whole number
+        const valuePercent = (value / (maximum - minimum));
+
+        // calculate the box
+        charsToLeft = Math.round((numCharsPerLine - 1) * valuePercent);
+        charsToRight = (numCharsPerLine - 2) - charsToLeft;
+
+        // Generate the box
+        output += ' ' + boxTop.repeat(numCharsPerLine - 2) + ' ' + '\n';
+        var k = 0;
+        for(var i = 0; i < numLines; i++) {
+            output += boxStart;
+            for(var j = 0; j < charsToLeft; j++) {
+                if(k >= boxFill1.length) {
+                    k = 0;
+                }
+                output += boxFill1[k];
+                k++;
+            }
+            output += boxFill2.repeat(charsToRight) + boxEnd + '\n';
+        }
+        output += ' ' + boxBot.repeat(numCharsPerLine - 2) + ' ' + '\n';
+
+        // // Generate values line
+        var valuesStr = "Current value: " + prettyValue + valueSuffix + "\n" + "Target value: " + prettyMax + valueSuffix + "\n";
+        valuesStr += `${Math.round(valuePercent * 100)}% toward levelling your alliance`;
+        // var valuesStr = prettyMin;
+        // var valueStartPos = (charsToLeft - prettyMin.length) - (Math.floor(prettyValue.length / 2));
+        // if (valueStartPos <= 0) {
+        //     valueStartPos = 1;
+        // }
+        // valuesStr += ' '.repeat(valueStartPos) + prettyValue;
+        // var maxStartPos = (charsToRight - prettyMin.length - prettyValue.length) - prettyMax.length;
+        // if(maxStartPos <= 0) {
+        //     maxStartPos = 1;
+        // }
+        // valuesStr += ' '.repeat(maxStartPos) + prettyMax;
+        valuesStr += '\n';
+
+        // Append the output to the values string
+        output = valuesStr + output;
+
+        // Return our chart to the user
+        return output;
     }
 }
