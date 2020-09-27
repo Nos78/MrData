@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon 
- * @Date: 2020-03-29 16:40:39
+ * @Date: 2020-04-14
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-11 00:38:08
+ * @Last Modified time: 2020-09-27 01:35:47
  */
 
 const logger = require('winston');
@@ -12,14 +12,18 @@ const library = require('../library');
 
 module.exports = {
     name: 'datahelp',
-    description: 'List all of my commands or info about a specific command.',
+    description: 'List all of my commands, or get info about a specific command.',
     aliases: ['commands', 'helpdata'],
     usage: '[command name]',
+    category: 'help',
     cooldown: 5,
     async execute(message, args) {
         const data = [];
         const { commands } = message.client;
-        const prefix = await library.System.getPrefix(message.guild.id);
+        var prefix = config.prefix;
+        if(message.guild) {
+            prefix = await library.System.getPrefix(message.guild.id);
+        }
 
         if (!args.length) {
             data.push('You can get general help by visiting my webpage, at **https://mrdata.thebotfactory.net**\n');
