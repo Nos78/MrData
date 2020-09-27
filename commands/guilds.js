@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-30 01:02:16
+ * @Last Modified time: 2020-09-27 01:48:16
  */
 
 const library = require('../library');
@@ -11,10 +11,11 @@ const { initialiseCommands } = require('../library/discord/discord');
 
 module.exports = {
     name: 'guilds',
-    description: `Command **${config.prefix}${this.name}** returns information on a discord guild (a server).  @BOTNAME must be a member of the guild to provide information. The default command returns information on your server.`,
+    description: `This command returns information on a discord guild (a server).  @BOTNAME must be a member of the guild to provide information. The default command returns information on your server.`,
     usage: `<guild name>`,
     args: false,
     guildOnly: false,
+    category: 'utility',
     version: '0.0.1',
     async execute(message, args) {
         const msg = library.Helper.sendStandardWaitMessage(message.channel)
