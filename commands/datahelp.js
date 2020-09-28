@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-04-14
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-28 21:43:23
+ * @Last Modified time: 2020-09-28 21:46:35
  */
 
 const logger = require('winston');
@@ -50,9 +50,9 @@ module.exports = {
         }
 
         if(prefix) {
-            global.library.Commands.commandHelp(command, prefix);
+            global.library.Commands.commandHelp(command, prefix, data, message.client);
         } else {
-            global.library.Commands.commandHelp(command, config.prefix);
+            global.library.Commands.commandHelp(command, config.prefix, data, message.client);
             }
 
         message.channel.send(data, { split: true });
