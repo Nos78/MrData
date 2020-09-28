@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-08 20:02:01 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-28 20:58:44
+ * @Last Modified time: 2020-09-28 22:10:41
  */
 
 // Required modules
@@ -144,6 +144,9 @@ module.exports = {
     commandHelp: function(command, prefix, data, client) {
         var returnValue = false;
         if(command) {
+            if(!data) {
+                data = [];
+            }
             data.push(`**Name:** ${command.name}`);
 
             if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
@@ -151,7 +154,7 @@ module.exports = {
             if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
 
             if(command.channel) {
-                data.push(`**Channel:** ${command.channel} - if this channel exists on your server, ${library.Config.botName(client)} will output the ranking table here.`);
+                data.push(`**Channel:** ${command.updateChannel} - if this channel exists on your server, ${library.Config.botName(client)} will output the ranking table here.`);
             }
             if(command.category) {
                 data.push(`**Category:** ${command.category}`);

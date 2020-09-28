@@ -36,7 +36,7 @@ module.exports = {
                 this.outputTable("powerdestroyed", guild);
                 this.outputTable("resourcesraided", guild);
             } else {
-                this.outputTable(table, guild)
+                this.outputTable(table, guild);
             }
         }
     },
@@ -51,7 +51,7 @@ module.exports = {
         if((table && table != "") && guild) {
             const command = global.library.Commands.getCommand(table, guild.client);
             if(command) {
-                var channelName = command.channel;
+                var channelName = command.updateChannel;
                 if(!channelName) {
                     channelName = command.name;
                 }
