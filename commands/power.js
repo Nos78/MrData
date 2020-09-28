@@ -256,7 +256,7 @@ module.exports = {
                         });
                     }
                 })
-                library.League.outputTables(message.guild);
+                library.League.outputTables(message.guild, this.name);
             })
     } // execute
 } // module.exports
