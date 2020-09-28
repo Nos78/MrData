@@ -23,7 +23,7 @@ module.exports = {
     args: false,
     usage: '<number>',
     cooldown: 3,
-    channel: 'power-destroyed',
+    updateChannel: 'power-destroyed',
     guildOnly: true,
     execute(message, args) {
         // New score object stores the data for adding into the database
@@ -253,7 +253,7 @@ module.exports = {
                         });
                     }
                 })
-                library.League.outputTables(message.client);
+                library.League.outputTables(message.guild, this.name);
             })
     } // execute
 } // module.exports
