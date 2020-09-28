@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-29 05:37:33
+ * @Last Modified time: 2020-09-27 01:47:37
  */
 
 const library = require('../library');
@@ -10,7 +10,7 @@ const config = require('../config.json');
 
 module.exports = {
     name: 'userinformation',
-    description: `Command **${config.prefix}${this.name}** returns information on a discord user.  The user must be a member of your server.`,
+    description: `This command returns information on a discord user.  The user must be a member of your server.`,
     aliases: ['memberinfo', 'userinfo', 'memberinformation'],
     usage: `<member name>`,
     args: true,

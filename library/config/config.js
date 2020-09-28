@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-23 14:17:39
+ * @Last Modified time: 2020-09-28 20:55:09
  */
  
 /* 
@@ -185,7 +185,13 @@ module.exports = {
      * @returns {string}
      */
     botName: function(client) {
-        return client.user.username;
+        var returnValue = "";
+        if(client) {
+            returnValue = client.user.username;
+        } else {
+            returnValue = this.packageName();
+        }
+        return returnValue;
     },
 
     botAvatar: function(client) {
