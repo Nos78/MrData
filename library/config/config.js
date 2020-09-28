@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 03:24:10
+ * @Last Modified time: 2020-09-28 20:54:02
  */
  
 /* 
@@ -177,7 +177,17 @@ module.exports = {
      * @returns {string}
      */
     botName: function(client) {
-        return client.user.username;
+        if(command.channe) {
+            data.push(`**Channel:** ${command.channel} - if this channel exists on your server, ${library.Config.botName(client)} will output the ranking table here.`);
+        }
+
+        var returnValue = "";
+        if(client) {
+            returnValue = client.user.username;
+        } else {
+            returnValue = this.packageName();
+        }
+        return returnValue;
     },
 
     botAvatar: function(client) {
