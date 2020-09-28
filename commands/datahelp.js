@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-04-14
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-27 01:35:47
+ * @Last Modified time: 2020-09-28 21:03:08
  */
 
 const logger = require('winston');
@@ -49,19 +49,11 @@ module.exports = {
             return message.reply('that\'s not a valid command!');
         }
 
-        data.push(`**Name:** ${command.name}`);
-
         if(prefix) {
-            if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
-            if (command.description) data.push(`**Description:** ${command.description}`);
-            if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
+            global.library.Helper.commandHelp(command, prefix);
         } else {
-            if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
-            if (command.description) data.push(`**Description:** ${command.description}`);
-            if (command.usage) data.push(`**Usage:** ${config.prefix}${command.name} ${command.usage}`);
+            global.library.Helper.commandHelp(command, config.prefix);
         }
-
-        data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
 
         message.channel.send(data, { split: true });
 	},
