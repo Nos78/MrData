@@ -18,7 +18,7 @@ const logger = require('winston');
 
 module.exports = {
     name: 'missionscompleted',
-    description: 'See the missions completed top 10, or set your own missions completed score.  **Custom top X** - *Use !ahs -count X*, where X is a number between 1 and 30, to show the top X scores!',
+    description: 'See the missions completed top 10, or set your own missions completed score.  You can see the ***top X*** scores by using *!ahs -count X*, where X is a number between 1 and 30, to show the top X scores!',
     aliases: ['m', 'mis', 'missions'],
     args: false ,
     usage: '<number>',

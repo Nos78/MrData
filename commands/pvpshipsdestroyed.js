@@ -16,7 +16,7 @@ const logger = require('winston');
 
 module.exports = {
     name: 'pvpshipsdestroyed',
-    description: 'See the top 10 pvp ships destroyed scores, or set your own pvp ships destroyed score. **Custom top X** - *Use !psd -count X*, where X is a number between 1 and 25, to show the top X scores!',
+    description: 'See the top 10 pvp ships destroyed scores, or set your own pvp ships destroyed score. You can see the ***top X*** scores by using *!psd -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['psd'],
     args: false,
     usage: '<number>',

@@ -25,16 +25,46 @@ module.exports = {
         }
     },
 
-    outputTables: function (client) {
-        // we want the bot not to ignore the next 3 messages
-        client.ignoreMyself = false;
-        client.myselfMaximum = client.myselfMaximum + 3;
+    outputTables: function (guild, table = "") {
+        if(guild && guild != "null") {
+            // we want the bot not to ignore the next 3 messages
+            guild.client.ignoreMyself = false;
+            guild.client.myselfMaximum = guild.client.myselfMaximum + 3;
 
-        let chan = client.channels.find("name", "power");
-        this.clearChannelAndSend(chan, "!power");
-        chan = client.channels.find("name", "resources-raided");
-        this.clearChannelAndSend(chan, "!rr");
-        chan = client.channels.find("name", "power-destroyed");
-        this.clearChannelAndSend(chan, "!pd");
+            if(!table || (table && table == "")) {
+                this.outputTable("power", guild);
+                this.outputTable("powerdestroyed", guild);
+                this.outputTable("resourcesraided", guild);
+            } else {
+                this.outputTable(table, guild);
+            }
+        }
+    },
+
+    /**
+     * Output the table for the specified stat.  This will output the ranking table into the channel with the same
+     * name as the command (this can be overridden by defining the channel field within the command definition).
+     * @param {string} table 
+     * @param {Object} guild 
+     */
+    outputTable: function(table, guild) {
+        if((table && table != "") && guild) {
+            const command = global.library.Commands.getCommand(table, guild.client);
+            if(command) {
+                var channelName = command.updateChannel;
+                if(!channelName) {
+                    channelName = command.name;
+                }
+                const chan = guild.channels.find("name", channelName);
+                global.library.System.getPrefix(guild.id)
+                    .then(prefix => {
+                        this.clearChannelAndSend(chan, `${prefix}${command.name}`);
+                });
+            } else {
+                logger.error(`outputTable: unable to located the specified command.`)
+            }
+        } else {
+            logger.error(`outputTable: unable to output the table, one or more of the parameters was uninitialised.`)
+        }
     }
 }

@@ -16,7 +16,7 @@ const logger = require('winston');
 
 module.exports = {
     name: 'resourcesmined',
-    description: 'See the top 10 resources mined scores, or set your own resources mined score. **Custom top X** - *Use !command -rm X*, where X is a number between 1 and 25, to show the top X scores!',
+    description: 'See the top 10 resources mined scores, or set your own resources mined score. You can see the ***top X*** scores by using *!command -rm X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['rm'],
     args: false,
     usage: '<number>',

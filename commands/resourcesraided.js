@@ -18,11 +18,12 @@ const logger = require('winston');
 
 module.exports = {
     name: 'resourcesraided',
-    description: 'See the resources raided top 10, or set your own resources raided score.  **Custom top X** - *Use !rr -count X*, where X is a number between 1 and 25, to show the top X scores!',
+    description: 'See the resources raided top 10, or set your own resources raided score.  You can see the ***top X*** scores by using *!rr -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['rr'],
     args: false,
     usage: '<number>',
     cooldown: 3,
+    updateChannel: 'resources-raided',
     guildOnly: true,
     execute(message, args) {
         // New score object stores the data for adding into the database
@@ -251,7 +252,7 @@ module.exports = {
                         });
                     }
                 })
-                library.League.outputTables(message.client);
+                library.League.outputTables(message.guild, this.name);
             })
     } // execute
 } // module.exports

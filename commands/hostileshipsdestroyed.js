@@ -1,9 +1,8 @@
-/**
- * @Date:   2019-05-08T16:01:53+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: hostileshipsdestroyed.js
- * @Last modified time: 2020-03-29T19:14:42+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-08 16:01:53
+ * @Last Modified by:   BanderDragon 
+ * @Last Modified time: 2020-09-24 19:48:38 
  */
 
 const Discord = require('discord.js');
@@ -16,11 +15,12 @@ const logger = require('winston');
 
 module.exports = {
     name: 'hostileshipsdestroyed',
-    description: 'See the top 10 hostile ships destroyed scores, or set your own hostile ships destroyed score. **Custom top X** - *Use !hsd -count X*, where X is a number between 1 and 25, to show the top X scores!',
+    description: 'See the top 10 hostile ships destroyed scores, or set your own hostile ships destroyed score. You can see the ***top X*** scores by using *!hsd -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['hsd'],
     args: false,
     usage: '<number>',
     cooldown: 3,
+    category: 'scoring',
     guildOnly: true,
     execute(message, args) {
         // New score object stores the data for adding into the database

@@ -1,9 +1,8 @@
-/**
- * @Date:   2019-05-08T16:01:53+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: hostilestotaldamage.js
- * @Last modified time: 2020-03-29T19:13:47+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-08 16:01:53
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-24 19:49:29
  */
 
 const Discord = require('discord.js');
@@ -16,10 +15,11 @@ const logger = require('winston');
 
 module.exports = {
     name: 'hostilestotaldamage',
-    description: 'See the top 10 hostiles total damage scores, or set your own hostiles total damage score. **Custom top X** - *Use !htd -count X*, where X is a number between 1 and 25, to show the top X scores!',
+    description: 'See the top 10 hostiles total damage scores, or set your own hostiles total damage score. You can see the ***top X*** scores by using *!htd -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['htd'],
     args: false,
     usage: '<number>',
+    category: 'scoring',
     cooldown: 3,
     guildOnly: true,
     execute(message, args) {
