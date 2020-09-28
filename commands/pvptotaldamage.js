@@ -16,7 +16,7 @@ const logger = require('winston');
 
 module.exports = {
     name: 'pvptotaldamage',
-    description: 'See the top 10 pvp total damage scores, or set your own pvp total damage score. **Custom top X** - *Use !ptd -count X*, where X is a number between 1 and 25, to show the top X scores!',
+    description: 'See the top 10 pvp total damage scores, or set your own pvp total damage score. You can see the ***top X*** scores by using *!ptd -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['ptd'],
     args: false,
     usage: '<number>',

@@ -18,11 +18,12 @@ const logger = require('winston');
 
 module.exports = {
     name: 'powerdestroyed',
-    description: 'See the top 10 power destroyed scores, or set your own power destroyed score.  **Custom top X** - *Use !pd -count X*, where X is a number between 1 and 25, to show the top X scores!',
+    description: 'See the top 10 power destroyed scores, or set your own power destroyed score.  You can see the ***top X*** scores by using *!pd -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['pd'],
     args: false,
     usage: '<number>',
     cooldown: 3,
+    channel: 'power-destroyed',
     guildOnly: true,
     execute(message, args) {
         // New score object stores the data for adding into the database

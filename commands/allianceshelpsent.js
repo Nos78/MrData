@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2020-21-08T16:42:00+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: allianceshelpsent.js
- * @Last modified by:
- * @Last modif8ied time: 2020-21-08T16:42:00+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2020-21-08 16:42:00
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-28 21:52:49
  */
 
 const Discord = require('discord.js');
@@ -18,9 +15,10 @@ const logger = require('winston');
 
 module.exports = {
     name: 'allianceshelpsent',
-    description: 'See the alliances help sent top 10, or set your own alliances help sent score.  **Custom top X** - *Use !ahs -count X*, where X is a number between 1 and 30, to show the top X scores!',
-    aliases: ['alliance', 'ahs', 'ah', 'allianceshelp', 'alliancehelp'],
-    args: false ,
+    description: 'See the alliances help sent top 10, or set your own alliances help sent score.  You can see the ***top X*** scores by using *!ahs -count X*, where X is a number between 1 and 30, to show the top X scores!',
+    aliases: ['ahs', 'allianceshelp', 'alliancehelp'],
+    args: false,
+    category: 'scoring',    
     usage: '<number>',
     cooldown: 3,
     guildOnly: true,
