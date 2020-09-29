@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-04 03:45:21 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 03:45:46
+ * @Last Modified time: 2020-09-29 05:59:40
  */
 
 const library = require('../library');
@@ -13,7 +13,7 @@ module.exports = {
     description: `This command is used to change @BOTNAME's command prefix for your server, which defaults to ${config.prefix} if none is specified.`,
     aliases: ['sp', 'scp', 'setcommandprefix'],
     args: true,
-    category: 'admin',
+    category: 'config',
     version: '0.0.1',
     usage: '<new prefix>, where the new prefix can be a single character of your choice, from !"£*$%^&+?~:;',
     guildOnly: true,
