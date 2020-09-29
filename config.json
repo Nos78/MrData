@@ -37,8 +37,8 @@
     "firebaseSenderId": 351645999964
   },
   "webPush": {
-    "clientAddr": "http://localhost",
-    "clientDisplayPort": 5000
+    "clientAddr": "https://mrdata.thebotfactory.net",
+    "clientDisplayPort": 5001
   },
   "timeBetweenAdverts": 300
 }
