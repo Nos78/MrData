@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 09:02:09
+ * @Last Modified time: 2020-09-29 09:28:19
  */
 
 // Configure the Discord bot client
@@ -213,7 +213,16 @@ client.on("guildCreate", guild => {
     client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
     db.guilds.add(guild.id)
         .then(guild_record => {
-            logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table. ${guild_record.count} records added.`);
+            if(guild_record) {
+                logger.info(`Added id: ${guild_record.id} guild id: ${guild_record.guild_id} into the guilds table. ${guild_record.count} records added.`);
+            } else {
+                logger.info(`Added a guild - db.guilds.add() has returned a null value - perhaps this record already exists in my Db?`);
+            }
+        });
+    // Notify my owner that there is a new guild
+    client.fetchUser(library.Admin.botOwnerId())
+        .then(user => {
+            user.send(`Hey, ${user.username}, ${guild.name} just added me to their server. Their owner is ${guild.owner}, ${guild.owner.user.tag} whose Id is ${guild.owner.id}`);
         });
 });
 
@@ -222,7 +231,7 @@ client.on("guildDelete", guild => {
     logger.info(`I have been removed from: ${guild.name} (id: ${guild.id})`);
     client.fetchUser(library.Admin.botOwnerId())
         .then(user => {
-            user.send(`Hey, ${user.username}, ${guild.name} just removed me from their server. Their owner is ${guild.owner} and their Id is ${guild.owner.id}`);
+            user.send(`Hey, ${user.username}, ${guild.name} just removed me from the server. Their owner is ${guild.owner}. ${guild.owner.user.tag}, Id ${guild.owner.id}`);
         });
     
     // Update the bot activity text to reflect the new stat
