@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 09:28:19
+ * @Last Modified time: 2020-09-29 09:34:57
  */
 
 // Configure the Discord bot client
@@ -236,6 +236,8 @@ client.on("guildDelete", guild => {
     
     // Update the bot activity text to reflect the new stat
     client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
+
+    // TODO - Remove the database entry for this guild - and all the users for this guild
 });
 
 client.on('message', async message => {
