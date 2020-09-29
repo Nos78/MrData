@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 09:34:57
+ * @Last Modified time: 2020-09-29 23:01:10
  */
 
 // Configure the Discord bot client
@@ -246,6 +246,9 @@ client.on('message', async message => {
         // I sent this message
         me = true;
         if (client.ignoreMyself) {
+            return;
+        } else if (message.channel.type == 'dm') {
+            // Always ignore myself in a DM!
             return;
         } else {
             logger.debug(`Not ignoring myself for ${client.myselfCount + 1} command, a maximum of ${client.myselfMaximum}`)
