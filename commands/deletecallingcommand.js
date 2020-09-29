@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-05 18:00:48
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-24 19:43:37
+ * @Last Modified time: 2020-09-29 02:57:18
  */
 
 const config = require('../config.json');
@@ -13,6 +13,7 @@ module.exports = {
     cooldown: 60,
     category: 'config',
     args: false,
+    version: '0.0.0',
     usage: '<@memberName>',
     execute(message, args) {
 

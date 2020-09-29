@@ -1,19 +1,17 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-10T19:54:25+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: privilegedrole.js
- * @Last modified by:
- * @Last modified time: 2019-05-20T19:03:58+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-10 19:54:25
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:31:45
  */
-
 const library = require('../library');
 
 module.exports = {
     name: 'listadmin',
     description: `This command lists all the users who are considered administrators of this guild.`,
     aliases: ['lista'],
+    category: 'admin',
+    version: '0.0.3',
     guildOnly: true,
     execute(message, args) {
         let countTotal = 0;

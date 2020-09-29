@@ -1,14 +1,11 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-10T19:54:25+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: privilegedrole.js
- * @Last modified by:
- * @Last modified time: 2019-05-20T19:03:58+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-10 19:54:25
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:33:51
  */
 
-const library = require('../library');
+ const library = require('../library');
 
 module.exports = {
     name: 'listrole',
@@ -16,6 +13,9 @@ module.exports = {
     aliases: ['listr'],
     usage: '<role>',
     guildOnly: true,
+    category: 'utility',
+    version: '0.0.2',
+
     execute(message, args) {
         if (args.length < 1) {
             return message.channel.send("Not enough parameters!  Please use `!listrole <role>`");

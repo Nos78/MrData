@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon 
  * @Date: 2020-09-25 13:41:43 
- * @Last Modified by:   BanderDragon 
- * @Last Modified time: 2020-09-25 13:41:43 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:34:55
  */
 
 const library = require('../library');
@@ -13,6 +13,7 @@ module.exports = {
     description: 'Outputs a copy of the officer stats cheat sheet, as advertised and made (YouTube) famous by Rev Deuce.',
     cooldown: 60,
     args: false,
+    version: '0.0.1',
     category: 'stats',
     usage: '<@memberName>',
     execute(message, args) {

@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-07-02 00:57:15
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-28 23:00:15
+ * @Last Modified time: 2020-09-29 03:25:45
  */
 
 const config = require('../config.json');
@@ -16,6 +16,7 @@ module.exports = {
     args: false,
     category: 'utility',
     usage: '<@memberName>',
+    version: '1.1.0',
     async execute(message, args) {
         logger.debug(`Creator command requested. Author id = ${message.author.id} and botOwnerId = ${library.Admin.botOwnerId()}`);
 

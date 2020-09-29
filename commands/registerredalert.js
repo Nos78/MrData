@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 20:15:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-02 20:01:07
+ * @Last Modified time: 2020-09-29 03:40:06
  */
 
 const Discord = require('discord.js');
@@ -22,6 +22,8 @@ module.exports = {
     args: false,
     usage: '<self | alliance | allies> - receive notifications if you, your alliance members, or your allies are attacked.  If no parameter is specified, self-registration is assumed.',
     cooldown: 3,
+    version: '0.0.4',
+    category: 'utility',
     guildOnly: true,
     execute(message, args) {
         var msg = library.Helper.sendWaitMessage("Please wait...", message.channel);

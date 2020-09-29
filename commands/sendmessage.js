@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-16T22:04:42+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: sendmessage.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-16T23:02:45+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-16 22:04:42
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:44:04
  */
 
 const library = require('../library');
@@ -16,6 +13,8 @@ module.exports = {
     aliases: ['send', 'sendmsg'],
     usage: '<message>`',
     args: true,
+    category: 'admin',
+    version: '0.1.2',
     guildOnly: true,
     execute(message, args) {
         if (library.Admin.isAdmin(message.author.id, message.guild.id, message.client)) {

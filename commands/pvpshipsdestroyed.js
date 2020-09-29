@@ -1,9 +1,8 @@
-/**
- * @Date:   2019-05-08T16:00:25+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: pvpshipsdestroyed.js
- * @Last modified time: 2020-03-29T19:09:28+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-08 16:00:25
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:38:37
  */
 
 const Discord = require('discord.js');
@@ -19,6 +18,8 @@ module.exports = {
     description: 'See the top 10 pvp ships destroyed scores, or set your own pvp ships destroyed score. You can see the ***top X*** scores by using *!psd -count X*, where X is a number between 1 and 25, to show the top X scores!',
     aliases: ['psd'],
     args: false,
+    category: 'scoring',
+    version: '1.0.2',
     usage: '<number>',
     cooldown: 3,
     guildOnly: true,

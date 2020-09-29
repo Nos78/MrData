@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon 
  * @Date: 2019-05-08 16:01:53
- * @Last Modified by:   BanderDragon 
- * @Last Modified time: 2020-09-24 19:48:38 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:24:21
  */
 
 const Discord = require('discord.js');
@@ -20,6 +20,7 @@ module.exports = {
     args: false,
     usage: '<number>',
     cooldown: 3,
+    version: '1.0.2',
     category: 'scoring',
     guildOnly: true,
     execute(message, args) {

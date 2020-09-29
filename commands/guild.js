@@ -1,19 +1,19 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-05T18:46:55+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: guild.js
- * @Last modified by:   BanderDragon
- * @Last modified time: 2019-05-05T18:49:32+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-05 18:46:55
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 02:57:13
  */
 
 const config = require('../config.json');
 
 module.exports = {
-  name: 'guild',
+  name: 'guildid',
+  aliases: ['guild'],
   description: 'Returns the discord Id of the current guild (server).',
   cooldown: 60,
+  version: '1.0.0',
+  category: 'utility',
   args: false,
   async execute(message, args) {
     message.channel.send({embed: {

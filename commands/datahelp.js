@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-04-14
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-28 21:46:35
+ * @Last Modified time: 2020-09-29 02:57:19
  */
 
 const logger = require('winston');
@@ -16,6 +16,7 @@ module.exports = {
     aliases: ['commands', 'helpdata'],
     usage: '[command name]',
     category: 'help',
+    version: '2.2.1',
     cooldown: 5,
     async execute(message, args) {
         const data = [];

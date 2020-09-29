@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-28 23:00:57 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 02:42:56
+ * @Last Modified time: 2020-09-29 02:57:32
  */
 
 const config = require('../config.json');
@@ -15,6 +15,7 @@ module.exports = {
     cooldown: 60,
     args: false,
     category: 'utility',
+    version: '1.0.0',
     async execute(message, args) {
         const creatorID = global.library.Admin.botOwnerId();
         msg = library.Helper.sendStandardWaitMessage(message.channel);

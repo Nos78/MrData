@@ -1,9 +1,8 @@
-/**
- * @Date:   2019-05-08T16:01:53+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: resourcesmined.js
- * @Last modified time: 2020-03-29T19:08:37+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-08 16:01:53
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:44:25
  */
 
 const Discord = require('discord.js');
@@ -21,6 +20,8 @@ module.exports = {
     args: false,
     usage: '<number>',
     cooldown: 3,
+    category: 'scoring',
+    version: '1.0.1',
     guildOnly: true,
     execute(message, args) {
         // New score object stores the data for adding into the database

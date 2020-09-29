@@ -1,9 +1,8 @@
-/**
- * @Date:   2019-07-01T23:25:57+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: broadcast.js
- * @Last modified time: 2019-07-02T03:03:58+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-07-01 23:25:57
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-28 22:56:41
  */
 
 const library = require('../library');
@@ -13,6 +12,8 @@ module.exports = {
     name: 'broadcast',
     description: `Bot *creator only* command! Broadcasts to every connected guild, using the default (or first available) channel.`,
     args: true,
+    category: 'owner',
+    version: '1.0.1',
     usage: '<message to send>',
     async execute(message, args) {
         // Only the bot creator can use the command 'broadcast'

@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-25 07:44:42 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-25 09:53:22
+ * @Last Modified time: 2020-09-28 22:48:14
  */
 
  const config = require('../config.json');
@@ -16,6 +16,7 @@ module.exports = {
     cooldown: 60,
     args: false,
     category: 'scoring',
+    version: '1.0.1',
     guildOnly: true,
     usage: '',
     async execute(message, args) {

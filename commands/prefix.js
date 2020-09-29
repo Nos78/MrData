@@ -16,6 +16,8 @@ module.exports = {
     description: `This command is used to change @BOTNAME's command prefix for your server, which defaults to ${config.prefix} if none is specified.`,
     aliases: ['prefix', 'commandprefix', 'showcommandprefix'],
     args: false,
+    version: '1.0.1',
+    category: 'admin',
     guildOnly: true,
     execute(message, args) {
         let msg = library.Helper.sendStandardWaitMessage(message.channel);

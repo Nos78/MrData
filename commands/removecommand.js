@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-10 16:10:02 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-10 17:34:19
+ * @Last Modified time: 2020-09-29 03:40:59
  */
 
 const library = require('../library');
@@ -14,7 +14,9 @@ module.exports = {
     cooldown: 30,
     aliases: ['remove'],
     usage: `<command name> - removes the given command name, e.g. *${config.prefix}remove power* will invalidate the cache for the power script, preventing the command from being run until the next restart.`,
-	args: true,
+    args: true,
+    version: '1.0.1',
+    category: 'owner',
 	guildOnly: true,
 	execute(message, args) {
         if(library.Admin.isBotOwner(message.author.id)) {

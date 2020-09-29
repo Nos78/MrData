@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-01 20:15:19 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-09 04:53:08
+ * @Last Modified time: 2020-09-29 03:39:45
  */
 
 const Discord = require('discord.js');
@@ -34,6 +34,8 @@ module.exports = {
     args: true,
     usage: '<member> <text> - send a red alert notification to <member>, with optional <text>.',
     cooldown: 3,
+    version: '0.0.5',
+    category: 'utility',
     guildOnly: true,
     execute(message, args) {
         if(args.length == 0) {

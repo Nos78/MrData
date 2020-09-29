@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-27 21:33:10 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 21:51:01
+ * @Last Modified time: 2020-09-29 03:47:09
  */
 
 const { useCustomLoadavg } = require('loadavg-windows');
@@ -18,6 +18,8 @@ module.exports = {
     name: 'systeminformation',
     cooldown: 30,
     args: false,
+    category: 'utility',
+    version: '0.0.3',
     aliases: ['sysinfo', 'si', 'uptime', 'up', 'version', 'about'],
     description: `Provides system information about @BOTNAME. Provides details of my critical systems, my software version and licensing.        Also lists the status of my hardware, the level of resources my systems consume, and provides an indication of how long I have been online since my last system update, in other words the total time elapsed since this bot was (re)started.`,
     async execute(message, args) {

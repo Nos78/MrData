@@ -21,6 +21,7 @@ module.exports = {
     args: false,
     usage: '<number>',
     cooldown: 3,
+    version: '1.0.2',
     guildOnly: true,
     execute(message, args) {
         // New score object stores the data for adding into the database
