@@ -40,5 +40,5 @@
     "clientAddr": "http://localhost",
     "clientDisplayPort": 5000
   },
-  "timeBetweenAdverts": 1800
+  "timeBetweenAdverts": 300
 }
