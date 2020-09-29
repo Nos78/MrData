@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-06 08:09:56
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 07:57:03
+ * @Last Modified time: 2020-09-29 09:37:24
  */
 
 const Discord = require('discord.js');
@@ -34,12 +34,12 @@ module.exports = {
         const client = message.client;
         var data = [];
         data.push(`__Here is a list of all the guilds that I am currently connected to:__\n`);
-        data.push(`ID,Name,Members,Joined,Deleted?,Owner,Region`);
+        data.push(`ID,Name%Members%Joined%Deleted?%Owner%Region`);
         var connectedIds = client.guilds.map(guild => guild.id).sort();
         for(var i = 0; i < connectedIds.length; i++) {
             var guild = client.guilds.get(connectedIds[i]);
             var joined = moment(guild.joinedAt).format('DD/MM/YYYY');
-            data.push(`${guild.id},${guild.name},${guild.memberCount},${joined},${guild.deleted},${guild.owner},${guild.region}`)
+            data.push(`${guild.id}%${guild.name}%${guild.memberCount}%${joined}%${guild.deleted}%${guild.owner}%${guild.region}`)
         }
         message.author.send(data, { split: true })
             .then(() => {
