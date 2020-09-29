@@ -17,7 +17,7 @@ module.exports = {
     aliases: ['prefix', 'commandprefix', 'showcommandprefix'],
     args: false,
     version: '1.0.1',
-    category: 'admin',
+    category: 'config',
     guildOnly: true,
     execute(message, args) {
         let msg = library.Helper.sendStandardWaitMessage(message.channel);
