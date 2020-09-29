@@ -2,11 +2,13 @@
  * @Author: BanderDragon 
  * @Date: 2020-03-29
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-14 16:15:13
+ * @Last Modified time: 2020-09-29 02:43:45
  */
 
 const config = require('../../config.json');
 const Discord = require('discord.js');
+const logger = require('winston');
+const moment = require('moment');
 
 const embedValueCharacterLimit = 1024;
 
@@ -37,12 +39,66 @@ function createRichEmbed (title, description, author, authorAvatarURL, messages,
  */
 module.exports = {
 
+    activityType: ['Playing', 'Streaming', 'Listening to', 'Watching'],
+    
     URLs: {
         "mrdata-home": "http://mrdata.thebotfactory.net/",
         "fundMrDataQr": "http://mrdata.thebotfactory.net/mrdata-qr-donate.png",
         "fundMrDataBanner": "http://mrdata.thebotfactory.net/fundmrdata.png"
     },
     
+    userCard: function(user, channel, client) {
+        var name = user.username;
+        var createdMoment = moment(user.createdAt);
+        var dateString = `**Joined discord ${createdMoment.fromNow()}**, on ${createdMoment.format('DD MMMM, YYYY')}`
+        var description = `${dateString}`;
+        var authorName = user.tag;
+        var authorAvatar = user.displayAvatarURL;
+        var authorURL = `http://discordapp.com/users/515622530371944448`;
+        var presenceString = '';
+        if(user.presence) {
+            if(user.presence.activities) {
+                const activities = user.presence.activities;
+                for(var i = 0; i < activities.length; i++) {
+                    if(activities[i].name) {
+                        var activity = this.activityType[activities[i].type];
+                        presenceString += `${activity} ${activities[i].name}`;
+                        if(activities[i].url) {
+                            presenceString += `, ${activities[i].url}`;
+                        }
+                        if(activities[i].details) {
+                            presenceString += `, ${activities[i].details}`;
+                        }
+                        if(activities[i].state) {
+                            presenceString += `, ${activities[i].state} `;
+                        }
+                    }
+                }
+            }
+            if(presenceString == '') {
+                presenceString = `${user.presence.status}`;
+            } else {
+                presenceString 
+            }
+        }
+
+        var fields = [
+            {name: `Current status: *${user.presence.status}*`,
+            value: `${presenceString}`, inline: true}
+        ];
+        return this.createFullRichEmbed(user.username,
+            description,
+            authorName,
+            authorAvatar,
+            authorURL,
+            fields,
+            channel,
+            client,
+            config.messageSuccessColor,
+            authorURL,
+            authorAvatar);
+    },
+
     createEmbed: function(messageText, channel, color, messageId = null) {
         var showAdvert = false;
         var uniqueId = null;
@@ -134,22 +190,71 @@ module.exports = {
         });
         return embed;
     },
-    
-    createFullRichEmbed: function(title, description, author, authorURL, messages, channel, client, color = 16777215) {
+
+    /**
+     * Creates a rich embed where all parameters/options can be set
+     * @param {string} title 
+     * @param {string} description 
+     * @param {string} author 
+     * @param {string} authorIconURL 
+     * @param {string} authorURL 
+     * @param {Array} messages 
+     * @param {Channel} channel 
+     * @param {Client} client 
+     * @param {integer} color 
+     * @param {string} URL 
+     * @param {string} thumbnail 
+     * @param {string} image 
+     * @param {Date} timestamp 
+     * @param {String} footer 
+     */
+    createFullRichEmbed: function(title, description, author, authorIconURL, authorURL, messages, channel, client, color = 16777215,
+            URL = null, thumbnail = null, image = null, timestamp = null, footer = null, footerURL) {
         const embed = new Discord.RichEmbed()
             .setTitle(title)
-            .setAuthor(author, authorURL)
             .setDescription(description)
             .setColor(color);
-        messages.forEach(function(message) {
-            if(message.name.length > Discord.RichEmbed.embedNameCharacterLimit) {
-                message.name = message.name.substring(0, Discord.RichEmbed.embedNameCharacterLimit);
+        if(messages) {
+            messages.forEach(function(message) {
+                if(message.name.length > Discord.RichEmbed.embedNameCharacterLimit) {
+                    message.name = message.name.substring(0, Discord.RichEmbed.embedNameCharacterLimit);
+                }
+                if(message.value.length > embedValueCharacterLimit) {
+                    message.value = message.value.substring(0, embedValueCharacterLimit);
+                }
+                embed.addField(message.name, message.value);
+            });
+        }
+        if(author) {
+            if(authorURL) {
+                embed.setAuthor(author, authorIconURL, authorURL);
+            } else {
+                embed.setAuthor(author, authorIconURL);
             }
-            if(message.value.length > embedValueCharacterLimit) {
-                message.value = message.value.substring(0, embedValueCharacterLimit);
+        }
+        if(URL) {
+            embed.setURL(URL);
+        }
+        if(thumbnail) {
+            embed.setThumbnail(thumbnail);
+        }
+        if(image) {
+            embed.setImage(image);
+        }
+        if(timestamp) {
+            if(global.library.Format.typeOf(timestamp) == 'date') {
+                embed.setTimestamp(timestamp);
+            } else {
+                logger.error(`createFullRichEmbed: ${timestamp} is not a date object`);
             }
-            embed.addField(message.name, message.value);
-        });
+        }
+        if(footer) {
+            if(footerURL) {
+                embed.setFooter(footer, footerURL);
+            } else {
+                embed.setFooter(footer);
+            }
+        }
         return embed;
     },
 
@@ -193,6 +298,17 @@ module.exports = {
         }
     },
 
+    editMessageEmbed: async function(originalMessage, newEmbed) {
+        if(originalMessage) {
+            originalMessage.then(async function (msg) {
+                if(msg.editable) {
+                    return msg.edit(newEmbed);
+                } else {
+                    this.sendErrorMessage(`An error occurred, I was unable to edit the above promise message ('${msg.Message}').`);
+                }
+            })
+        }
+    },
     /**
      * Edits the given message object, which was returned by a previous call to
      * sendWaitMessage. The message will be updated with the new messageText and
@@ -364,7 +480,7 @@ module.exports = {
      * @returns {Promise<Message>}
      */
     sendFullRichMessage: function(title, description, author, authorURL, messages, channel, client, color = 16777215) {
-        return channel.send(this.createFullRichEmbed(title, description, author, authorURL, messages, channel, client, color));
+        return channel.send(this.createFullRichEmbed(title, description, author, authorURL, null, messages, channel, client, color));
     },
 
     displayName: function (member) {
