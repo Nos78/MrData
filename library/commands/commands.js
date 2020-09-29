@@ -153,7 +153,7 @@ module.exports = {
             if (command.description) data.push(`**Description:** ${command.description}`);
             if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
 
-            if(command.channel) {
+            if(command.updateChannel) {
                 data.push(`**Channel:** ${command.updateChannel} - if this channel exists on your server, ${library.Config.botName(client)} will output the ranking table here.`);
             }
             if(command.category) {
