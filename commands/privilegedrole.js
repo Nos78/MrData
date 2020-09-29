@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 02:55:43 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 03:37:58
+ * @Last Modified time: 2020-09-29 05:15:10
  */
 
 const library = require('../library');
@@ -13,6 +13,7 @@ module.exports = {
     aliases: ['priv'],
     args: true,
     version: '0.1.1',
+    category: 'admin',
     guildOnly: true,
     execute(message, args) {
 
