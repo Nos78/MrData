@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon 
  * @Date: 2020-08-25 02:55:43 
- * @Last Modified by:   BanderDragon 
- * @Last Modified time: 2020-08-25 02:55:43 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:37:58
  */
 
 const library = require('../library');
@@ -12,6 +12,7 @@ module.exports = {
     description: `This command is used by Admins to add a role to the guild privileged roles list.`,
     aliases: ['priv'],
     args: true,
+    version: '0.1.1',
     guildOnly: true,
     execute(message, args) {
 

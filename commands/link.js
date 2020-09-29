@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-08 17:28:56 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-08 18:28:21
+ * @Last Modified time: 2020-09-29 03:30:38
  */
 
 const config = require('../config.json');
@@ -11,10 +11,11 @@ const library = require('../library');
     name: 'link',
     description: 'Returns a discord invitation link to install @BOTNAME on a discord server.  Want to add me to your own discord server?  Everything you need is right here.',
     cooldown: 60,
+    category: 'misc',
+    version: '0.0.2',
     aliases: ['linkme', 'datalink', 'url', 'addme'],
     args: false,
     guildOnly: false,
-    usage: ``,
 
     async execute(message, args) {
         var link = "https://discordapp.com/oauth2/authorize?&client_id=553632838486982657&scope=bot&permissions=8";

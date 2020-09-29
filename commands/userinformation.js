@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-27 01:47:37
+ * @Last Modified time: 2020-09-29 03:47:28
  */
 
 const library = require('../library');
@@ -16,6 +16,7 @@ module.exports = {
     args: true,
     guildOnly: true,
     version: '0.0.2',
+    category: 'utility',
     execute(message, args) {
         if(args.length == 0) {
             library.Helper.sendErrorMessage(`${this.name} requires a name.  Try '${config.prefix}${this.name} ${message.author}', for example.`);

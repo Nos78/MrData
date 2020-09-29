@@ -1,12 +1,11 @@
-/**
- * @Date:   2019-05-08T16:01:08+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: kdratio.js
- * @Last modified time: 2020-03-29T19:13:17+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-08 16:01:08
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:30:07
  */
 
-const Discord = require('discord.js');
+ const Discord = require('discord.js');
 const db = require('../db');
 const config = require('../config.json');
 const library = require('../library');
@@ -20,6 +19,8 @@ module.exports = {
     aliases: ['kd'],
     args: false,
     usage: '<number>',
+    category: 'scoring',
+    version: '1.0.2',
     cooldown: 3,
     guildOnly: true,
     execute(message, args) {

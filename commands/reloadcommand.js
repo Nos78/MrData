@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-09 03:26:15 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-10 17:00:57
+ * @Last Modified time: 2020-09-29 03:41:01
  */
 const library = require('../library');
 const config = require('../config.json');
@@ -13,7 +13,9 @@ module.exports = {
     cooldown: 30,
     aliases: ['reload'],
     usage: `<command name> - reloads the given command name, e.g. *${config.prefix}reload power* will invalidate the cache for the power script, and reload power.js from file storage.`,
-	args: true,
+    args: true,
+    version: '1.0.0',
+    category: 'owner',
 	guildOnly: true,
 	execute(message, args) {
         if(library.Admin.isBotOwner(message.author.id)) {

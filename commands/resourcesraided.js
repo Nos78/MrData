@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-10T20:21:49+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: resourcesraided.js
- * @Last modified by:
- * @Last modified time: 2020-03-29T19:16:50+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-10 20:21:49
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:44:20
  */
 
 const Discord = require('discord.js');
@@ -22,6 +19,8 @@ module.exports = {
     aliases: ['rr'],
     args: false,
     usage: '<number>',
+    version: '1.0.3',
+    category: 'scoring',
     cooldown: 3,
     updateChannel: 'resources-raided',
     guildOnly: true,

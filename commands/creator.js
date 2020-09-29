@@ -1,28 +1,33 @@
-/**
- * @Date:   2019-07-02T00:57:15+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: creator.js
- * @Last modified time: 2019-07-02T02:45:26+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2020-09-28 23:00:57 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:21:45
  */
 
 const config = require('../config.json');
 const library = require('../library');
 const logger = require('winston');
+const { guildOnly } = require('./isowner');
 
 module.exports = {
     name: 'creator',
-    description: 'Checks if the user is registered as my creator',
+    description: 'Returns the discord username of my creator.',
     cooldown: 60,
     args: false,
-    usage: '<@memberName>',
+    version: '0.1.0',
+    category: 'utility',
     async execute(message, args) {
-        logger.debug(`Creator command requested. Author id = ${message.author.id} and botOwnerId = ${library.Admin.botOwnerId()}`);
-
-        if(library.Admin.isBotOwner(message.author.id)) {
-            message.channel.send(`Greetings, ${message.author}, you are my creator!`);
-        } else {
-          message.channel.send(`Greetings, ${message.author}, alas you are not my creator.`);
-        }
+        const creatorID = global.library.Admin.botOwnerId();
+        msg = library.Helper.sendStandardWaitMessage(message.channel);
+        message.client.fetchUser(creatorID)
+            .then(function (creatorUser) {
+                var member = null;
+                if(message.guild.member(creatorID)) {
+                    member = message.guild.members.get(creatorID);
+                }
+                var embedMsg = global.library.Helper.userCard(creatorUser, message.channel, message.client, member);
+                library.Helper.editMessageEmbed(msg, embedMsg);
+        }.bind(this));
     }
 };

@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-10T19:54:25+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: privilegedrole.js
- * @Last modified by:
- * @Last modified time: 2019-05-20T19:03:58+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2020-09-04 03:45:21 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:45:46
  */
 
 const library = require('../library');
@@ -16,6 +13,8 @@ module.exports = {
     description: `This command is used to change @BOTNAME's command prefix for your server, which defaults to ${config.prefix} if none is specified.`,
     aliases: ['sp', 'scp', 'setcommandprefix'],
     args: true,
+    category: 'admin',
+    version: '0.0.1',
     usage: '<new prefix>, where the new prefix can be a single character of your choice, from !"£*$%^&+?~:;',
     guildOnly: true,
     async execute(message, args) {

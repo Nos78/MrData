@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-11T00:51:12+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: changenickname.js
- * @Last modified by:
- * @Last modified time: 2019-05-14T09:58:23+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-11 00:51:12
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-28 22:57:11
  */
 
 const library = require('../library');
@@ -16,7 +13,9 @@ module.exports = {
     aliases: ['nick', 'changenick'],
     usage: '`!changenickname <newnickname>`\nAdmin only: `!changenickname <@user> <newnickname>`',
     args: true,
+    version: '1.1.0',
     guildOnly: true,
+    category: 'admin',
     execute(message, args) {
         var userToChange = null;
         var newNickname = "";

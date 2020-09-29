@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-09 02:55:51 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-13 20:04:53
+ * @Last Modified time: 2020-09-29 03:46:19
  */
 const library = require('../library');
 const process = require('process');
@@ -12,6 +12,8 @@ module.exports = {
 	description: `Shuts down @BOTNAME - this command can only be performed by my owner.`,
 	cooldown: 30,
 	args: false,
+	category: 'owner',
+	version: '0.0.1',
 	guildOnly: true,
 	async execute(message, args) {
 		if(library.Admin.isBotOwner(message.author.id)) {

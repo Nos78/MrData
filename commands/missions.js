@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2020-21-08T16:42:00+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: missionscompleted.js
- * @Last modified by:
- * @Last modif8ied time: 2020-21-08T16:42:00+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2020-21-08 16:42:00
+ * @Last Modified by:   BanderDragon 
+ * @Last Modified time: 2020-09-29 03:34:12 
  */
 
 const Discord = require('discord.js');
@@ -23,6 +20,8 @@ module.exports = {
     args: false ,
     usage: '<number>',
     cooldown: 3,
+    category: 'scoring',
+    version: '1.0.2',
     guildOnly: true,
     execute(message, args) {
         // New score object stores the data for adding into the database

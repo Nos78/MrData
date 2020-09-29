@@ -1,11 +1,8 @@
-/**
- * @Author: BanderDragon
- * @Date:   2019-05-06T08:09:56+01:00
- * @Email:  noscere1978@gmail.com
- * @Project: MrData
- * @Filename: power.js
- * @Last modified by:
- * @Last modified time: 2020-03-29T19:10:41+01:00
+/*
+ * @Author: BanderDragon 
+ * @Date: 2019-05-06 08:09:56
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-29 03:36:15
  */
 
 const Discord = require('discord.js');
@@ -22,6 +19,8 @@ module.exports = {
     aliases: ['p'],
     args: false,
     usage: '<number>',
+    category: 'scoring',
+    version: '1.0.3',
     cooldown: 3,
 
     guildOnly: true,

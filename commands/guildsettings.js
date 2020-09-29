@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-09-10 15:33:21 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-14 15:38:59
+ * @Last Modified time: 2020-09-29 03:23:47
  */
 
 const library = require('../library');
@@ -13,11 +13,13 @@ const markdown = library.Discord.markdown;
 
 module.exports = {
     name: 'guildsettings',
-    description: `Outputs the current settings for the guild as a JSON object.  Descriptions of each field is provided by using the parameter "desc" or "true" after the command name.`,
+    description: `Outputs the current settings for the guild as a JSON object.  Descriptions of each field can be provided by using the parameter "desc" or "true" after the command name.`,
     aliases: ['settings'],
     args: false,
     usage: '<guild id> <description>, optionally give a description of each setting field, and also optionally output the settings for a different discord guild/server.',
     guildOnly: true,
+    version: '0.0.2',
+    category: 'config',
     async execute(message, args) {
         var msg = library.Helper.sendStandardWaitMessage(message.channel);
         var guildId = message.guild.id;

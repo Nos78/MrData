@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-21-08 16:42:00
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-28 21:52:49
+ * @Last Modified time: 2020-09-28 22:48:43
  */
 
 const Discord = require('discord.js');
@@ -20,6 +20,7 @@ module.exports = {
     args: false,
     category: 'scoring',    
     usage: '<number>',
+    version: '1.0.2',
     cooldown: 3,
     guildOnly: true,
     execute(message, args) {

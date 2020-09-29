@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 02:55:21 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-08-25 03:40:14
+ * @Last Modified time: 2020-09-29 03:41:43
  */
 
 const db = require('../db');
@@ -16,6 +16,8 @@ module.exports = {
     args: false,
     usage: 'removeuser <user ID> - where <user ID> is the discord user ID of the user you want to delete; this is a long number and can be found on the leaderboard(s).',
     cooldown: 3,
+    category: 'scoring',
+    version: '0.1.1',
     guildOnly: true,
     execute(message, args) {
 

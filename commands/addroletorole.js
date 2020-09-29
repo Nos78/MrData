@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon 
  * @Date: 2019-05-10 19:54:25 
- * @Last Modified by:   BanderDragon 
- * @Last Modified time: 2020-08-29 03:15:52 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2020-09-28 22:47:23
  */
 
 const library = require('../library');
@@ -12,6 +12,8 @@ module.exports = {
     description: `This command is used by Admins to add a members of role A to role B.`,
     aliases: ['artr'],
     usage: '<role A> <role B>',
+    category: 'admin',
+    version: '2.0.3',
     guildOnly: true,
     execute(message, args) {
         let msg = library.Helper.sendStandardWaitMessage(message.channel);

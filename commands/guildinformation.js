@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-13 23:25:58
+ * @Last Modified time: 2020-09-24 19:45:29
  */
 
 const library = require('../library');
@@ -16,6 +16,7 @@ module.exports = {
     usage: `<guild name>`,
     args: false,
     version: '0.0.0',
+    category: 'utility',    
     guildOnly: true,
     execute(message, args) {
         // if(args.length == 0) {
