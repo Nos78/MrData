@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-03-29
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 02:43:45
+ * @Last Modified time: 2020-09-29 03:15:53
  */
 
 const config = require('../../config.json');
@@ -46,11 +46,20 @@ module.exports = {
         "fundMrDataQr": "http://mrdata.thebotfactory.net/mrdata-qr-donate.png",
         "fundMrDataBanner": "http://mrdata.thebotfactory.net/fundmrdata.png"
     },
-    
-    userCard: function(user, channel, client) {
+
+    userCard: function(user, channel, client, member = null) {
         var name = user.username;
+        if(member) {
+            if(member.nickname) {
+                name = member.displayName;
+            }
+        }
         var createdMoment = moment(user.createdAt);
-        var dateString = `**Joined discord ${createdMoment.fromNow()}**, on ${createdMoment.format('DD MMMM, YYYY')}`
+        var dateString = `**Joined discord ${createdMoment.fromNow()}**, on ${createdMoment.format('DD MMMM, YYYY')}`;
+        if(member) {
+            var joinedMoment = moment(member.joinedAt);
+            dateString += `\n**Joined ${global.library.Discord.getGuildName(member.guild)} ${joinedMoment.fromNow()}**, on ${joinedMoment.format('DD MMM, YYYY')}`;
+        }
         var description = `${dateString}`;
         var authorName = user.tag;
         var authorAvatar = user.displayAvatarURL;
@@ -86,7 +95,7 @@ module.exports = {
             {name: `Current status: *${user.presence.status}*`,
             value: `${presenceString}`, inline: true}
         ];
-        return this.createFullRichEmbed(user.username,
+        return this.createFullRichEmbed(name,
             description,
             authorName,
             authorAvatar,
