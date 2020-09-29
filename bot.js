@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 08:42:02
+ * @Last Modified time: 2020-09-29 09:02:09
  */
 
 // Configure the Discord bot client
@@ -223,9 +223,8 @@ client.on("guildDelete", guild => {
     client.fetchUser(library.Admin.botOwnerId())
         .then(user => {
             user.send(`Hey, ${user.username}, ${guild.name} just removed me from their server. Their owner is ${guild.owner} and their Id is ${guild.owner.id}`);
-        }.bind(this));
+        });
     
-    client.send()
     // Update the bot activity text to reflect the new stat
     client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
 });
