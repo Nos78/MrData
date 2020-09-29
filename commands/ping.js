@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-03-14 22:12:49
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 03:35:43
+ * @Last Modified time: 2020-09-29 03:59:11
  */
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
 	description: 'Calculates the ping between sending a message and editing it, calculating round-trip latency! The second ping is the averge latency between the bot and the web-socket (one way).',
 	cooldown: 5,
 	version: '1.0.0',
-	category: 'utility'
+	category: 'utility',
 	args: false,
 	async execute(message, args) {
     // Calculates ping between sending a message and editing it, giving a nice round-trip latency.
