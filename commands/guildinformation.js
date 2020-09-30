@@ -2,12 +2,13 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-30 21:36:49
+ * @Last Modified time: 2020-09-30 21:49:36
  */
 
 const library = require('../library');
 const config = require('../config.json');
 const { initialiseCommands } = require('../library/discord/discord');
+const moment = require('moment');
 
 module.exports = {
     name: 'guildinformation',
@@ -15,7 +16,7 @@ module.exports = {
     aliases: ['guild', 'guildinfo', 'serverinfo', 'allianceinfo'],
     usage: `<guild name>`,
     args: false,
-    version: '0.0.3',
+    version: '0.1.1',
     category: 'utility',    
     guildOnly: true,
     async execute(message, args) {
@@ -122,7 +123,14 @@ module.exports = {
                         if(result) {
                             let inviteArr = result.array();
                             for(var j = 0; j < inviteArr.length; j++) {
-                                fields.push({"name": `Invite link:`, "value": `https://discord.gg/${inviteArr[j].code}`});
+                                var details = `**Link:** https://discord.gg/${inviteArr[j].code}\n`;
+                                details += `**Channel:** ${inviteArr[j].channel.name}\n`;
+                                details += `**Inviter:** ${inviteArr[j].inviter.tag}\n`;
+                                details += `**Created at:** ${moment(inviteArr[j].createdTimestamp).format('LLLL')}\n`;
+                                details += `**Expires at:** ${moment(inviteArr[j].expiresTimestamp).format('LLLL')}\n`;
+                                details += `**Maximum uses:** ${inviteArr[j].maxUses}\n`;
+                                details += `**Current uses:** ${inviteArr[j].uses}\n`;
+                                fields.push({"name": `Invite details:`, "value": `${details}`});
                             }
                             //fields.push({"name": `Invite link`, "value": `https://discord.gg/${vanityCode}`});
                             //fields.push({"name": `Invite links`, "value": `${JSON.stringify(invites)}`});
