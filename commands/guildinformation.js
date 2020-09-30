@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-30 21:49:36
+ * @Last Modified time: 2020-09-30 21:57:10
  */
 
 const library = require('../library');
@@ -151,7 +151,9 @@ module.exports = {
                         fields = [];
                         fields.push({"name": `Banned Users`, "value": `${JSON.stringify(bans)}`});
                         Array.from(bans).forEach(function(ban) {
-                            fields.push({"name": `User name`, "value": `${ban.username}#${ban.discriminator}`});
+                            var banDetails = `**Banned user:** ${ban.user}\n`;
+                            banDetails += `**Reason:** ${ban.reason}\n`;
+                            fields.push({"name": `Ban details:`, "value": `${banDetails}`});
                         });
                     }
                     if(fields.length > 0) {
