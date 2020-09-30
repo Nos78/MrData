@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-03-29
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 03:15:53
+ * @Last Modified time: 2020-09-30 19:13:12
  */
 
 const config = require('../../config.json');
@@ -63,7 +63,7 @@ module.exports = {
         var description = `${dateString}`;
         var authorName = user.tag;
         var authorAvatar = user.displayAvatarURL;
-        var authorURL = `http://discordapp.com/users/515622530371944448`;
+        var authorURL = `http://discordapp.com/users/${user.id}`;
         var presenceString = '';
         if(user.presence) {
             if(user.presence.activities) {
