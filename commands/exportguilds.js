@@ -2,14 +2,13 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-06 08:09:56
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 09:37:24
+ * @Last Modified time: 2020-09-30 17:51:39
  */
 
 const Discord = require('discord.js');
 const db = require('../db');
 const config = require('../config.json');
 const library = require('../library');
-const fastcsv = require("fast-csv");
 const moment = require('moment');
 
 // Set up the logger for debug/info
