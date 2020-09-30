@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-30 21:34:39
+ * @Last Modified time: 2020-09-30 21:36:49
  */
 
 const library = require('../library');
@@ -15,7 +15,7 @@ module.exports = {
     aliases: ['guild', 'guildinfo', 'serverinfo', 'allianceinfo'],
     usage: `<guild name>`,
     args: false,
-    version: '0.0.0',
+    version: '0.0.3',
     category: 'utility',    
     guildOnly: true,
     async execute(message, args) {
