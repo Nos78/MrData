@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-30 21:21:03
+ * @Last Modified time: 2020-09-30 21:34:39
  */
 
 const library = require('../library');
@@ -115,35 +115,47 @@ module.exports = {
             var msg2 = library.Helper.editMessageEmbed(msg, guildEmbed);
 
             var msg3 = null;
-            var invites = guild.fetchInvites()
-                .then(result => {
-                    fields = [];
-                    if(result) {
-                        let inviteArr = result.array();
-                        for(var j = 0; j < inviteArr.length; j++) {
-                            fields.push({"name": `Invite link:`, "value": `https://discord.gg/${inviteArr[j].code}`});
+            try {
+                var invites = guild.fetchInvites()
+                    .then(result => {
+                        fields = [];
+                        if(result) {
+                            let inviteArr = result.array();
+                            for(var j = 0; j < inviteArr.length; j++) {
+                                fields.push({"name": `Invite link:`, "value": `https://discord.gg/${inviteArr[j].code}`});
+                            }
+                            //fields.push({"name": `Invite link`, "value": `https://discord.gg/${vanityCode}`});
+                            //fields.push({"name": `Invite links`, "value": `${JSON.stringify(invites)}`});
+                            msg3 = library.Helper.sendRichMessage(`${displayName} current invitation links`, `Here is a list of the current invitation links that can be used to join ${displayName}`, fields, message.channel, message.client, config.messageSuccessColor);
                         }
-                        //fields.push({"name": `Invite link`, "value": `https://discord.gg/${vanityCode}`});
-                        //fields.push({"name": `Invite links`, "value": `${JSON.stringify(invites)}`});
-                        msg3 = library.Helper.sendRichMessage(`${displayName} current invitation links`, `Here is a list of the current invitation links that can be used to join ${displayName}`, fields, message.channel, message.client, config.messageSuccessColor);
+                    })
+                    .catch(err => {
+                        msg3 = library.Helper.sendErrorMessage(`Sorry, ${message.author}, my current permission level means I am unable to access the invites data for ${displayName}.`, message.channel);
+                    });
+            } catch (err) {
+                msg3 = library.Helper.sendErrorMessage(`Sorry, ${message.author}, my current permission level means I am unable to access the invites data for ${displayName}.`, message.channel);
+            }
+        
+            var msg4 = null;
+            try {
+                guild.fetchBans().then(function(bans) {
+                    if(bans) {
+                        fields = [];
+                        fields.push({"name": `Banned Users`, "value": `${JSON.stringify(bans)}`});
+                        Array.from(bans).forEach(function(ban) {
+                            fields.push({"name": `User name`, "value": `${ban.username}#${ban.discriminator}`});
+                        });
+                    }
+                    if(fields.length > 0) {
+                        msg4 = library.Helper.sendRichMessage(`Banned user list for ${displayName}`, `The following users have an active ban:`, fields, message.channel, message.client, config.messageSuccessColor);           
                     }
                 })
                 .catch(err => {
-                    msg3 = library.Helper.sendErrorMessage(`Sorry, ${message.author}, my current permission level means I am unable to access the invites data for ${displayName}.`, message.channel);
+                    msg4 = library.Helper.sendErrorMessage(`Sorry, ${message.author}, my current permission level means I am unable to access the bans data for ${displayName}.`, message.channel);
                 });
-        
-            guild.fetchBans().then(function(bans) {
-                if(bans) {
-                    fields = [];
-                    fields.push({"name": `Banned Users`, "value": `${JSON.stringify(bans)}`});
-                    Array.from(bans).forEach(function(ban) {
-                        fields.push({"name": `User name`, "value": `${ban.username}#${ban.discriminator}`});
-                   });
-                }
-                if(fields.length > 0) {
-                    var msg4 = library.Helper.sendRichMessage(`Banned user list for ${displayName}`, `The following users have an active ban:`, fields, message.channel, message.client, config.messageSuccessColor);           
-                }
-            });
+            } catch (err) {
+                msg4 = library.Helper.sendErrorMessage(`Sorry, ${message.author}, my current permission level means I am unable to access the bans data for ${displayName}.`, message.channel);
+            }
         } else {
             library.Helper.sendErrorMessage(`Sorry, ${message.author}, I am not connected to ${args[0]} and therefore I am unable to return any information about their organisation.  To see a list of organisations I have connections with, you can use the ${library.Config.getPrefix()}guilds command.`, message.channel);
         }
