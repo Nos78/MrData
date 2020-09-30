@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-06 08:09:56 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-12 01:13:22
+ * @Last Modified time: 2020-09-30 18:38:35
  */
 
 'use strict';
@@ -18,33 +18,38 @@ const settings = require('./settings/settings.js');
 const system = require('./system/system.js');
 const commands = require('./commands/commands.js');
 const funding = require('./funding/funding.js');
+const logger = require('winston');
 
 module.exports = {
-  Format: format,
-  Admin: admin,
-  League: league,
-  Helper: helper,
-  Config: config,
-  Discord: discord,
-  Settings: settings,
-  System: system,
-  Commands: commands,
-  Funding: funding,
+    Format: format,
+    Admin: admin,
+    League: league,
+    Helper: helper,
+    Config: config,
+    Discord: discord,
+    Settings: settings,
+    System: system,
+    Commands: commands,
+    Funding: funding,
   
-  /**
-   * Collate the args array, from index to the end, into one string, each term seperated by a space.
-   * @param {*} index 
-   * @param {*} args 
-   * @returns {string} collated args.
-   */
-  collateArgs: function(index, args) {
-      var returnString = "";
-      if (index < args.length) {
-          returnString = args[index];
-          for(var i = index + 1; i < args.length; i++) {
-              returnString = returnString + " " + args[i];
-          }
-      }
-      return returnString;
-  }
+/**
+ * Collate the args array, from index to the end, into one string, each term seperated by a space.
+ * @param {*} index 
+ * @param {*} args 
+ * @returns {string} collated args.
+ */
+collateArgs: function(index, args) {
+        var returnString = "";
+        if(index != null && args != null) {
+            if (index < args.length) {
+                returnString = args[index];
+                for(var i = index + 1; i < args.length; i++) {
+                    returnString = returnString + " " + args[i];
+                }
+            }
+        } else {
+            logger.error(`collateArgs: insufficient parameters specified.`);
+        }
+        return returnString;
+    }
 }
