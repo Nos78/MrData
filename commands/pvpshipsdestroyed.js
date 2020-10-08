@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-08 16:00:25
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-10-08 22:17:08
+ * @Last Modified time: 2020-10-08 22:22:23
  */
 
 const Discord = require('discord.js');
@@ -14,12 +14,12 @@ const library = require('../library');
 const logger = require('winston');
 
 module.exports = {
-    name: 'playershipsdestroyed',
+    name: 'pvpshipsdestroyed',
     description: 'See the top 10 pvp ships destroyed scores, or set your own pvp ships destroyed score. You can see the ***top X*** scores by using *!psd -count X*, where X is a number between 1 and 25, to show the top X scores!',
-    aliases: ['psd', 'pvpshipsdestroyed'],
+    aliases: ['psd', 'playershipsdestroyed'],
     args: false,
     category: 'scoring',
-    version: '1.0.3',
+    version: '1.0.4',
     usage: '<number>',
     cooldown: 3,
     guildOnly: true,
