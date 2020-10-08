@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-08 16:01:53
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 03:39:19
+ * @Last Modified time: 2020-10-08 22:17:17
  */
 
 const Discord = require('discord.js');
@@ -14,9 +14,9 @@ const library = require('../library');
 const logger = require('winston');
 
 module.exports = {
-    name: 'pvptotaldamage',
+    name: 'playertotaldestroyed',
     description: 'See the top 10 pvp total damage scores, or set your own pvp total damage score. You can see the ***top X*** scores by using *!ptd -count X*, where X is a number between 1 and 25, to show the top X scores!',
-    aliases: ['ptd'],
+    aliases: ['ptd', 'pvptotaldamage'],
     args: false,
     usage: '<number>',
     version: '1.0.2',
