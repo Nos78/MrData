@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2019-05-08 16:01:53
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-10-08 22:17:17
+ * @Last Modified time: 2020-10-08 22:18:36
  */
 
 const Discord = require('discord.js');
@@ -19,7 +19,7 @@ module.exports = {
     aliases: ['ptd', 'pvptotaldamage'],
     args: false,
     usage: '<number>',
-    version: '1.0.2',
+    version: '1.0.3',
     category: 'scoring',
     cooldown: 3,
     guildOnly: true,
