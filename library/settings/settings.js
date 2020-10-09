@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-10-09 04:39:50
+ * @Last Modified time: 2020-10-09 04:44:37
  */
 
 const logger = require('winston');
@@ -108,6 +108,7 @@ module.exports = {
         var newSettings = Object.assign({}, this.newGuildSettings());
 
         if(compareVersions.compare(newSettings.version, oldSettingsId, '<=')) {
+            settings.showAdvert = true;
             return settings;
         }
         // added for version, 2.1.2
