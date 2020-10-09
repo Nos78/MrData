@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-25 21:10:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-25 08:39:59
+ * @Last Modified time: 2020-10-09 04:39:50
  */
 
 const logger = require('winston');
@@ -125,7 +125,9 @@ module.exports = {
         }
         // added for version 2.1.6
         if(settings.hasOwnProperty('showAdvert')) {
-            newSettings.showAdvert = settings.showAdvert;
+            // Always set show advert to be true on start up
+            newSettings.showAdvert = true;
+            //newSettings.showAdvert = settings.showAdvert;
         }
         // added for version 2.1.7
         if(settings.hasOwnProperty('helpDM')) {
