@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-04-14
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 06:06:41
+ * @Last Modified time: 2020-10-09 04:35:20
  */
 
 const logger = require('winston');
@@ -19,7 +19,7 @@ module.exports = {
     version: '2.2.1',
     cooldown: 5,
     async execute(message, args) {
-		msg = library.Helper.sendStandardWaitMessage(message.channel);
+		//msg = library.Helper.sendStandardWaitMessage(message.channel);
         const data = [];
         const { commands } = message.client;
         var prefix = config.prefix;
@@ -41,7 +41,8 @@ module.exports = {
             return message.author.send(data, { split: true })
                 .then(() => {
                     if (message.channel.type === 'dm') return;
-                    library.Helper.editWaitSuccessMessage(msg, `${message.author}, I've sent you a DM with all my commands! - https://mrdata.thebotfactory.net`);
+                    message.reply(`${message.author}, I've sent you a DM with all my commands! - https://mrdata.thebotfactory.net`);
+                    //library.Helper.editWaitSuccessMessage(msg, `${message.author}, I've sent you a DM with all my commands! - https://mrdata.thebotfactory.net`);
                 })
                 .catch(error => {
                     logger.error(`Could not send help DM to ${message.author.tag}.\n`, error);
