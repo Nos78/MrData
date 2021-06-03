@@ -101,8 +101,8 @@ client.on("ready", () => {
     library.Commands.resolveCommandDescriptions(client);
 
     // Update the bot activity text to reflect the connections status
-    client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
-    logger.info(`${client.user.username} Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
+    client.user.setActivity(`${client.guilds.cache.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
+    logger.info(`${client.user.username} Bot has started, with ${client.users.cache.size} users, in ${client.channels.size} channels of ${client.guilds.cache.size} guilds.`);
 
     /* We want to ensure our database is created when the bot comes online
      * and configure it if they don't exist...
@@ -170,8 +170,8 @@ client.on("ready", () => {
             }
         });
     /* Populate the database with the guilds we are online in. */
-    //for (x = 0; x < client.guilds.size; x++) {
-    client.guilds.forEach((guild) => {
+    //for (x = 0; x < client.guilds.cache.size; x++) {
+    client.guilds.cache.forEach((guild) => {
         logger.info(`Adding ${guild.name}, id: ${guild.id} to the database`);
         db.guilds.add(guild.id).then((guild_record) => {
             if (guild_record == null) {
@@ -210,7 +210,7 @@ client.on("guildCreate", guild => {
     logger.info(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
 
     // Update the bot activity text to reflect the new stat
-    client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
+    client.user.setActivity(`${client.guilds.cache.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
     db.guilds.add(guild.id)
         .then(guild_record => {
             if(guild_record) {
@@ -220,7 +220,8 @@ client.on("guildCreate", guild => {
             }
         });
     // Notify my owner that there is a new guild
-    client.fetchUser(library.Admin.botOwnerId())
+    client.users.fetch(library.Admin.botOwnerId())
+//   client.fetchUser(library.Admin.botOwnerId())
         .then(user => {
             user.send(`Hey, ${user.username}, ${guild.name} just added me to their server. Their owner is ${guild.owner}, ${guild.owner.user.tag} whose Id is ${guild.owner.id}`);
         });
@@ -229,13 +230,13 @@ client.on("guildCreate", guild => {
 client.on("guildDelete", guild => {
     // this event triggers when the bot is removed from a guild.
     logger.info(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-    client.fetchUser(library.Admin.botOwnerId())
+    client.users.fetch(library.Admin.botOwnerId())
         .then(user => {
             user.send(`Hey, ${user.username}, ${guild.name} just removed me from the server. Their owner is ${guild.owner}. ${guild.owner.user.tag}, Id ${guild.owner.id}`);
         });
     
     // Update the bot activity text to reflect the new stat
-    client.user.setActivity(`${client.guilds.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
+    client.user.setActivity(`${client.guilds.cache.size} guilds | ${config.prefix}datahelp`, { type: 'WATCHING' });
 
     // TODO - Remove the database entry for this guild - and all the users for this guild
 });
