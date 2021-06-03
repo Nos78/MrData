@@ -25,9 +25,9 @@ module.exports = {
                     // Mark the settings as modified, so they can be committed to the database later
                     settings.modified = true;
                     // Take a copy of the settings, as objects are passed by ref.
-                    client.guildSettings[`${guildId}`] = Object.assign({}, settings);
+                    client.myGuildSettings[`${guildId}`] = Object.assign({}, settings);
                     // And return this object
-                    return client.guildSettings[`${guildId}`];
+                    return client.myGuildSettings[`${guildId}`];
                 } else {
                     throw `cacheSettings: guildId is null caching settings to guild ${guildId}`;
                 }
@@ -50,7 +50,7 @@ module.exports = {
         if(client) {
             if (guildId && guildId != 'null') {
                 // objects are assigned by reference, no need to assign back to client
-                var settings = client.guildSettings[`${guildId}`];
+                var settings = client.myGuildSettings[`${guildId}`];
                 // assign the new value to the named parameter
                 settings[`${parameterName}`] = parameterValue;
                 settings.modified = true;
@@ -129,7 +129,7 @@ module.exports = {
      * @returns {any} the property value
      */
     getCachedParameter: function(guildId, parameterName, client) {
-        return client.guildSettings[`${guildId}`][`${parameterName}`];
+        return client.myGuildSettings[`${guildId}`][`${parameterName}`];
     },
 
     /**
@@ -258,8 +258,8 @@ module.exports = {
         var returnValue = null;
         if(guildId && guildId != 'null') {
             if(client) {
-                if(client.guildSettings[`${guildId}`]) {
-                    returnValue = client.guildSettings[`${guildId}`];
+                if(client.myGuildSettings[`${guildId}`]) {
+                    returnValue = client.myGuildSettings[`${guildId}`];
                 }
             }
 

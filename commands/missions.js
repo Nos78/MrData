@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon 
  * @Date: 2020-21-08 16:42:00
- * @Last Modified by:   BanderDragon 
- * @Last Modified time: 2020-09-29 03:34:12 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2021-06-03 02:33:31
  */
 
 const Discord = require('discord.js');
@@ -70,19 +70,19 @@ module.exports = {
                                     message.channel.send({
                                         embed: {
                                             color: config.missionsColor,
-                                            description: `${message.author}, *No* records were found for **${message.client.guilds.get(message.guild.id).name}**`
+                                            description: `${message.author}, *No* records were found for **${message.client.guilds.cache.get(message.guild.id).name}**`
                                         }
                                     });
                                 } else {
                                     logger.debug(`Displaying the league table for ${message.guild}`);
-                                    const embed = new Discord.RichEmbed()
+                                    const embed = new Discord.MessageEmbed()
                                         .setTitle("Missions Completed Leaderboard")
-                                        .setAuthor(message.client.user.username, message.client.user.avatarURL)
+                                        .setAuthor(message.client.user.username, message.client.user.avatarURL())
                                         .setDescription(`Our top ${maxRankCount} missions completed leaders!`)
                                         .setColor(config.missionsColor);
                                     var c = 1;
                                     for (const data of top10) {
-                                        var top10member = message.client.guilds.get(message.guild.id).members.get(data.user_id);
+                                        var top10member = message.client.guilds.cache.get(message.guild.id).members.cache.get(data.user_id);
                                         var displayName = "";
                                         if (top10member == null) {
                                             displayName = `User ${data.user_id} has left the building`;

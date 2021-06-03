@@ -43,7 +43,7 @@ module.exports = {
                 }
                 break;
         }
-        message.guild.members.get(userToChange).setNickname(newNickname);
+        message.guild.members.cache.get(userToChange).setNickname(newNickname);
         return message.channel.send(`${message.author}, that nickname has been successfully updated.`);
     },
 }

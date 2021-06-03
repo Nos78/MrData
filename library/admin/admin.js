@@ -1,8 +1,8 @@
 /*
  * @Author: BanderDragon
  * @Date: 2020-08-25 02:46:57 
- * @Last Modified by:   BanderDragon 
- * @Last Modified time: 2020-08-25 02:46:57 
+ * @Last Modified by: BanderDragon
+ * @Last Modified time: 2021-06-03 02:43:22
  */
 
 const logger = require('winston');
@@ -48,7 +48,7 @@ module.exports = {
      * @returns {boolean}
      */
     isOwner: function (uid, gid, client) {
-        let guild = client.guilds.get(gid);
+        let guild = client.guilds.cache.get(gid);
         return guild.ownerID == uid;
     },
 
@@ -61,7 +61,7 @@ module.exports = {
      * @returns {boolean}
      */
     isAdmin: function (uid, gid, client) {
-        return client.guilds.get(gid).members.get(uid).hasPermission("ADMINISTRATOR");
+        return client.guilds.cache.get(gid).members.cache.get(uid).hasPermission("ADMINISTRATOR");
     },
 
     /**
@@ -75,9 +75,9 @@ module.exports = {
             return true;
         }
         
-        let guild = client.guilds.get(gid);
+        let guild = client.guilds.cache.get(gid);
         if (guild) {
-            let member = guild.members.get(uid);
+            let member = guild.members.cache.get(uid);
             if (member) {
                 return this.hasPrivilegedRole(member, gid);
             }
@@ -94,7 +94,7 @@ module.exports = {
      * @returns {boolean}
      */
     hasPermission: function (permissionToCheck, uid, gid, client) {
-        return client.guilds.get(gid).members.get(uid).hasPermission(permissionToCheck);
+        return client.guilds.cache.get(gid).members.cache.get(uid).hasPermission(permissionToCheck);
     },
 
     /**
@@ -105,7 +105,7 @@ module.exports = {
      * @returns {object} GuildMember object of the owner/user
      */
     owner: function(gid, client) {
-        return client.guilds.get(gid).owner;
+        return client.guilds.cache.get(gid).owner;
     },
 
     /**
@@ -115,7 +115,7 @@ module.exports = {
      * @returns guild object
      */
     getGuild: function(gid, client) {
-        return client.guilds.get(gid);
+        return client.guilds.cache.get(gid);
     },
 
     /**
@@ -126,7 +126,7 @@ module.exports = {
      * @returns member (user) object
      */
     getMember: function(uid, gid, client) {
-        return client.guilds.get(gid).members.get(uid);
+        return client.guilds.cache.get(gid).members.cache.get(uid);
     },
 
     /**
@@ -201,7 +201,7 @@ module.exports = {
     deleteAllMessages: async function (channel) {
         let fetched;
         do {
-            fetched = await channel.fetchMessages({limit: 100});
+            fetched = await channel.messages.fetch({limit: 100});
             channel.bulkDelete(fetched);
         }
         while(fetched.size >= 2);

@@ -195,7 +195,7 @@ module.exports = {
     },
 
     botAvatar: function(client) {
-        return client.user.avatarURL;
+        return client.user.avatarURL();
     },
 
     /**

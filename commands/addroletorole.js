@@ -21,26 +21,26 @@ module.exports = {
             if (args.length < 2) {
                 return message.channel.send("Not enough parameters!  Please use `!artr <from role A> <to role B>`");
             } else {
-                let roleA = message.guild.roles.find("name", library.Helper.parseName(args[0]));
-                let roleB = message.guild.roles.find("name", library.Helper.parseName(args[1]));
+                let roleA = message.guild.roles.cache.find(role => role.name === `${library.Helper.parseName(args[0])}`);
+                let roleB = message.guild.roles.cache.find(role => role.name === `${library.Helper.parseName(args[1])}`);
                 if(roleA == null) {
-                    roleA = message.guild.roles.find("id", library.Helper.parseNumber(args[0]));
+                    roleA = message.guild.roles.cache.get(library.Helper.parseNumber(args[0]));
                     if(roleA == null) {
                         return library.Helper.editWaitErrorMessage(msg, `Please specify valid roles!  ${roleA} does not exist.  Please use \`!artr <from role A> <to role B>\``);
                     }
                 }
                 if(roleB == null) {
-                    roleB = message.guild.roles.find("id", library.Helper.parseNumber(args[0]));
+                    roleB = message.guild.roles.cache.get(library.Helper.parseNumber(args[0]));
                     if(roleB == null) {
                         return library.Helper.editWaitErrorMessage(msg, `Please specify valid roles!  ${roleB} does not exist.  Please use \`!artr <from role A> <to role B>\``);
                     }
                 }
                 
                 let members = [];
-                message.guild.members.forEach(function(member) {
+                message.guild.members.cache.forEach(function(member) {
                     let members = [];
                     if(member.roles.has(roleA.id)) {
-                        member.addRole(roleB.id);
+                        member.roles.add(roleB.id);
                         members.push(library.Discord.getDisplayName(member));
                     }
                 });

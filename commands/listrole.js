@@ -20,20 +20,20 @@ module.exports = {
         if (args.length < 1) {
             return message.channel.send("Not enough parameters!  Please use `!listrole <role>`");
             } else {
-                let role = message.guild.roles.find("name", args[0]);
+                let role = message.guild.roles.cache.find(role => role.name === args[0]);
                 if(role == null) {
                     return message.channel.send(`Please specify a valid role - ${role} does not exist.  Please use \`!listrole <role>\``);
                 }
                 let countTotal = 0;
                 let msgResponse = `${role.name}, on guild ${message.guild.name}, has the following members:\n`;
-                message.guild.members.forEach(function(member) {
-                    if(member.roles.has(role.id)) {
+                message.guild.members.cache.forEach(function(member) {
+                    if(member.roles.cache.has(role.id)) {
                        msgResponse = msgResponse + member.displayName + `\n`;
                        countTotal++;
                     }
                 });
                 msgResponse = msgResponse + `\nA total of ${countTotal} members`
-                message.channel.send(msgResponse);
+                message.channel.send(`${msgResponse}`);
             
         }
     }

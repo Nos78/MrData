@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-03-29
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-30 19:13:12
+ * @Last Modified time: 2021-06-03 03:51:23
  */
 
 const config = require('../../config.json');
@@ -15,16 +15,16 @@ const embedValueCharacterLimit = 1024;
 /*
  * Private functions
  */
-function createRichEmbed (title, description, author, authorAvatarURL, messages, color = 16777215) {
-    const embed = new Discord.RichEmbed()
+function createMessageEmbed (title, description, author, authorAvatarURL, messages, color = 16777215) {
+    const embed = new Discord.MessageEmbed()
         .setTitle(title)
         .setAuthor(author, authorAvatarURL)
         .setDescription(description)
         .setColor(color);
 
     messages.forEach(function(message) {
-        if(message.name.length > Discord.RichEmbed.embedNameCharacterLimit) {
-            message.name = message.name.substring(0, Discord.RichEmbed.embedNameCharacterLimit);
+        if(message.name.length > Discord.MessageEmbed.embedNameCharacterLimit) {
+            message.name = message.name.substring(0, Discord.MessageEmbed.embedNameCharacterLimit);
         }
         if(message.value.length > embedValueCharacterLimit) {
             message.value = message.value.substring(0, embedValueCharacterLimit);
@@ -62,7 +62,7 @@ module.exports = {
         }
         var description = `${dateString}`;
         var authorName = user.tag;
-        var authorAvatar = user.displayAvatarURL;
+        var authorAvatar = user.displayAvatarURL();
         var authorURL = `http://discordapp.com/users/${user.id}`;
         var presenceString = '';
         if(user.presence) {
@@ -95,7 +95,7 @@ module.exports = {
             {name: `Current status: *${user.presence.status}*`,
             value: `${presenceString}`, inline: true}
         ];
-        return this.createFullRichEmbed(name,
+        return this.createFullMessageEmbed(name,
             description,
             authorName,
             authorAvatar,
@@ -182,15 +182,15 @@ module.exports = {
         }
     },
 
-    createRichEmbed: function(title, description, messages, channel, client, color = 16777215) {
-        const embed = new Discord.RichEmbed()
+    createMessageEmbed: function(title, description, messages, channel, client, color = 16777215) {
+        const embed = new Discord.MessageEmbed()
             .setTitle(title)
-            .setAuthor(client.user.username, client.user.avatarURL)
+            .setAuthor(client.user.username, client.user.avatarURL())
             .setDescription(description)
             .setColor(color);
         messages.forEach(function(message) {
-            if(message.name.length > Discord.RichEmbed.embedNameCharacterLimit) {
-                message.name = message.name.substring(0, Discord.RichEmbed.embedNameCharacterLimit);
+            if(message.name.length > Discord.MessageEmbed.embedNameCharacterLimit) {
+                message.name = message.name.substring(0, Discord.MessageEmbed.embedNameCharacterLimit);
             }
             if(message.value.length > embedValueCharacterLimit) {
                 message.value = message.value.substring(0, embedValueCharacterLimit);
@@ -217,16 +217,16 @@ module.exports = {
      * @param {Date} timestamp 
      * @param {String} footer 
      */
-    createFullRichEmbed: function(title, description, author, authorIconURL, authorURL, messages, channel, client, color = 16777215,
+    createFullMessageEmbed: function(title, description, author, authorIconURL, authorURL, messages, channel, client, color = 16777215,
             URL = null, thumbnail = null, image = null, timestamp = null, footer = null, footerURL) {
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
             .setTitle(title)
             .setDescription(description)
             .setColor(color);
         if(messages) {
             messages.forEach(function(message) {
-                if(message.name.length > Discord.RichEmbed.embedNameCharacterLimit) {
-                    message.name = message.name.substring(0, Discord.RichEmbed.embedNameCharacterLimit);
+                if(message.name.length > Discord.MessageEmbed.embedNameCharacterLimit) {
+                    message.name = message.name.substring(0, Discord.MessageEmbed.embedNameCharacterLimit);
                 }
                 if(message.value.length > embedValueCharacterLimit) {
                     message.value = message.value.substring(0, embedValueCharacterLimit);
@@ -254,7 +254,7 @@ module.exports = {
             if(global.library.Format.typeOf(timestamp) == 'date') {
                 embed.setTimestamp(timestamp);
             } else {
-                logger.error(`createFullRichEmbed: ${timestamp} is not a date object`);
+                logger.error(`createFullMessageEmbed: ${timestamp} is not a date object`);
             }
         }
         if(footer) {
@@ -412,7 +412,7 @@ module.exports = {
      * @param {integer} color 
      */
     sendRichMessage: function(title, description, messages, channel, client, color = 16777215) {
-        return channel.send(this.createRichEmbed(title, description, messages, channel, client, color));
+        return channel.send(this.createMessageEmbed(title, description, messages, channel, client, color));
     },
 
     /**
@@ -451,7 +451,7 @@ module.exports = {
                             authorName = author.name;
                             authorIcon = author.iconURL;
                         }
-                        newEmbed = createRichEmbed(title, description, authorName, authorIcon, messages, color);
+                        newEmbed = createMessageEmbed(title, description, authorName, authorIcon, messages, color);
                     }
                 }
                 return msg.edit(newEmbed);
@@ -469,7 +469,7 @@ module.exports = {
                         // if(oldEmbed.author) {
 
                         // }
-                        newEmbed = createRichEmbed(title, description, author, authorURL, messages, color);
+                        newEmbed = createMessageEmbed(title, description, author, authorURL, messages, color);
                     }
                 }
                 return msg.edit(newEmbed);
@@ -489,7 +489,7 @@ module.exports = {
      * @returns {Promise<Message>}
      */
     sendFullRichMessage: function(title, description, author, authorURL, messages, channel, client, color = 16777215) {
-        return channel.send(this.createFullRichEmbed(title, description, author, authorURL, null, messages, channel, client, color));
+        return channel.send(this.createFullMessageEmbed(title, description, author, authorURL, null, messages, channel, client, color));
     },
 
     displayName: function (member) {

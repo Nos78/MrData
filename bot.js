@@ -2,7 +2,7 @@
  * @Author: BanderDragon
  * @Date: 2019-03-10 02:54:40 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 23:01:10
+ * @Last Modified time: 2021-06-03 03:31:15
  */
 
 // Configure the Discord bot client
@@ -69,7 +69,7 @@ try {
     // Initialise the settings for individual servers - these
     // will be stored in the database, but a cached version in the client
     // would be much more efficient...
-    client.guildSettings = [];
+    client.myGuildSettings = [];
 } catch (error) {
     logger.error(`Failed to initialise guild settings, ${JSON.stringify(error)}`);
 }
@@ -187,7 +187,7 @@ client.on("ready", () => {
                 var oldVersion = settings.version;
                 settings = library.Settings.upgradeGuildSettings(settings);
                 var newVersion = settings.version;
-                client.guildSettings[`${guild.id}`] = settings;
+                client.myGuildSettings[`${guild.id}`] = settings;
                 if (settings.modified) {
                     library.System.saveGuildSettings(guild.id, settings)
                         .then(result => {
@@ -412,9 +412,9 @@ client.on('message', async message => {
         logger.error(errorJSON);
         //message.reply('there was an error trying to execute that command!');
         if(logger.level === 'silly' || logger.level === 'debug' || logger.level === 'error') {
-            const embed = new Discord.RichEmbed()
+            const embed = new Discord.MessageEmbed()
                 .setTitle(`${error.name} : Unexpected Error (${error.name}) in the bagging area`)
-                .setAuthor(message.client.user.username, message.client.user.avatarURL)
+                .setAuthor(message.client.user.username, message.client.user.avatarURL())
                 .setDescription(`An unexpected error occurred : ${error.message}`)
                 .setColor(config.hostilestotaldamageColor);
             embed.addField("Stack trace:", `length: ${stack.length} characters`);

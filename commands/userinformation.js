@@ -2,7 +2,7 @@
  * @Author: BanderDragon 
  * @Date: 2020-08-29 02:51:12 
  * @Last Modified by: BanderDragon
- * @Last Modified time: 2020-09-29 03:47:28
+ * @Last Modified time: 2021-06-03 03:59:15
  */
 
 const library = require('../library');
@@ -39,8 +39,8 @@ module.exports = {
             fields.push({"name": `User name`, "value": `${member.user.username}`});
             fields.push({"name": `Display Name`, "value": `${member.displayName}`});
             fields.push({"name": `Nickname`, "value": `${member.nickname}`});
-            fields.push({"name": `User avatar`, "value": `${member.user.avatarURL}`});
-            fields.push({"name": `User displayed avatar`, "value": `${member.user.displayAvatarURL}`});
+            fields.push({"name": `User avatar`, "value": `${member.user.avatarURL()}`});
+            fields.push({"name": `User displayed avatar`, "value": `${member.user.displayAvatarURL()}`});
             fields.push({"name": `User default avatar`, "value": `${member.user.defaultAvatarURL}`});
             fields.push({"name": `Discord Tag`, "value": `${member.user.tag}`});
             fields.push({"name": `Joined At`, "value": `${member.joinedAt}`});
@@ -62,9 +62,9 @@ module.exports = {
                 });
                 fields.push({"name": `Roles`, "value": `${member.roles.size} - ${JSON.stringify(roles)}`});
             }
-            fields.push({"name": `Is Deaf?`, "value": `${member.deaf}`});
+            fields.push({"name": `Is Deaf?`, "value": `${member.voice.deaf}`});
             fields.push({"name": `Voice state`, "value": `${member.voice}`});
-            fields.push({"name": `Client state`, "value": `desktop: ${JSON.stringify(member.user.presence.clientStatus)}, game: ${member.user.presence.game}, status: ${member.user.presence.status}`});
+            fields.push({"name": `Client state`, "value": `desktop: ${JSON.stringify(member.user.presence.clientStatus)}, activities: ${member.user.presence.activities}, status: ${member.user.presence.status}`});
             library.Helper.sendRichMessage(`Displaying User Information`, `I have scoured ${message.guild.name} and the Discord network. Here is all the information I could find for ${args[0]}`, fields, message.channel, message.client, config.messageSuccessColor);           
 
             fields = [];

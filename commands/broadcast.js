@@ -34,7 +34,7 @@ module.exports = {
                             var msgToSend = library.collateArgs(0, args);
                             logger.debug(`sending to ${channel.name} on guild server ${guild.name}`);
                             logger.debug(`message: '${msgToSend}'`);
-                            channel.send(msgToSend);
+                            channel.send(`${msgToSend}`);
                         } else {
                             logger.debug(`Unable to send to ${channel.name} on guild server ${guild.name}`);
                         }

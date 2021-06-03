@@ -16,14 +16,14 @@ module.exports = {
     execute(message, args) {
         let countTotal = 0;
         let msgResponse = `${role.name}, on guild ${message.guild.name}, has the following members:\n`;
-        message.guild.members.forEach(function(member) {
+        message.guild.members.cache.forEach(function(member) {
             if (library.Admin.isAdmin(member.id, message.guild.id, message.client)) {
                msgResponse = msgResponse + member.displayName + `\n`;
                countTotal++;
             }
         });
         msgResponse = msgResponse + `\nA total of ${countTotal} members`
-        message.channel.send(msgResponse);
+        message.channel.send(`${msgResponse}`);
             
     }
 }

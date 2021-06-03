@@ -24,7 +24,7 @@ module.exports = {
             .then(function (creatorUser) {
                 var member = null;
                 if(message.guild.member(creatorID)) {
-                    member = message.guild.members.get(creatorID);
+                    member = message.guild.members.cache.get(creatorID);
                 }
                 var embedMsg = global.library.Helper.userCard(creatorUser, message.channel, message.client, member);
                 library.Helper.editMessageEmbed(msg, embedMsg);

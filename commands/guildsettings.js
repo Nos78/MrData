@@ -38,7 +38,7 @@ module.exports = {
                     guildId = library.Helper.parseIdNumber(args[i]);
                 }
             }
-            searchGuild = message.client.guilds.get(guildId);
+            searchGuild = message.client.guilds.cache.get(guildId);
             if(!searchGuild) {
                 return library.Helper.editWaitErrorMessage(msg, `${message.author}, I was unable to access the discord guild with the id number ${guildId}`);
             }

@@ -36,7 +36,7 @@ module.exports = {
         data.push(`ID,Name%Members%Joined%Deleted?%Owner%Region`);
         var connectedIds = client.guilds.map(guild => guild.id).sort();
         for(var i = 0; i < connectedIds.length; i++) {
-            var guild = client.guilds.get(connectedIds[i]);
+            var guild = client.guilds.cache.get(connectedIds[i]);
             var joined = moment(guild.joinedAt).format('DD/MM/YYYY');
             data.push(`${guild.id}%${guild.name}%${guild.memberCount}%${joined}%${guild.deleted}%${guild.owner}%${guild.region}`)
         }

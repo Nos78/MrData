@@ -38,7 +38,7 @@ module.exports = {
                 if(!message.client.guilds.has(`${guildId}`)) {
                     return library.Helper.editWaitErrorMessage(msg, `Sorry, ${message.author}, I do not have access to guild ${guildId}.`)
                 } else {
-                    guild = message.client.guilds.get(guildId);
+                    guild = message.client.guilds.cache.get(guildId);
                 }
             }
 
@@ -60,7 +60,7 @@ module.exports = {
             fields.push({"name": `Description`, "value": `${guild.description}`});
             fields.push({"name": `Guild Owner`, "value": `Name: **${guild.owner.displayName}**\nDiscord username: **${guild.owner.user.username}#${guild.owner.user.discriminator}**\nDiscord ID number: **${guild.ownerID}**`});
             fields.push({"name": `Icon`, "value": `${guild.icon}`});
-            fields.push({"name": `Icon`, "value": `${guild.iconURL}`});
+            fields.push({"name": `Icon`, "value": `${guild.iconURL()}`});
             if(guild.banner) {
                 fields.push({"name": `Banner`, "value": `${guild.banner}`});
                 if(guild.bannerURL) {
@@ -109,10 +109,10 @@ module.exports = {
             fields.push({"name": `${displayName} Created At`, "value": `${guild.createdAt}`});
             fields.push({"name": `${library.Config.botName(message.client)} Joined ${displayName} At`, "value": `${guild.joinedAt}`});
 
-            var guildEmbed = library.Helper.createFullRichEmbed(`Discord Guild: ${displayName}`,
+            var guildEmbed = library.Helper.createFullMessageEmbed(`Discord Guild: ${displayName}`,
                 `*I have scoured my databanks and the Discord network. Here is all the information I could find for* **${displayName}**`,
-                `Guild Owner: ${guild.owner.displayName}`, guild.owner.user.avatarURL, `http://discordapp.com/users/${guild.owner.user.id}`,
-                fields, message.channel, message.client, config.messageSuccessColor, `https://discord.com/developers/servers/${guild.id}`, guild.iconURL, library.Helper.URLs.fundMrDataBanner);
+                `Guild Owner: ${guild.owner.displayName}`, guild.owner.user.avatarURL(), `http://discordapp.com/users/${guild.owner.user.id}`,
+                fields, message.channel, message.client, config.messageSuccessColor, `https://discord.com/developers/servers/${guild.id}`, guild.iconURL(), library.Helper.URLs.fundMrDataBanner);
             var msg2 = library.Helper.editMessageEmbed(msg, guildEmbed);
 
             var msg3 = null;
@@ -151,7 +151,7 @@ module.exports = {
                         fields = [];
                         fields.push({"name": `Banned Users`, "value": `${JSON.stringify(bans)}`});
                         Array.from(bans).forEach(function(ban) {
-                            var banDetails = `**Banned user:** ${ban.user}\n`;
+                            var banDetails = `**Banned user:** ${ban.user} - tag: ${ban.tag}\n`;
                             banDetails += `**Reason:** ${ban.reason}\n`;
                             fields.push({"name": `Ban details:`, "value": `${banDetails}`});
                         });

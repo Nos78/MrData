@@ -69,7 +69,7 @@ module.exports = {
             payload.notification.title = payload.notification.title.replace("@SERVERNAME", guildName);
             payload.notification.body = payload.notification.body.replace("@MEMBERNAME", displayName);
             payload.notification.body = payload.notification.body.replace("@NOTIFIER", senderName);
-            payload.notification.icon = message.client.user.displayAvatarURL;
+            payload.notification.icon = message.client.user.displayAvatarURL();
 
             // Go ahead and send the message to the users device(s)...
             db.userGuildSettings.findUserSettingsById(member.user.id, message.guild.id)

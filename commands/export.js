@@ -39,7 +39,7 @@ module.exports = {
                     message.channel.send({
                         embed: {
                             color: config.powerDestroyedColor,
-                            description: `${message.author}, *No* records were found for **${message.client.guilds.get(message.guild.id).name}**`
+                            description: `${message.author}, *No* records were found for **${message.client.guilds.cache.get(message.guild.id).name}**`
                         }
                     });
                 } else {
@@ -55,7 +55,7 @@ module.exports = {
                     delete jsonData["id"];
                     delete jsonData["guild_id"];
                     for(var i = 0; i < scores.length; i++) {
-                        var user =  message.guild.members.get(jsonData[i].user_id);
+                        var user =  message.guild.members.cache.get(jsonData[i].user_id);
                         var username = null; //var username = jsonData[i].user_id;
                         if(user) {
                             username = user.displayName;

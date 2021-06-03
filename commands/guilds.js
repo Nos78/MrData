@@ -56,8 +56,8 @@ module.exports = {
                         } );
                         fields.push({"name": `Invite link`, "value": `https://discord.gg/${vanityCode}`});
                         fields.push({"name": `Invite links`, "value": `${JSON.stringify(invites)}`});
-                        library.Helper.sendFullRichMessage(`${id.value} - ${guild.name}`, `${guild.description}`, `${guild.owner.displayName} [${guild.owner.user.username}#${guild.owner.user.discriminator}]`, `${guild.iconURL}`, fields, message.channel, message.client, config.messageSuccessColor);
-                        //fields.push({"name": `${guild.iconURL} ${id.value} - ${guild.name}`, "value": `members: ${guild.members.size} https://discord.gg/${vanityCode} -  **Discord Guild Owner:** `});
+                        library.Helper.sendFullRichMessage(`${id.value} - ${guild.name}`, `${guild.description}`, `${guild.owner.displayName} [${guild.owner.user.username}#${guild.owner.user.discriminator}]`, `${guild.iconURL()}`, fields, message.channel, message.client, config.messageSuccessColor);
+                        //fields.push({"name": `${guild.iconURL()} ${id.value} - ${guild.name}`, "value": `members: ${guild.members.size} https://discord.gg/${vanityCode} -  **Discord Guild Owner:** `});
                     } catch (e) {
                         console.error(e);
                     }

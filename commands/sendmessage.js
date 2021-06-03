@@ -19,7 +19,7 @@ module.exports = {
     execute(message, args) {
         if (library.Admin.isAdmin(message.author.id, message.guild.id, message.client)) {
             var msgToSend = library.collateArgs(0, args);
-            message.channel.send(msgToSend);
+            message.channel.send(`${msgToSend}`);
             message.delete();
         }
     },
