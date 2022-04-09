@@ -17,7 +17,7 @@
     "firebase-admin": "^9.9.0",
     "libsodium-wrappers": "^0.7.9",
     "loadavg-windows": "^1.1.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.33",
     "node-fetch": "^2.6.1",
     "pg": "^7.18.2",
